@@ -1,11 +1,15 @@
 import React, { useEffect, useState } from "react";
 import styled, { css } from "styled-components/native";
+import { AtomUserId, AtomUserToken } from "../../atom/atom";
 import { colors } from "../../colors";
 import { RightArrowIcon } from "../../components/Icons";
 import LayOut from "../../components/LayOut";
 import { NormalPopup, PurpleBtn } from "../../components/share";
 import { fonts } from "../../fonts";
 import { getData } from "../../storage";
+
+import { useRecoilState } from 'recoil';
+
 
 const PageTitleWrap = styled.View`
   width: 100%;
@@ -130,8 +134,20 @@ const menuList = [
 
 const MyPage = ({ navigation }) => {
   const [loginPopOn, setLoginPopOn] = useState(false);
-  const loginStatus = true;
+  const [loginStatus, setLoginStatus] = useState(true);
 
+  const [atUserId, setAtUserId] = useRecoilState(AtomUserId)  //유저아이디
+  const [atUserToken, setAtUserToken] = useRecoilState(AtomUserToken) //유저 토큰
+
+  // useEffect(() => {
+  //   if (atUserId != 'guest' && atUserToken != 'guestToken') {
+  //     setLoginStatus(false)
+  //   } else {
+  //     setLoginStatus(true)
+  //   }
+  // }, [])
+
+  //현재 랜덤으로 이름 불러오고 있음. 이부분 변경해야함
   const [name, setName] = useState("게스트");
   useEffect(() => {
     getData("randomName").then((name) => setName(name));
