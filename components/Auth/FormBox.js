@@ -47,6 +47,8 @@ const FormBox = ({
   name,
   isSelected,
   onClickSelect,
+  onChangeText,
+  onPressFunction,
 }) => {
   return (
     <Container>
@@ -64,13 +66,13 @@ const FormBox = ({
       )}
 
       <InputRow>
-        <Input placeholder={inputPlaceholder} width={"70%"}></Input>
+        <Input placeholder={inputPlaceholder} width={"70%"} onChangeText={onChangeText}></Input>
         <PurpleBtn
           height={"48px"}
           text="인증하기"
           width={"25%"}
           marginTop={0}
-          onPress={() => Keyboard.dismiss()}
+          onPress={onPressFunction}
         />
       </InputRow>
       {caption && (
