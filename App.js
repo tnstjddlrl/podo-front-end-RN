@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import AppLoading from "expo-app-loading";
 import { Asset } from "expo-asset";
 import * as Font from "expo-font";
@@ -15,6 +15,15 @@ import DoubleTapToClose from "./utils/DoubleBack";
 import { storeData } from "./storage";
 import { randomName } from "./constants";
 
+import {
+  RecoilRoot,
+  atom,
+  selector,
+  useRecoilState,
+  useRecoilValue,
+} from 'recoil';
+import { getIsFirst, setIsFirst } from "./atom/atom";
+
 const isCurrentScreenInitialOne = (state) => {
   const route = state.routes[state.index];
   if (route.state) {
@@ -24,11 +33,15 @@ const isCurrentScreenInitialOne = (state) => {
   return state.index === 0;
 };
 
+
+
 export default function App() {
   const [isInitialScreen, setIsInitialScreen] = useState(true);
 
   const [loading, setLoading] = useState(true);
-  const [intro, setIntro] = useState(true);
+  const [intro, setIntro] = useState(getIsFirst().then((res) => {
+    setIntro(res)
+  }));
   const onFinish = () => setLoading(false);
 
   const [fontsLoaded] = Font.useFonts({
@@ -70,27 +83,30 @@ export default function App() {
 
   const done = () => {
     setIntro(false);
+    setIsFirst('notFirst')
   };
 
   return (
     <>
-      {intro ? (
-        <Intro onDone={done} />
-      ) : (
-        <ThemeProvider theme={darkMode ? darkTheme : lightTheme}>
-          {isInitialScreen && (
-            <DoubleTapToClose message="'뒤로' 버튼을 한번 더 누르시면 종료됩니다." />
-          )}
-          <NavigationContainer
-            onStateChange={(state) => {
-              setIsInitialScreen(isCurrentScreenInitialOne(state));
-            }}
-          >
-            <StatusBar />
-            <LoggedOutNav />
-          </NavigationContainer>
-        </ThemeProvider>
-      )}
+      <RecoilRoot>
+        {intro ? (
+          <Intro onDone={done} />
+        ) : (
+          <ThemeProvider theme={darkMode ? darkTheme : lightTheme}>
+            {isInitialScreen && (
+              <DoubleTapToClose message="'뒤로' 버튼을 한번 더 누르시면 종료됩니다." />
+            )}
+            <NavigationContainer
+              onStateChange={(state) => {
+                setIsInitialScreen(isCurrentScreenInitialOne(state));
+              }}
+            >
+              <StatusBar />
+              <LoggedOutNav />
+            </NavigationContainer>
+          </ThemeProvider>
+        )}
+      </RecoilRoot>
     </>
   );
 }
