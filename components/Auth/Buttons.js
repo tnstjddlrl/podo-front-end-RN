@@ -1,0 +1,53 @@
+import React from "react";
+import styled from "styled-components/native";
+import { colors } from "../../colors";
+import { fonts } from "../../fonts";
+import { RightArrowIcon } from "../Icons";
+
+const SNSBtn = styled.TouchableOpacity`
+  width: 100%;
+  height: 52px;
+  border: 1px solid ${colors.border};
+  border-radius: 12px;
+  margin-bottom: 8px;
+  padding: 14px 16px 14px 20px;
+  flex-direction: row;
+  justify-content: space-between;
+`;
+
+const BtnLeftWrapper = styled.View`
+  flex-direction: row;
+  align-items: center;
+`;
+
+const LogoImage = styled.Image`
+  margin-right: 12px;
+`;
+const BtnText = styled.Text`
+  font-size: 14px;
+  font-family: ${fonts.bold};
+`;
+
+export const FacebookBtn = ({ onPress }) => {
+  return (
+    <SNSBtn onPress={() => onPress && onPress()}>
+      <BtnLeftWrapper>
+        <LogoImage source={require("../../assets/ic_facebook.png")} />
+        <BtnText>페이스북으로 시작하기</BtnText>
+      </BtnLeftWrapper>
+      <RightArrowIcon />
+    </SNSBtn>
+  );
+};
+
+export const KakaoBtn = ({ onPress }) => {
+  return (
+    <SNSBtn onPress={() => onPress && onPress()}>
+      <BtnLeftWrapper>
+        <LogoImage source={require("../../assets/ic_kakao.png")} />
+        <BtnText>카카오로 시작하기</BtnText>
+      </BtnLeftWrapper>
+      <RightArrowIcon />
+    </SNSBtn>
+  );
+};
