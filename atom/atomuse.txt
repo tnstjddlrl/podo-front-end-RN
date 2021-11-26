@@ -1,0 +1,3 @@
+
+  const [atUserId, setAtUserId] = useRecoilState(AtomUserId)  //유저아이디
+  const [atUserToken, setAtUserToken] = useRecoilState(AtomUserToken) //유저 토큰
