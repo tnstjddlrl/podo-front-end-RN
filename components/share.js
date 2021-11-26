@@ -118,6 +118,7 @@ export const Input = ({
   fontSize,
   height,
   multiline,
+  onChangeText
 }) => {
   return (
     <InputA
@@ -131,6 +132,7 @@ export const Input = ({
       height={height}
       multiline={multiline}
       style={{ textAlignVertical: "top" }}
+      onChangeText={onChangeText}
     />
   );
 };
