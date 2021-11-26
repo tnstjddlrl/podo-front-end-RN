@@ -1,10 +1,12 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FlatList } from "react-native";
 import styled, { css } from "styled-components/native";
 import { colors } from "../../colors";
 import { DownArrowIcon } from "../../components/Icons";
 import NoPage from "../../components/NoPage";
 import { fonts } from "../../fonts";
+
+import axios from "axios";
 
 const ListItem = styled.TouchableOpacity`
   width: 100%;
@@ -80,6 +82,27 @@ const data = [
   },
 ];
 
+//테스트로 넘어온 값
+// {
+//   "error": false,
+//   "list": Array [
+//     Object {
+//       "category": "",
+//       "content": "공지사항 내용",
+//       "hit": "0",
+//       "img_name": "이미지 파일이름",
+//       "img_path": "이미지 파일 경로",
+//       "img_size": "이미지 파일 사이즈",
+//       "num": "4",
+//       "reg_date": "2021-11-19 22:10:38",
+//       "title": "공지사항 제목",
+//       "writer": "",
+//     },
+//   ],
+//   "msg": "success",
+//   "status": 200,
+// }
+
 const Notice = () => {
   const [clicked, setClicked] = useState([]);
 
@@ -90,6 +113,28 @@ const Notice = () => {
       setClicked(clicked.concat(data.filter((item) => item.id === num)));
     }
   };
+
+  function noticePostAxios(params) {
+    axios.post('https://softer104.cafe24.com/Open/Notice/List', {
+      limit: 3,
+      offset: 0,
+      w_name: 'num',
+      w_para: 4
+    }).then((res) => {
+      console.log(res.data);
+    }).catch((error) => {
+      if (error.response) {
+        console.log(error.response.data);
+        Alert.alert(error.response.data.error);
+      } else if (error.request) {
+        console.log(error.request);
+      }
+    })
+  }
+
+  useEffect(() => {
+    noticePostAxios()
+  }, [])
 
   const renderItem = ({ item }) => {
     return (
@@ -118,15 +163,15 @@ const Notice = () => {
     );
   };
   return (
-    <NoPage customText={"아직 공지사항이 없습니다!"} />
-    // <FlatList
-    //   style={{
-    //     backgroundColor: "#fff",
-    //   }}
-    //   data={data}
-    //   renderItem={renderItem}
-    //   keyExtractor={(item) => "" + item.id}
-    // />
+    // <NoPage customText={"아직 공지사항이 없습니다!"} />
+    <FlatList
+      style={{
+        backgroundColor: "#fff",
+      }}
+      data={data}
+      renderItem={renderItem}
+      keyExtractor={(item) => "" + item.id}
+    />
   );
 };
 

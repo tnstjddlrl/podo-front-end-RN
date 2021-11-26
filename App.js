@@ -17,12 +17,9 @@ import { randomName } from "./constants";
 
 import {
   RecoilRoot,
-  atom,
-  selector,
-  useRecoilState,
-  useRecoilValue,
 } from 'recoil';
-import { getIsFirst, setIsFirst } from "./atom/atom";
+
+import { AsyncgetIsFirst } from "./atom/atom";
 
 const isCurrentScreenInitialOne = (state) => {
   const route = state.routes[state.index];
@@ -39,7 +36,7 @@ export default function App() {
   const [isInitialScreen, setIsInitialScreen] = useState(true);
 
   const [loading, setLoading] = useState(true);
-  const [intro, setIntro] = useState(getIsFirst().then((res) => {
+  const [intro, setIntro] = useState(AsyncgetIsFirst().then((res) => {
     setIntro(res)
   }));
   const onFinish = () => setLoading(false);
