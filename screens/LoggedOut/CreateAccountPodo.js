@@ -10,6 +10,7 @@ import { Input } from "../../components/share";
 
 
 import axios from 'axios';
+
 import { fonts } from "../../fonts";
 
 const AgreeBox = styled.View`
@@ -44,25 +45,33 @@ const FormBoxText = styled.Text`
   margin-left: 4px;
 `;
 
-//휴대전화 인증 초안
-function PhoneAuthAxios(phone) {
-  axios.post('https://softer104.cafe24.com/Open/Auth/PhoneAuth', {
-    phone: phone,
-  }).then((res) => {
-    console.log(res.data);
-  }).catch((error) => {
-    if (error.response) {
-      console.log(error.response.data.error);
-      Alert.alert(error.response.data.error);
-    } else if (error.request) {
-      console.log(error.request);
-    }
-  })
 
-}
+const CreateAccountPodo = ({ Navigation }) => {
 
-const CreateAccountPodo = () => {
-
+  //휴대전화 인증 초안
+  function PhoneAuthAxios(phone) {
+    axios.post('https://softer104.cafe24.com/Open/Auth/PhoneAuth', {
+      type: 'email',
+      mb_email: 'test1@test.com',
+      mb_phone: '01022272013',
+      mb_password: 'asdf1234!',
+      mb_password_check: 'asdf1234!',
+      mb_agree_email: 'Y'
+    }).then((res) => {
+      console.log(res.data);
+      if (res.data.msg === 'success') {
+        console.log('회원가입 성공');
+        Navigation.navigate('test');
+      }
+    }).catch((error) => {
+      if (error.response) {
+        console.log(error.response.data.error);
+        Alert.alert(error.response.data.error);
+      } else if (error.request) {
+        console.log(error.request);
+      }
+    })
+  }
   const [mb_email, setMb_email] = useState('')
   const [mb_phone, setMb_phone] = useState('')
 
