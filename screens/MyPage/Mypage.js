@@ -178,7 +178,7 @@ const MyPage = ({ navigation }) => {
               <>
                 <PageTitleWrap>
                   <NameWrap>
-                    <Username>{name}님, </Username>
+                    <Username>{atUserId}님, </Username>
                     <WelcomeText>환영합니다.</WelcomeText>
                   </NameWrap>
                   <LogoutBtn onPress={() => navigation.navigate("Login")}>

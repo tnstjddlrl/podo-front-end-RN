@@ -116,12 +116,16 @@ const Notice = () => {
 
   function noticePostAxios(params) {
     axios.post('https://softer104.cafe24.com/Open/Notice/List', {
-      limit: 3,
+      limit: 10,
       offset: 0,
       w_name: 'num',
       w_para: 4
     }).then((res) => {
       console.log(res.data);
+      if (res.data.msg === 'success') {
+
+      }
+
     }).catch((error) => {
       if (error.response) {
         console.log(error.response.data);
@@ -137,9 +141,19 @@ const Notice = () => {
   }, [])
 
   const renderItem = ({ item }) => {
+    // const [isClick, setIsclick] = useState(false)
+    var isClick = false
+    function ClickedListItem(params) {
+      if (isClick) {
+        isClick = false
+      } else {
+        isClick = true
+      }
+    }
+
     return (
       <>
-        <ListItem onPress={() => onPressClicked(item.id)}>
+        <ListItem onPress={() => ClickedListItem()}>
           <ListTextWrap>
             <ListText title>{item.title}</ListText>
             <ListText date>{item.date}</ListText>
@@ -154,11 +168,17 @@ const Notice = () => {
             <DownArrowIcon />
           </ListIcon>
         </ListItem>
-        {clicked.filter((list) => list.id === item.id).length !== 0 && (
+        {isClick && (
           <ListContent>
             <ListContentText>{item.description}</ListContentText>
           </ListContent>
         )}
+
+        {/* {clicked.filter((list) => list.id === item.id).length !== 0 && (
+          <ListContent>
+            <ListContentText>{item.description}</ListContentText>
+          </ListContent>
+        )} */}
       </>
     );
   };
