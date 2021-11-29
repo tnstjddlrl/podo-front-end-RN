@@ -49,6 +49,23 @@ const LoginPodo = ({ navigation }) => {
       mb_password: pwd
     }).then((res) => {
       console.log(res.data);
+      if (res.data.msg == 'success') {
+        setAtUserId(mb_email)
+        setAtUserToken(res.data.token)
+
+        try {
+          AsyncsetUserId(mb_email)
+          AsyncsetUserToken(res.data.token)
+          console.log('어싱크 완료!')
+        } catch (error) {
+          console.error('어싱크 실패!');
+        } finally {
+          navigation.navigate('MyPageNav')
+        }
+
+      } else {
+
+      }
     }).catch((error) => {
       if (error.response) {
         console.log(error.response.data);
