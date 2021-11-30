@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components/native";
 import { colors } from "../../colors";
 import LayOut from "../../components/LayOut";
@@ -48,7 +48,32 @@ const FormBoxText = styled.Text`
 
 const CreateAccountPodo = ({ Navigation }) => {
 
-  //휴대전화 인증 초안
+  useEffect(() => {
+    policyLoadAxios()
+  }, [])
+
+  const [policyText, setPolicyText] = useState('')
+  const [termText, setTermText] = useState('')
+
+  function policyLoadAxios(params) {
+    axios.post('https://softer104.cafe24.com/Open/Term/Call', {}).then((res) => {
+      if (res.data.msg == 'success') {
+        console.log(res.data[0]);
+        setPolicyText(res.data[0].privacy_policy)
+        setTermText(res.data[0].terms)
+      }
+    }).catch((error) => {
+      if (error.response) {
+        console.log(error.response.data.error);
+        Alert.alert(error.response.data.error);
+      } else if (error.request) {
+        console.log(error.request);
+      }
+    })
+  }
+
+
+  //회원가입 초안
   function PhoneAuthAxios(phone) {
     axios.post('https://softer104.cafe24.com/Open/Auth/PhoneAuth', {
       type: 'email',
@@ -176,8 +201,8 @@ const CreateAccountPodo = ({ Navigation }) => {
           isSelected={isSelected}
         />
       </AgreeBox>
-      {isTerm && <TextPopup onPress={onClickConfirm} />}
-      {isPolicy && <TextPopup onPress={onClickConfirm} />}
+      {isTerm && <TextPopup onPress={onClickConfirm} txt={termText} />}
+      {isPolicy && <TextPopup onPress={onClickConfirm} txt={policyText} />}
     </LayOut>
   );
 };
