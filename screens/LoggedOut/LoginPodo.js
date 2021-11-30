@@ -36,12 +36,6 @@ const LoginPodo = ({ navigation }) => {
   const [atUserToken, setAtUserToken] = useRecoilState(AtomUserToken)
 
 
-  // 어싱크에 유저아이디랑 토큰 값 넣어놔야함. 지금 테스트 로그인이 안됨
-  // AsyncsetUserId()
-  // AsyncsetUserToken()
-
-
-
   // 로그인 post 초안!
   function EmailLoginPost(email, pwd) {
     axios.post('https://softer104.cafe24.com/Open/Login', {

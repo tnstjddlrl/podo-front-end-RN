@@ -66,11 +66,11 @@ const RenderItem = ({ item, setCategory }) => {
 
   if (item.code.split('')[2] === '0') {
     // console.log(item.code.split('')[3])
-    console.log(slider[Number(item.code.split('')[3])])
+    // console.log(slider[Number(item.code.split('')[3])])
     img = slider[Number(item.code.split('')[3])]
   } else {
     // console.log(item.code.split('')[2] + item.code.split('')[3])
-    console.log(slider[Number(item.code.split('')[2] + item.code.split('')[3])])
+    // console.log(slider[Number(item.code.split('')[2] + item.code.split('')[3])])
     img = slider[Number(item.code.split('')[2] + item.code.split('')[3])]
   }
 
