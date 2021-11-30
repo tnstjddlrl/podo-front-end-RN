@@ -8,6 +8,7 @@ import { screenSize } from "../../constants";
 import dummyData from "../../assets/dummyData";
 import axios from 'axios';
 import { Alert } from "react-native";
+import ItemMediumTest from "../../components/ItemMedium";
 
 const FlatList = styled.FlatList`
   background-color: #fff;
@@ -23,17 +24,15 @@ const Home = ({ navigation }) => {
   const [axiosArray, setAxiosArray] = useState([])
 
   const renderItem = ({ item }) => {
-    return <ItemMedium {...item} navigation={navigation} />;
+    return <ItemMediumTest {...item} navigation={navigation} />;
   };
 
   function ProductGetAxios(params) {
-    axios.get('https://softer104.cafe24.com/Open/Coupang/Product?limit=30&kinds=bestcategories&category_id=' + productCode, {
+    axios.get('https://softer104.cafe24.com/Open/Coupang/Product?limit=100&kinds=bestcategories&category_id=' + productCode, {
     }).then((res) => {
       // console.log(res.data);
       if (res.data.msg === 'success') {
-
         setAxiosArray(res.data.data)
-
       }
     }).catch((error) => {
       if (error.response) {
@@ -47,18 +46,18 @@ const Home = ({ navigation }) => {
 
   useEffect(() => {
     ProductGetAxios()
-  }, [])
+  }, [productCode])
 
   const limit = 10;
 
   useEffect(() => {
-    setData(dummyData[category].slice(0, limit));
+    setData(axiosArray.slice(0, limit));
     setOffset(limit);
-  }, [category]);
+  }, [category, axiosArray]);
 
   const loadMoreData = () => {
     const newData = data.concat(
-      dummyData[category].slice(offset, offset + limit)
+      axiosArray.slice(offset, offset + limit)
     );
     setData(newData);
     setOffset(offset + limit);
@@ -74,7 +73,7 @@ const Home = ({ navigation }) => {
               data={MainBannerData}
               pageWidth={screenSize.width}
             />
-            <CategoryBtnBox setCategory={setCategory} />
+            <CategoryBtnBox setCategory={setProductCode} />
           </>
         }
         ListHeaderComponentStyle={{
@@ -82,7 +81,7 @@ const Home = ({ navigation }) => {
         }}
         data={data}
         showsVerticalScrollIndicator={true}
-        keyExtractor={(item) => "" + item.href}
+        keyExtractor={(item) => "" + item.productUrl}
         renderItem={renderItem}
         numColumns={2}
         onEndReachedThreshold={0.95}
