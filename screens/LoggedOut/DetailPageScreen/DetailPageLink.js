@@ -54,8 +54,10 @@ const FooterText = styled.Text`
 `;
 
 const DetailPageLink = ({ route, navigation }) => {
-  const { href, reward } = route.params;
+  const { productUrl } = route.params;
   const [loading, setLoading] = useState(true);
+
+  console.log(productUrl)
 
   return (
     <>
@@ -67,7 +69,7 @@ const DetailPageLink = ({ route, navigation }) => {
         </CloseIconWrap>
       </WebViewTopper>
       <WebView
-        source={{ uri: href }}
+        source={{ uri: productUrl }}
         originWhitelist={["https://*", "http://*"]}
         onLoadEnd={() => {
           console.log('로드 end')
@@ -75,12 +77,6 @@ const DetailPageLink = ({ route, navigation }) => {
         }}
       />
 
-      {/* {!loading && (
-        <>
-          
-          
-        </>
-      )}*/}
 
       <Modal visible={loading}>
         <LayOut backgroundColor={"#fff"}>
