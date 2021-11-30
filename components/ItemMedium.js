@@ -103,10 +103,10 @@ const ItemMedium = ({
   price,
   reward,
   title,
-  navigation,
   isFavorite,
   userLike,
   freeShipping,
+  navigation,
 }) => {
   const goDetailPage = () =>
     navigation.navigate("DetailPageLink", { href, reward });
@@ -150,4 +150,57 @@ const ItemMedium = ({
   );
 };
 
-export default ItemMedium;
+const ItemMediumTest = ({
+  productUrl,
+  productImage,
+  productPrice,
+  productName,
+  isFavorite,
+  like,
+  isFreeShipping,
+  navigation,
+  rank,
+}) => {
+  const goDetailPage = () =>
+    navigation.navigate("DetailPageLink", { productUrl });
+  const [isLike, setIsLike] = useState(isFavorite || like != 0);
+  const onClickLike = () => {
+    setIsLike(!isLike);
+  };
+
+  return (
+    <ItemContainer onPress={() => goDetailPage()}>
+      <ImageWrapper>
+        <ItemImage source={{ uri: productImage }} />
+        {isFreeShipping && (
+          <FreeShippingBtn>
+            <FreeBtnText>무료배송</FreeBtnText>
+          </FreeShippingBtn>
+        )}
+        <HeartBtn onPress={() => onClickLike()}>
+          {isLike ? (
+            <HeartBtnBackground>
+              <FavoriteFilledSmallIcon />
+            </HeartBtnBackground>
+          ) : (
+            <HeartBtnBackground>
+              <FavoriteSmallIcon />
+            </HeartBtnBackground>
+          )}
+        </HeartBtn>
+      </ImageWrapper>
+      <InfoWrapper>
+        <InfoTextRow>
+          <InfoText price>{productPrice.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}</InfoText>
+          {/* <InfoText rewardPercent>{reward}</InfoText> */}
+        </InfoTextRow>
+        <InfoText title numberOfLines={2}>
+          {productName}
+        </InfoText>
+        <InfoText count>랭킹 {rank}위</InfoText>
+      </InfoWrapper>
+    </ItemContainer>
+  );
+};
+
+export default ItemMediumTest;
