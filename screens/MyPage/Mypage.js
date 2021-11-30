@@ -134,18 +134,18 @@ const menuList = [
 
 const MyPage = ({ navigation }) => {
   const [loginPopOn, setLoginPopOn] = useState(false);
-  const [loginStatus, setLoginStatus] = useState(true);
+  const [loginStatus, setLoginStatus] = useState(atUserId == '');
 
   const [atUserId, setAtUserId] = useRecoilState(AtomUserId)  //유저아이디
   const [atUserToken, setAtUserToken] = useRecoilState(AtomUserToken) //유저 토큰
 
-  // useEffect(() => {
-  //   if (atUserId != 'guest' && atUserToken != 'guestToken') {
-  //     setLoginStatus(false)
-  //   } else {
-  //     setLoginStatus(true)
-  //   }
-  // }, [])
+  useEffect(() => {
+    if (atUserId == '') {
+      setLoginStatus(false)
+    } else {
+      setLoginStatus(true)
+    }
+  }, [atUserId])
 
   //현재 랜덤으로 이름 불러오고 있음. 이부분 변경해야함
   const [name, setName] = useState("게스트");
@@ -178,7 +178,7 @@ const MyPage = ({ navigation }) => {
               <>
                 <PageTitleWrap>
                   <NameWrap>
-                    <Username>{atUserId}님, </Username>
+                    <Username>{atUserId.split('@')[0]}님, </Username>
                     <WelcomeText>환영합니다.</WelcomeText>
                   </NameWrap>
                   <LogoutBtn onPress={() => navigation.navigate("Login")}>
