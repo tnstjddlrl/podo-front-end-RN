@@ -72,6 +72,7 @@ const CreateAccountPodo = ({ Navigation }) => {
       }
     })
   }
+
   const [mb_email, setMb_email] = useState('')
   const [mb_phone, setMb_phone] = useState('')
 

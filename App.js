@@ -19,7 +19,7 @@ import {
   RecoilRoot,
 } from 'recoil';
 
-import { AsyncgetIsFirst } from "./atom/atom";
+import { AsyncgetIsFirst, AsyncsetIsFirst } from "./atom/atom";
 
 const isCurrentScreenInitialOne = (state) => {
   const route = state.routes[state.index];
@@ -80,7 +80,7 @@ export default function App() {
 
   const done = () => {
     setIntro(false);
-    setIsFirst('notFirst')
+    AsyncsetIsFirst('notFirst')
   };
 
   return (
