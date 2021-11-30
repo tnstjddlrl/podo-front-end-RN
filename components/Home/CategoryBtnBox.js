@@ -34,14 +34,45 @@ const Text = styled.Text`
   color: ${colors.gray};
 `;
 
+const slider = {
+  1: require('../../assets/categoryIcons/1001.png'),
+  2: require('../../assets/categoryIcons/1002.png'),
+  10: require('../../assets/categoryIcons/1010.png'),
+  11: require('../../assets/categoryIcons/1011.png'),
+  12: require('../../assets/categoryIcons/1012.png'),
+  13: require('../../assets/categoryIcons/1013.png'),
+  14: require('../../assets/categoryIcons/1014.png'),
+  15: require('../../assets/categoryIcons/1015.png'),
+  16: require('../../assets/categoryIcons/1016.png'),
+  17: require('../../assets/categoryIcons/1017.png'),
+  18: require('../../assets/categoryIcons/1018.png'),
+  19: require('../../assets/categoryIcons/1019.png'),
+  20: require('../../assets/categoryIcons/1020.png'),
+  21: require('../../assets/categoryIcons/1021.png'),
+  24: require('../../assets/categoryIcons/1024.png'),
+  25: require('../../assets/categoryIcons/1025.png'),
+  26: require('../../assets/categoryIcons/1026.png'),
+  29: require('../../assets/categoryIcons/1029.png'),
+  30: require('../../assets/categoryIcons/1030.png')
+}
+
+
+
 const RenderItem = ({ item, setCategory }) => {
   const onPressSetState = () => {
-    // setCategory(item.code);
-    Alert.alert(item.code)
+    setCategory(item.code);
   };
-  // console.log(item.code)
-  var dd = '../../assets/categoryIcons/' + '1030' + '.png'
-  const img = require(dd)
+  var img = ''
+
+  if (item.code.split('')[2] === '0') {
+    // console.log(item.code.split('')[3])
+    console.log(slider[Number(item.code.split('')[3])])
+    img = slider[Number(item.code.split('')[3])]
+  } else {
+    // console.log(item.code.split('')[2] + item.code.split('')[3])
+    console.log(slider[Number(item.code.split('')[2] + item.code.split('')[3])])
+    img = slider[Number(item.code.split('')[2] + item.code.split('')[3])]
+  }
 
   return (
     <Container onPress={onPressSetState}>
@@ -61,7 +92,7 @@ const CategoryBtnBox = ({ setCategory }) => {
     axios.get('https://softer104.cafe24.com/Open/Coupang/Category', {
       //noparam
     }).then((res) => {
-      console.log(res.data);
+      // console.log(res.data);
       if (res.data.msg === 'success') {
         console.log('불러오기 성공')
         var array = []
@@ -70,7 +101,7 @@ const CategoryBtnBox = ({ setCategory }) => {
           array.push(Object.values(res.data)[i])
         }
 
-        console.log(array)
+        // console.log(array)
         setCategoryArray(array)
       }
     }).catch((error) => {
