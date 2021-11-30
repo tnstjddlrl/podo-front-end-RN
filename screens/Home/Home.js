@@ -6,6 +6,8 @@ import { MainBannerData } from "../../components/Home/SampleData";
 import ItemMedium from "../../components/ItemMedium";
 import { screenSize } from "../../constants";
 import dummyData from "../../assets/dummyData";
+import axios from 'axios';
+import { Alert } from "react-native";
 
 const FlatList = styled.FlatList`
   background-color: #fff;
@@ -13,12 +15,39 @@ const FlatList = styled.FlatList`
 
 const Home = ({ navigation }) => {
   const [category, setCategory] = useState("all");
+
+  const [productCode, setProductCode] = useState('1001')
   const [data, setData] = useState([]);
   const [offset, setOffset] = useState(0);
+
+  const [axiosArray, setAxiosArray] = useState([])
 
   const renderItem = ({ item }) => {
     return <ItemMedium {...item} navigation={navigation} />;
   };
+
+  function ProductGetAxios(params) {
+    axios.get('https://softer104.cafe24.com/Open/Coupang/Product?limit=30&kinds=bestcategories&category_id=' + productCode, {
+    }).then((res) => {
+      // console.log(res.data);
+      if (res.data.msg === 'success') {
+
+        setAxiosArray(res.data.data)
+
+      }
+    }).catch((error) => {
+      if (error.response) {
+        console.log(error.response.data);
+        // Alert.alert(error.response.data.error);
+      } else if (error.request) {
+        console.log(error.request);
+      }
+    })
+  }
+
+  useEffect(() => {
+    ProductGetAxios()
+  }, [])
 
   const limit = 10;
 

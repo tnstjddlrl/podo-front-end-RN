@@ -8,6 +8,7 @@ import { screenSize } from "../../../constants";
 import { fonts } from "../../../fonts";
 import LottieView from "lottie-react-native";
 import { WebView } from "react-native-webview";
+import { Modal } from "react-native";
 
 const RewardIndicatorWrap = styled.View`
   width: ${screenSize.width + "px"};
@@ -55,21 +56,39 @@ const FooterText = styled.Text`
 const DetailPageLink = ({ route, navigation }) => {
   const { href, reward } = route.params;
   const [loading, setLoading] = useState(true);
-  useEffect(() => {
-    setTimeout(() => {
-      setLoading(false);
-    }, 1500);
-  });
+
   return (
     <>
       <SafeAreaView style={{ backgroundColor: "#fff" }} />
-      {loading && (
+
+      <WebViewTopper>
+        <CloseIconWrap onPress={() => navigation.goBack()}>
+          <CloseIcon />
+        </CloseIconWrap>
+      </WebViewTopper>
+      <WebView
+        source={{ uri: href }}
+        originWhitelist={["https://*", "http://*"]}
+        onLoadEnd={() => {
+          console.log('로드 end')
+          setLoading(false)
+        }}
+      />
+
+      {/* {!loading && (
+        <>
+          
+          
+        </>
+      )}*/}
+
+      <Modal visible={loading}>
         <LayOut backgroundColor={"#fff"}>
           <RewardIndicatorWrap>
-            <RewardIndicator>
-              <RewardIndicatorText>리워드 {reward}</RewardIndicatorText>
-            </RewardIndicator>
-            <CloseIconWrap onPress={() => navigation.goBack()}>
+            <CloseIconWrap onPress={() => {
+              navigation.goBack()
+              console.log('클릭')
+            }}>
               <CloseIcon />
             </CloseIconWrap>
           </RewardIndicatorWrap>
@@ -83,23 +102,7 @@ const DetailPageLink = ({ route, navigation }) => {
             책임은 각 판매업체에 있습니다 .
           </FooterText>
         </LayOut>
-      )}
-      {!loading && (
-        <>
-          <WebViewTopper>
-            <RewardIndicator>
-              <RewardIndicatorText>리워드 {reward}</RewardIndicatorText>
-            </RewardIndicator>
-            <CloseIconWrap onPress={() => navigation.goBack()}>
-              <CloseIcon />
-            </CloseIconWrap>
-          </WebViewTopper>
-          <WebView
-            source={{ uri: href }}
-            originWhitelist={["https://*", "http://*"]}
-          />
-        </>
-      )}
+      </Modal>
     </>
   );
 };

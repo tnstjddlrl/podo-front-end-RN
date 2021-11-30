@@ -39,7 +39,7 @@ const RenderItem = ({ item, setCategory }) => {
     // setCategory(item.code);
     Alert.alert(item.code)
   };
-  console.log(item.code)
+  // console.log(item.code)
   var dd = '../../assets/categoryIcons/' + '1030' + '.png'
   const img = require(dd)
 
