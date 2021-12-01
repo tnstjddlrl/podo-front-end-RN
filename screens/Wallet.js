@@ -1,3 +1,4 @@
+import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { FlatList, View } from "react-native";
 import styled, { css } from "styled-components/native";
@@ -122,6 +123,15 @@ const Wallet = ({ navigation }) => {
   useEffect(() => {
     getData("randomName").then((name) => setName(name));
   }, []);
+
+  function MyInformLoadAxios(params) {
+    axios.get('https://softer104.cafe24.com/V1/Member/@me', {
+      headers: { Token }
+    })
+  }
+
+
+
   const renderItem = ({ item }) => {
     return (
       <View style={{ paddingHorizontal: 24 }}>
