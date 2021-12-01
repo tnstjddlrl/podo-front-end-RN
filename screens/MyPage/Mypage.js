@@ -134,13 +134,13 @@ const menuList = [
 
 const MyPage = ({ navigation }) => {
   const [loginPopOn, setLoginPopOn] = useState(false);
-  const [loginStatus, setLoginStatus] = useState(atUserId == '');
+  const [loginStatus, setLoginStatus] = useState(false);
 
   const [atUserId, setAtUserId] = useRecoilState(AtomUserId)  //유저아이디
   const [atUserToken, setAtUserToken] = useRecoilState(AtomUserToken) //유저 토큰
 
   useEffect(() => {
-    if (atUserId == '') {
+    if (atUserId == '' || atUserId == null) {
       setLoginStatus(false)
     } else {
       setLoginStatus(true)
