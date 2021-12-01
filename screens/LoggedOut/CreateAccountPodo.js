@@ -3,7 +3,7 @@ import styled from "styled-components/native";
 import { colors } from "../../colors";
 import LayOut from "../../components/LayOut";
 import CheckRow from "../../components/Auth/CheckRow";
-import { Alert, Keyboard, TouchableOpacity, View } from "react-native";
+import { Alert, Keyboard, SafeAreaView, Text, TextInput, TouchableOpacity, View } from "react-native";
 import { TextPopup } from "../../components/Auth/Terms";
 import FormBox from "../../components/Auth/FormBox";
 import { Input } from "../../components/share";
@@ -12,6 +12,8 @@ import { Input } from "../../components/share";
 import axios from 'axios';
 
 import { fonts } from "../../fonts";
+import { ScrollView } from "react-native-gesture-handler";
+import { Center } from "native-base";
 
 const AgreeBox = styled.View`
   width: 100%;
@@ -54,6 +56,8 @@ const CreateAccountPodo = ({ Navigation }) => {
 
   const [policyText, setPolicyText] = useState('')
   const [termText, setTermText] = useState('')
+
+  const [authClicked, setAuthClicked] = useState(false)
 
   function policyLoadAxios(params) {
     axios.post('https://softer104.cafe24.com/Open/Term/Call', {}).then((res) => {
@@ -142,69 +146,144 @@ const CreateAccountPodo = ({ Navigation }) => {
   };
 
   return (
-    <LayOut paddingTop={24}>
-      <FormBox
-        title="이메일"
-        inputPlaceholder="이메일"
-        caption="이메일 주소를 입력해주세요."
-        onChangeText={setMb_email}
-      />
-
-      {/* FormBox 를 나눈것! */}
-      <Title>휴대전화 번호</Title>
-      <Input placeholder={`"-" 없이 숫자만 입력해주세요.`} width={"100%"} onChangeText={setMb_phone}></Input>
-      <FormBoxText>휴대전화 번호를 입력해주세요.</FormBoxText>
-
-      {/* 간격 조정 */}
-      <View style={{ marginBottom: 10 }}></View>
-
-      <AgreeBox>
-        <CheckRow
-          name="all"
-          text="PODO 가입 전체 약관에 동의"
-          bold={true}
-          onClickSelect={onClickSelect}
-          isSelected={isSelected}
+    <SafeAreaView style={{ backgroundColor: 'white', paddingTop: 20, paddingLeft: 20, paddingRight: 20, paddingBottom: 10, flex: 1 }} >
+      <ScrollView showsVerticalScrollIndicator={false} style={{ flex: 1 }}>
+        <TextInputProp
+          width={'70%'}
+          title="이메일"
+          placeholder="이메일"
+          bottomtxt="이메일 주소를 입력해주세요."
+          onChangeText={setMb_email}
+          onPress={() => {
+            console.log('클릭됨')
+            setAuthClicked(true)
+          }}
+          onPresstxt={'인증하기'}
         />
-        <AgreeWrapper>
+
+        <View style={{ marginBottom: 20 }}></View>
+
+        {authClicked &&
+          <>
+            <TextInputProp
+              title={'인증번호'}
+              placeholder={`인증번호를 입력해주세요`}
+              width={"70%"}
+              onChangeText={setMb_phone}
+              onPress={() => { console.log('클릭됨'); }}
+              onPresstxt={'인증'} />
+            <View style={{ marginBottom: 20 }}></View>
+          </>
+        }
+
+        {/* FormBox 를 나눈것! */}
+        <TextInputProp
+          width={'100%'}
+          title={'휴대전화 번호'}
+          placeholder={`"-" 없이 숫자만 입력해주세요.`}
+          bottomtxt={'휴대전화 번호를 입력해주세요.'}
+          onChangeText={setMb_phone} />
+
+        {/* 간격 조정 */}
+        <View style={{ marginBottom: 20 }}></View>
+
+        {/* FormBox 를 나눈것! */}
+        <TextInputProp
+          width={'100%'}
+          title={'비밀번호'}
+          placeholder={'비밀번호를 입력해주세요.'} />
+
+        {/* 간격 조정 */}
+        <View style={{ marginBottom: 20 }}></View>
+
+        {/* FormBox 를 나눈것! */}
+        <TextInputProp
+          width={'100%'}
+          title={'비밀번호 확인'}
+          placeholder={'비밀번호를 확인해주세요.'} />
+
+        {/* 간격 조정 */}
+        <View style={{ marginBottom: 20 }}></View>
+
+        <AgreeBox>
           <CheckRow
-            name="terms"
-            text="서비스 이용약관 (필수)"
+            name="all"
+            text="PODO 가입 전체 약관에 동의"
+            bold={true}
             onClickSelect={onClickSelect}
             isSelected={isSelected}
           />
-          <TouchableOpacity onPress={() => onClickTerm()}>
-            <Bio>내용</Bio>
-          </TouchableOpacity>
-        </AgreeWrapper>
-        <AgreeWrapper>
+          <AgreeWrapper>
+            <CheckRow
+              name="terms"
+              text="서비스 이용약관 (필수)"
+              onClickSelect={onClickSelect}
+              isSelected={isSelected}
+            />
+            <TouchableOpacity onPress={() => onClickTerm()}>
+              <Bio>내용</Bio>
+            </TouchableOpacity>
+          </AgreeWrapper>
+          <AgreeWrapper>
+            <CheckRow
+              name="policy"
+              text="개인정보 취급방침 (필수)"
+              onClickSelect={onClickSelect}
+              isSelected={isSelected}
+            />
+            <TouchableOpacity onPress={() => onClickPolicy()}>
+              <Bio>내용</Bio>
+            </TouchableOpacity>
+          </AgreeWrapper>
           <CheckRow
-            name="policy"
-            text="개인정보 취급방침 (필수)"
+            name="age"
+            text="만 14세 이상 여부 확인 (필수)"
             onClickSelect={onClickSelect}
             isSelected={isSelected}
           />
-          <TouchableOpacity onPress={() => onClickPolicy()}>
-            <Bio>내용</Bio>
-          </TouchableOpacity>
-        </AgreeWrapper>
-        <CheckRow
-          name="age"
-          text="만 14세 이상 여부 확인 (필수)"
-          onClickSelect={onClickSelect}
-          isSelected={isSelected}
-        />
-        <CheckRow
-          name="email"
-          text="이메일 SMS수신 (선택)"
-          onClickSelect={onClickSelect}
-          isSelected={isSelected}
-        />
-      </AgreeBox>
-      {isTerm && <TextPopup onPress={onClickConfirm} txt={termText} />}
-      {isPolicy && <TextPopup onPress={onClickConfirm} txt={policyText} />}
-    </LayOut>
+          <CheckRow
+            name="email"
+            text="이메일 SMS수신 (선택)"
+            onClickSelect={onClickSelect}
+            isSelected={isSelected}
+          />
+        </AgreeBox>
+        {isTerm && <TextPopup onPress={onClickConfirm} txt={termText} />}
+        {isPolicy && <TextPopup onPress={onClickConfirm} txt={policyText} />}
+
+      </ScrollView>
+      <View style={{ width: '100%', height: 52, borderRadius: 12, backgroundColor: '#553AED', marginTop: 10, alignItems: "center", justifyContent: "center" }}>
+        <Text style={{ color: 'white', fontFamily: fonts.bold, fontSize: 16 }}>PODO 신규 가입하기</Text>
+      </View>
+    </SafeAreaView>
   );
 };
+
+
+function TextInputProp({ title, placeholder, bottomtxt, onChangeText, width, onPress, onPresstxt }) {
+
+  const [isFocus, setIsFocus] = useState(false)
+
+  return (
+    <View>
+      {title && <Title>{title}</Title>}
+      <View style={{ width: onPress ? '100%' : width, height: 48, flexDirection: 'row', alignItems: 'center' }}>
+        <View style={{ flex: 1, height: 48, borderRadius: 10, borderWidth: 1, borderColor: isFocus ? '#553AED' : '#DAE3EF', }}>
+          <TextInput style={{ height: '100%', marginLeft: 13 }} placeholder={`${placeholder}`} onChangeText={onChangeText} onFocus={() => { setIsFocus(true) }} onBlur={() => { setIsFocus(false) }} />
+
+        </View>
+
+        {onPress &&
+          <TouchableOpacity onPress={onPress}>
+            <View style={{ borderRadius: 12, backgroundColor: '#553AED', width: 84, height: 48, marginLeft: 10, alignItems: "center", justifyContent: "center" }}>
+              <Text style={{ color: 'white', fontSize: 14, fontFamily: fonts.bold }}>{onPresstxt}</Text>
+            </View>
+          </TouchableOpacity>
+        }
+      </View>
+      {bottomtxt && <FormBoxText>{bottomtxt}</FormBoxText>}
+    </View>
+  )
+}
 
 export default CreateAccountPodo;
