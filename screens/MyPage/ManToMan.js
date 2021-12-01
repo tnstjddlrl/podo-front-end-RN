@@ -1,5 +1,5 @@
 // import { Picker } from "@react-native-picker/picker";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FlatList, StyleSheet, Text, View } from "react-native";
 import styled, { css } from "styled-components/native";
 import { colors } from "../../colors";
@@ -16,6 +16,8 @@ import { fonts } from "../../fonts";
 import RNPickerSelect from "react-native-picker-select";
 import NoPage from "../../components/NoPage";
 import LayOut from "../../components/LayOut";
+
+import axios from 'axios';
 
 const MainContainer = styled.View`
   flex: 1;
@@ -247,6 +249,33 @@ const ManToMan = () => {
 
   const [requestType, setRequestType] = useState();
   const [sendOn, setSendOn] = useState(false);
+
+  function HistoryLoadAxios(params) {
+    axios.get('https://softer104.cafe24.com/Open/Coupang/Brands', {
+    }).then((res) => {
+      console.log(res.data);
+      if (res.data.msg === 'success') {
+        // var array = []
+
+        // for (var i = 0; i < Object.keys(res.data).length - 3; i++) {
+        //   array.push(Object.values(res.data)[i])
+        // }
+
+        // setBrandArray(array)
+      }
+    }).catch((error) => {
+      if (error.response) {
+        console.log(error.response.data);
+        // Alert.alert(error.response.data.error);
+      } else if (error.request) {
+        console.log(error.request);
+      }
+    })
+  }
+
+  useEffect(() => {
+    HistoryLoadAxios()
+  }, [])
 
   const onClickSelect = (name) => {
     setIsFocused({

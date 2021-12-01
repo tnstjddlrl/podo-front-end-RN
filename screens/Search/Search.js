@@ -44,7 +44,7 @@ const Search = ({ navigation }) => {
   }, [isFocused]);
 
   const renderItem = ({ item }) => {
-    return <ItemMedium {...item} navigation={navigation} />;
+    // return <ItemMedium {...item} navigation={navigation} />;
   };
 
   return (

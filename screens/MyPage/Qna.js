@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import axios from "axios";
+import React, { useEffect, useState } from "react";
 import { FlatList } from "react-native";
 import styled, { css } from "styled-components/native";
 import { colors } from "../../colors";
@@ -132,6 +133,37 @@ const Qna = () => {
 
   const [clicked, setClicked] = useState([]);
 
+  function HistoryLoadAxios(params) {
+    axios.get('https://softer104.cafe24.com/Open/Faq/List', {
+      limit: 5,
+      offset: 0,
+      w_name: 'num',
+      w_para: 2
+    }).then((res) => {
+      console.log(res.data);
+      if (res.data.msg === 'success') {
+        // var array = []
+
+        // for (var i = 0; i < Object.keys(res.data).length - 3; i++) {
+        //   array.push(Object.values(res.data)[i])
+        // }
+
+        // setBrandArray(array)
+      }
+    }).catch((error) => {
+      if (error.response) {
+        console.log(error.response.data);
+        // Alert.alert(error.response.data.error);
+      } else if (error.request) {
+        console.log(error.request);
+      }
+    })
+  }
+
+  useEffect(() => {
+    HistoryLoadAxios()
+  }, [])
+
   const onPressClicked = (num) => {
     if (clicked.filter((item) => item.id === num).length !== 0) {
       setClicked(clicked.filter((item) => item.id !== num));
@@ -185,6 +217,8 @@ const Qna = () => {
       </>
     );
   };
+
+
   return (
     <LayOut backgroundColor={"#fff"} horizontalZero={true}>
       <TabBox>
