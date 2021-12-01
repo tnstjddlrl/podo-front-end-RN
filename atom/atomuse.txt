@@ -1,3 +1,6 @@
 
   const [atUserId, setAtUserId] = useRecoilState(AtomUserId)  //유저아이디
   const [atUserToken, setAtUserToken] = useRecoilState(AtomUserToken) //유저 토큰
+
+
+  const [atCategoryArray,setAtCategoryArray] = useRecoilState(AtomCategoryArray) //카테고리 아톰 어레이

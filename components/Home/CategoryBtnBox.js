@@ -6,6 +6,8 @@ import { SearchResultTabList } from "./SampleData";
 
 import axios from 'axios';
 import { Alert, Image } from "react-native";
+import { useRecoilState } from "recoil";
+import { AtomCategoryArray } from "../../atom/atom";
 
 
 const FlatList = styled.FlatList`
@@ -86,7 +88,7 @@ const RenderItem = ({ item, setCategory }) => {
 
 const CategoryBtnBox = ({ setCategory }) => {
   const [categoryArray, setCategoryArray] = useState([])
-
+  const [atCategoryArray, setAtCategoryArray] = useRecoilState(AtomCategoryArray)
 
   function CategoryGetAxios(params) {
     axios.get('https://softer104.cafe24.com/Open/Coupang/Category', {
@@ -101,8 +103,10 @@ const CategoryBtnBox = ({ setCategory }) => {
           array.push(Object.values(res.data)[i])
         }
 
+
         // console.log(array)
         setCategoryArray(array)
+        setAtCategoryArray(array)
       }
     }).catch((error) => {
       if (error.response) {

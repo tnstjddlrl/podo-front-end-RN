@@ -95,3 +95,9 @@ export const AtomUserToken = atom({
     default: AsyncgetUserToken(),
 });
 ///////////////////////////////////////////////////////////////////
+
+//카테고리 /////////////////////////////////////////////////////////
+export const AtomCategoryArray = atom({
+    key: 'AtomCategoryArray',
+    default: [],
+});
