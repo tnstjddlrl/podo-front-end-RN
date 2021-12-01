@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useRecoilState } from "recoil";
 import styled, { css } from "styled-components/native";
 import { AtomCategoryArray } from "../atom/atom";
@@ -7,6 +7,8 @@ import { SearchResultTabList } from "../components/Home/SampleData";
 import LayOut from "../components/LayOut";
 import { screenSize } from "../constants";
 import { fonts } from "../fonts";
+
+import axios from 'axios';
 
 const Container = styled.ScrollView`
   flex: 1;
@@ -56,8 +58,36 @@ const MenuItemText = styled.Text`
 const eventMenuList = ["골드박스", "기획전", "이벤트/쿠폰", "C.에비뉴"];
 
 const Menu = () => {
-
   const [atCategoryArray, setAtCategoryArray] = useRecoilState(AtomCategoryArray)
+  const [brandArray, setBrandArray] = useState([])
+
+
+  function BrandLoadAxios(params) {
+    axios.get('https://softer104.cafe24.com/Open/Coupang/Brands', {
+    }).then((res) => {
+      console.log(res.data);
+      if (res.data.msg === 'success') {
+        var array = []
+
+        for (var i = 0; i < Object.keys(res.data).length - 3; i++) {
+          array.push(Object.values(res.data)[i])
+        }
+
+        setBrandArray(array)
+      }
+    }).catch((error) => {
+      if (error.response) {
+        console.log(error.response.data);
+        // Alert.alert(error.response.data.error);
+      } else if (error.request) {
+        console.log(error.request);
+      }
+    })
+  }
+
+  useEffect(() => {
+    BrandLoadAxios()
+  }, [])
 
 
   return (
