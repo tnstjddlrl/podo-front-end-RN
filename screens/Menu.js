@@ -1,5 +1,7 @@
 import React from "react";
+import { useRecoilState } from "recoil";
 import styled, { css } from "styled-components/native";
+import { AtomCategoryArray } from "../atom/atom";
 import { colors } from "../colors";
 import { SearchResultTabList } from "../components/Home/SampleData";
 import LayOut from "../components/LayOut";
@@ -49,9 +51,15 @@ const MenuItemText = styled.Text`
     `}
 `;
 
+
+
 const eventMenuList = ["골드박스", "기획전", "이벤트/쿠폰", "C.에비뉴"];
 
 const Menu = () => {
+
+  const [atCategoryArray, setAtCategoryArray] = useRecoilState(AtomCategoryArray)
+
+
   return (
     <LayOut horizontalZero backgroundColor={"#fff"}>
       <Container>
@@ -59,10 +67,10 @@ const Menu = () => {
           <MenuItemText header>쇼핑</MenuItemText>
         </MenuHeader>
         <MenuLayout>
-          {SearchResultTabList.map((item) => {
+          {atCategoryArray.map((item) => {
             return (
-              <MenuItem key={item.id}>
-                <MenuItemText>{item.title}</MenuItemText>
+              <MenuItem key={item.code}>
+                <MenuItemText>{item.name}</MenuItemText>
               </MenuItem>
             );
           })}
