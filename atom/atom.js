@@ -32,13 +32,13 @@ export const AsyncsetIsFirst = async (value) => {
 }
 /////////////////////////////////////////////////////////////
 
-//아이디 및 로그인 여부 가져오기////////////////////////////////
+//아이디,비밀번호 및 로그인 여부 가져오기////////////////////////////////
 export const AsyncgetUserId = async () => {
     try {
         const value = await AsyncStorage.getItem('@user_id')
         console.log(value)
 
-        if (value !== null) {
+        if (value == null) {
             console.log('false')
             return 'guest'
         } else {
@@ -62,6 +62,36 @@ export const AtomUserId = atom({
     key: 'AtomUserId',
     default: AsyncgetUserId(),
 });
+
+export const AsyncgetUserPWD = async () => {
+    try {
+        const value = await AsyncStorage.getItem('@user_PWD')
+        console.log(value)
+
+        if (value == null) {
+            console.log('false')
+            return 'guest'
+        } else {
+            console.log('true')
+            return value
+        }
+    } catch (e) {
+        console.log(e)
+    }
+}
+
+export const AsyncsetUserPWD = async (value) => {
+    try {
+        await AsyncStorage.setItem('@user_PWD', value)
+    } catch (e) {
+        console.log(e)
+    }
+}
+
+export const AtomUserPWD = atom({
+    key: 'AtomUserPWD',
+    default: AsyncgetUserPWD(),
+});
 /////////////////////////////////////////////////////////////////
 
 //로그인 토큰 값 저장 및 불러오기/////////////////////////////////
@@ -70,7 +100,7 @@ export const AsyncgetUserToken = async () => {
         const value = await AsyncStorage.getItem('@user_token')
         console.log(value)
 
-        if (value !== null) {
+        if (value == null) {
             console.log('false')
             return 'guestToken'
         } else {
@@ -101,3 +131,15 @@ export const AtomCategoryArray = atom({
     key: 'AtomCategoryArray',
     default: [],
 });
+
+///////////////////////////////////////////////////////////////////
+
+//유저 개인 정보 ////////////////////////////////////////////////////////
+export const AtomUserLevel = atom({
+    key: 'AtomUserLevel',
+    default: '',
+});
+
+
+
+
