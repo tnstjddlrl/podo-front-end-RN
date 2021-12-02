@@ -156,14 +156,13 @@ const Wallet = ({ navigation }) => {
   useEffect(() => {
     getData("randomName").then((name) => setName(name));
     console.log('토큰 : ' + atUserToken);
-    MyInformLoadAxios()
+    // MyInformLoadAxios()
     // TokenRefreshAxios()
   }, []);
 
   useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
       MyInformLoadAxios()
-
     });
 
     return unsubscribe;
