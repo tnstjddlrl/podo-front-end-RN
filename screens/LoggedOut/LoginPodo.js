@@ -7,7 +7,7 @@ import { Input, PurpleBtn } from "../../components/share";
 import { Alert, TouchableOpacity } from "react-native";
 import axios from 'axios';
 import { useRecoilState } from 'recoil';
-import { AsyncsetUserId, AsyncsetUserToken, AtomUserId, AtomUserToken, setUserId } from "../../atom/atom";
+import { AsyncsetUserId, AsyncsetUserPWD, AsyncsetUserToken, AtomUserId, AtomUserPWD, AtomUserToken, setUserId } from "../../atom/atom";
 
 
 const TextBtnWrapper = styled.View`
@@ -33,6 +33,7 @@ const LoginPodo = ({ navigation }) => {
   const [mb_pwd, setMb_pwd] = useState('')
 
   const [atUserId, setAtUserId] = useRecoilState(AtomUserId)
+  const [atUserPWD, setAtUserPWD] = useRecoilState(AtomUserPWD)
   const [atUserToken, setAtUserToken] = useRecoilState(AtomUserToken)
 
 
@@ -45,10 +46,12 @@ const LoginPodo = ({ navigation }) => {
       console.log(res.data);
       if (res.data.msg == 'success') {
         setAtUserId(mb_email)
+        setAtUserPWD(mb_pwd)
         setAtUserToken(res.data.token)
 
         try {
           AsyncsetUserId(mb_email)
+          AsyncsetUserPWD(mb_pwd)
           AsyncsetUserToken(res.data.token)
           console.log('어싱크 완료!')
         } catch (error) {
