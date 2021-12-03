@@ -1,7 +1,10 @@
+import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { FlatList } from "react-native";
+import { useRecoilState } from "recoil";
 import styled from "styled-components/native";
 import dummyData from "../../assets/dummyData";
+import { AtomUserId, AtomUserToken } from "../../atom/atom";
 import ItemMedium from "../../components/ItemMedium";
 import LayOut from "../../components/LayOut";
 import SelectTabList from "../../components/SelectTabList.circle";
@@ -39,6 +42,54 @@ const Favorite = ({
     Favorite: isFavorite,
   });
   const [listSample, setListSample] = useState(favoriteListSample);
+
+  const [atUserId, setAtUserId] = useRecoilState(AtomUserId)
+  const [atUserToken, setAtUserToken] = useRecoilState(AtomUserToken)
+
+  function MyViewLoadAxios(params) {
+    axios.get('https://softer104.cafe24.com/V1/View/List', {
+      headers: {
+        Authorization: `Bearer ${atUserToken}`
+      },
+      params: {
+        limit: 5,
+        offset: 0,
+        w_name: 'mb_email',
+        w_para: atUserId
+      }
+    }).then((res) => {
+      console.log(res.data);
+      // var data = res.data.data
+    }).catch((error) => {
+      console.log(error);
+    })
+  }
+
+  function MyLikeLoadAxios(params) {
+    axios.get('https://softer104.cafe24.com/V1/Like/List', {
+      headers: {
+        Authorization: `Bearer ${atUserToken}`
+      },
+      params: {
+        limit: 5,
+        offset: 0,
+        w_name: 'mb_email',
+        w_para: atUserId
+      }
+    }).then((res) => {
+      console.log(res.data);
+      // var data = res.data.data
+    }).catch((error) => {
+      console.log(error);
+    })
+  }
+
+  useEffect(() => {
+    MyViewLoadAxios()
+    MyLikeLoadAxios()
+  }, [])
+
+
 
   const onClickSelect = (name) => {
     if (!isFocused[name]) {
@@ -84,13 +135,13 @@ const Favorite = ({
           );
         })}
       </TabBox>
-      <FlatList
+      {/* <FlatList
         data={listSample}
         showsVerticalScrollIndicator={true}
         keyExtractor={(item) => "" + item.href}
         renderItem={renderItem}
         numColumns={2}
-      />
+      /> */}
     </LayOut>
   );
 };
