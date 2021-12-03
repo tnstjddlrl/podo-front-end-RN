@@ -40,7 +40,7 @@ export const AsyncgetUserId = async () => {
 
         if (value == null) {
             console.log('false')
-            return 'guest'
+            return null
         } else {
             console.log('true')
             return value
@@ -70,7 +70,7 @@ export const AsyncgetUserPWD = async () => {
 
         if (value == null) {
             console.log('false')
-            return 'guest'
+            return ''
         } else {
             console.log('true')
             return value
@@ -102,7 +102,7 @@ export const AsyncgetUserToken = async () => {
 
         if (value == null) {
             console.log('false')
-            return 'guestToken'
+            return ''
         } else {
             console.log('true')
             return value

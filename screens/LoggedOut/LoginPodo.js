@@ -50,8 +50,8 @@ const LoginPodo = ({ navigation }) => {
         setAtUserToken(res.data.token)
 
         try {
-          AsyncsetUserId(mb_email)
-          AsyncsetUserPWD(mb_pwd)
+          AsyncsetUserId(email)
+          AsyncsetUserPWD(pwd)
           AsyncsetUserToken(res.data.token)
           console.log('어싱크 완료!')
         } catch (error) {
