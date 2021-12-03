@@ -1,6 +1,7 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { FlatList, View } from "react-native";
+import { ScrollView } from "react-native-gesture-handler";
 import { useRecoilState } from "recoil";
 import styled, { css } from "styled-components/native";
 import { AtomUserId, AtomUserLevel, AtomUserToken } from "../atom/atom";
@@ -152,6 +153,14 @@ const Wallet = ({ navigation }) => {
 
   const [atMemberLevel, setAtMemberLevel] = useRecoilState(AtomUserLevel)
 
+  const [requirePodoStaking, setRequirePodoStaking] = useState(0)
+  const [userLevel, setUserLevel] = useState(0)
+
+  const [wbtc, setWbtc] = useState(0)
+  const [wbtc_kr, setWbtc_kr] = useState(0)
+
+  const [podo, setPodo] = useState(0)
+  const [podo_kr, setPodo_kr] = useState(0)
 
   useEffect(() => {
     getData("randomName").then((name) => setName(name));
@@ -162,6 +171,7 @@ const Wallet = ({ navigation }) => {
 
   useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
+      console.log('토큰 : ' + atUserToken);
       MyInformLoadAxios()
     });
 
@@ -175,6 +185,11 @@ const Wallet = ({ navigation }) => {
       }
     }).then((res) => {
       console.log(res.data.data);
+      var data = res.data.data
+      setRequirePodoStaking(data.require_podo);
+      setUserLevel(data.mb_level)
+
+
     }).catch((error) => {
       console.log(error);
     })
@@ -195,34 +210,11 @@ const Wallet = ({ navigation }) => {
     })
   }
 
-  const renderItem = ({ item }) => {
-    return (
-      <View style={{ paddingHorizontal: 24 }}>
-        <WalletAccBox
-          coinName={item.coinName}
-          coinValue={"0"}
-          // price={"10,000"}
-          // date={"YYYY.MM.DD XX:XX"}
-          price={"0"}
-          date={`${current.getFullYear()}.${zeroPlus(
-            current.getMonth() + 1
-          )}.${zeroPlus(current.getDate())} ${zeroPlus(
-            current.getHours()
-          )}:${zeroPlus(current.getMinutes())}`}
-        />
-        <PurpleBtn
-          text={item.btnText}
-          marginTop={"12px"}
-          marginBottom={"20px"}
-          onPress={() =>
-            navigation.navigate(item.navigate, {
-              coinName: item.coinName,
-            })
-          }
-        />
-      </View>
-    );
-  };
+  // const renderItem = ({ item }) => {
+  //   return (
+
+  //   );
+  // };
   return (
     <>
       {/* <LevelSection>
@@ -240,29 +232,80 @@ const Wallet = ({ navigation }) => {
             <InfoSectionText isCount>획득!</InfoSectionText>
           </InfoNum>
         </InfoSection> */}
-        <FlatList
+        <ScrollView>
+          <LevelSection>
+            <LevelText isTitle>{atUserId.split('@')[0]}님, Level {userLevel} 에요!</LevelText>
+            <Gauge>
+              <GaugeStatus percent={gaugePercent} />
+            </Gauge>
+            <LevelText>다음 레벨까지 {requirePodoStaking} Stacking 필요!</LevelText>
+          </LevelSection>
+          <InfoSection>
+            <InfoSectionText>현재까지 WBTC를</InfoSectionText>
+            <InfoNum>
+              <InfoSectionText isNumber>{wbtc}</InfoSectionText>
+              <InfoSectionText isCount>획득!</InfoSectionText>
+            </InfoNum>
+          </InfoSection>
+
+          <View style={{ paddingHorizontal: 24 }}>
+            <WalletAccBox
+              coinName={'WBTC'}
+              coinValue={wbtc}
+              // price={"10,000"}
+              // date={"YYYY.MM.DD XX:XX"}
+              price={wbtc_kr}
+              date={`${current.getFullYear()}.${zeroPlus(
+                current.getMonth() + 1
+              )}.${zeroPlus(current.getDate())} ${zeroPlus(
+                current.getHours()
+              )}:${zeroPlus(current.getMinutes())}`}
+            />
+            <PurpleBtn
+              text={'WBTC 출금 신청'}
+              marginTop={"12px"}
+              marginBottom={"20px"}
+              onPress={() =>
+                navigation.navigate('PocketNormal', {
+                  coinName: "WBTC",
+                })
+              }
+            />
+          </View>
+
+          <View style={{ paddingHorizontal: 24 }}>
+            <WalletAccBox
+              coinName={'POD'}
+              coinValue={podo}
+              // price={"10,000"}
+              // date={"YYYY.MM.DD XX:XX"}
+              price={podo_kr}
+              date={`${current.getFullYear()}.${zeroPlus(
+                current.getMonth() + 1
+              )}.${zeroPlus(current.getDate())} ${zeroPlus(
+                current.getHours()
+              )}:${zeroPlus(current.getMinutes())}`}
+            />
+            <PurpleBtn
+              text={'스테이킹 신청'}
+              marginTop={"12px"}
+              marginBottom={"20px"}
+              onPress={() =>
+                navigation.navigate('PocketStacking', {
+                  coinName: "POD",
+                })
+              }
+            />
+          </View>
+
+        </ScrollView>
+        {/* <FlatList
           ListHeaderComponent={
-            <>
-              <LevelSection>
-                <LevelText isTitle>{atUserId}님, Level 1 에요!</LevelText>
-                <Gauge>
-                  <GaugeStatus percent={gaugePercent} />
-                </Gauge>
-                <LevelText>다음 레벨까지 2000 Stacking 필요!</LevelText>
-              </LevelSection>
-              <InfoSection>
-                <InfoSectionText>현재까지 WBTC를</InfoSectionText>
-                <InfoNum>
-                  <InfoSectionText isNumber>0</InfoSectionText>
-                  <InfoSectionText isCount>획득!</InfoSectionText>
-                </InfoNum>
-              </InfoSection>
-            </>
           }
           data={renderList}
           renderItem={renderItem}
           keyExtractor={(item) => item.coinName.toString()}
-        />
+        /> */}
         {/* <WalletAccBox
           coinName={"WBTC"}
           coinValue={"0.0000000"}
