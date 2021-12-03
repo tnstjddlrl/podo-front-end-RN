@@ -1,4 +1,4 @@
-package com.podo;
+package io.podopoint;
 
 import android.os.Bundle;
 

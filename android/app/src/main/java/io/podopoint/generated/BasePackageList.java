@@ -1,4 +1,4 @@
-package com.podo.generated;
+package io.podopoint.generated;
 
 import java.util.Arrays;
 import java.util.List;
