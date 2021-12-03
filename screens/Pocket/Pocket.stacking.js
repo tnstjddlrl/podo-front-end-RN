@@ -112,49 +112,49 @@ const HistoryStatusText = styled.Text`
 
 const tabList = ["전체", "스테이킹 이력", "언스테이킹 이력"];
 
-// const sampleHistory = [
-//   {
-//     date: "2021.06.16",
-//     description: "06.14 스테이킹 신청 건",
-//     status: {
-//       code: "stackingEnd",
-//       text: "스테이킹 완료",
-//     },
-//   },
-//   {
-//     date: "2021.06.16",
-//     description: "06.14 스테이킹 신청 건",
-//     status: {
-//       code: "stackingProcessing",
-//       text: "스테이킹 처리중",
-//     },
-//   },
-//   {
-//     date: "2021.06.16",
-//     description: "06.23 출금 신청 건",
-//     transaction: "XXXXXXXXXXXXXXX",
-//     status: {
-//       code: "stackingApply",
-//       text: "스테이킹 신청",
-//     },
-//   },
-//   {
-//     date: "2021.06.23",
-//     description: "06.23 언스테이킹 신청 건",
-//     status: {
-//       code: "unStackingApply",
-//       text: "언스테이킹 신청",
-//     },
-//   },
-//   {
-//     date: "2021.06.27",
-//     description: "06.23 언스테이킹 신청 건",
-//     status: {
-//       code: "unStackingEnd",
-//       text: "언스테이킹 완료",
-//     },
-//   },
-// ];
+const sampleHistory = [
+  {
+    date: "2021.06.16",
+    description: "06.14 스테이킹 신청 건",
+    status: {
+      code: "stackingEnd",
+      text: "스테이킹 완료",
+    },
+  },
+  {
+    date: "2021.06.16",
+    description: "06.14 스테이킹 신청 건",
+    status: {
+      code: "stackingProcessing",
+      text: "스테이킹 처리중",
+    },
+  },
+  {
+    date: "2021.06.16",
+    description: "06.23 출금 신청 건",
+    transaction: "XXXXXXXXXXXXXXX",
+    status: {
+      code: "stackingApply",
+      text: "스테이킹 신청",
+    },
+  },
+  {
+    date: "2021.06.23",
+    description: "06.23 언스테이킹 신청 건",
+    status: {
+      code: "unStackingApply",
+      text: "언스테이킹 신청",
+    },
+  },
+  {
+    date: "2021.06.27",
+    description: "06.23 언스테이킹 신청 건",
+    status: {
+      code: "unStackingEnd",
+      text: "언스테이킹 완료",
+    },
+  },
+];
 
 // const sampleStackingHistory = sampleHistory.filter((item) =>
 //   item.status.code.toLowerCase().startsWith("stacking")
@@ -174,8 +174,8 @@ const zeroPlus = (num) => {
 
 const PocketStacking = ({ navigation }) => {
   const [isFocused, setIsFocused] = useState(0);
-  // const [historyList, setHistoryList] = useState(sampleHistory);
-  const historyList = null;
+  const [historyList, setHistoryList] = useState(sampleHistory);
+  // const historyList = null;
 
   // const onClickFocused = (index) => {
   //   setIsFocused(index);
