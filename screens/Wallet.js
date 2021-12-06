@@ -234,7 +234,12 @@ const Wallet = ({ navigation }) => {
         </InfoSection> */}
         <ScrollView>
           <LevelSection>
-            <LevelText isTitle>{atUserId.split('@')[0]}님, Level {userLevel} 에요!</LevelText>
+            {atUserId ?
+              <LevelText isTitle>{atUserId.split('@')[0]}님, Level {userLevel} 에요!</LevelText>
+              :
+              <LevelText isTitle>로그인을 먼저 해주세요!</LevelText>
+
+            }
             <Gauge>
               <GaugeStatus percent={gaugePercent} />
             </Gauge>
