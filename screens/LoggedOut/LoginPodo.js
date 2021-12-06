@@ -43,7 +43,8 @@ const LoginPodo = ({ navigation }) => {
       mb_email: email,
       mb_password: pwd
     }).then((res) => {
-      console.log(res.data);
+      console.log(res.data)
+      console.log(res.data.token);
       if (res.data.msg == 'success') {
         setAtUserId(mb_email)
         setAtUserPWD(mb_pwd)
