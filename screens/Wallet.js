@@ -4,7 +4,7 @@ import { FlatList, View } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import { useRecoilState } from "recoil";
 import styled, { css } from "styled-components/native";
-import { AtomUserId, AtomUserLevel, AtomUserToken } from "../atom/atom";
+import { AtomUserId, AtomUserLevel, AtomUserPodo, AtomUserPodo_kr, AtomUserToken, AtomUserWbtc, AtomUserWbtc_kr } from "../atom/atom";
 import { colors } from "../colors";
 import LayOut from "../components/LayOut";
 import { PurpleBtn } from "../components/share";
@@ -121,28 +121,30 @@ const zeroPlus = (num) => {
 };
 
 // {
-//   "created_at": "2021-12-02 10:14:05",
-//   "deleted_at": null,
-//   "mb_agree_email": "N",
-//   "mb_alarm": "1",
-//   "mb_email": "sasaa3865@naver.com",
-//   "mb_level": 1,
-//   "mb_nick": "",
-//   "mb_no": "10",
-//   "mb_phone": "010-7615-3865",
-//   "mb_podo": "0",
-//   "mb_sns_id": null,
-//   "mb_state": "1",
-//   "mb_token": "",
-//   "mb_wbtc": "0",
-//   "podo": "0",
-//   "podo_date": "2021-12-02 11:21:55",
-//   "podo_kr": 0,
-//   "require_podo": 2000000,
-//   "updated_at": "2021-12-02 11:21:07",
-//   "wbtc_date": "2021-12-02 11:21:55",
-//   "wbtc_kr": 0,
-// }
+//   "created_at":"2021-12-02 10:14:05",
+//   "deleted_at":null,
+//   "mb_admin_update":"",
+//   "mb_agree_email":"N",
+//   "mb_alarm":"1",
+//   "mb_email":"sasaa3865@naver.com",
+//   "mb_level":1,
+//   "mb_nick":"",
+//   "mb_no":"10",
+//   "mb_os":"",
+//   "mb_phone":"010-7615-3865",
+//   "mb_podo":"0",
+//   "mb_sns_id":null,
+//   "mb_state":"1",
+//   "mb_token":"",
+//   "mb_wbtc":"0",
+//   "podo":"0",
+//   "podo_date":"2021-12-06 11:00:34",
+//   "podo_kr":0,
+//   "require_podo":2000000,
+//   "updated_at":"2021-12-06 11:00:29",
+//   "wbtc_date":"2021-12-06 11:00:34",
+//   "wbtc_kr":0
+//   }
 
 const Wallet = ({ navigation }) => {
   const gaugePercent = 50;
@@ -156,6 +158,14 @@ const Wallet = ({ navigation }) => {
   const [requirePodoStaking, setRequirePodoStaking] = useState(0)
   const [userLevel, setUserLevel] = useState(0)
 
+  const [atuserPodo, setatuserPodo] = useRecoilState(AtomUserPodo)
+  const [atuserPodo_kr, setatuserPodo_kr] = useRecoilState(AtomUserPodo_kr)
+
+  const [atuserWbtc, setatuserWbtc] = useRecoilState(AtomUserWbtc)
+  const [atuserWbtc_kr, setatuserWbtc_kr] = useRecoilState(AtomUserWbtc_kr)
+
+
+
   const [wbtc, setWbtc] = useState(0)
   const [wbtc_kr, setWbtc_kr] = useState(0)
 
@@ -165,8 +175,6 @@ const Wallet = ({ navigation }) => {
   useEffect(() => {
     getData("randomName").then((name) => setName(name));
     console.log('토큰 : ' + atUserToken);
-    // MyInformLoadAxios()
-    // TokenRefreshAxios()
   }, []);
 
   useEffect(() => {
@@ -189,6 +197,19 @@ const Wallet = ({ navigation }) => {
       setRequirePodoStaking(data.require_podo);
       setUserLevel(data.mb_level)
 
+      setatuserPodo(data.mb_podo)
+      setatuserPodo_kr(data.podo_kr)
+
+      setatuserWbtc(data.mb_wbtc)
+      setatuserWbtc_kr(data.wbtc_kr)
+
+
+      setPodo(data.mb_podo)
+      setPodo_kr(data.podo_kr)
+
+      setWbtc(data.mb_wbtc)
+      setWbtc_kr(data.wbtc_kr)
+
 
     }).catch((error) => {
       console.log(error);
@@ -210,11 +231,6 @@ const Wallet = ({ navigation }) => {
     })
   }
 
-  // const renderItem = ({ item }) => {
-  //   return (
-
-  //   );
-  // };
   return (
     <>
       {/* <LevelSection>
@@ -238,7 +254,6 @@ const Wallet = ({ navigation }) => {
               <LevelText isTitle>{atUserId.split('@')[0]}님, Level {userLevel} 에요!</LevelText>
               :
               <LevelText isTitle>로그인을 먼저 해주세요!</LevelText>
-
             }
             <Gauge>
               <GaugeStatus percent={gaugePercent} />
@@ -304,45 +319,6 @@ const Wallet = ({ navigation }) => {
           </View>
 
         </ScrollView>
-        {/* <FlatList
-          ListHeaderComponent={
-          }
-          data={renderList}
-          renderItem={renderItem}
-          keyExtractor={(item) => item.coinName.toString()}
-        /> */}
-        {/* <WalletAccBox
-          coinName={"WBTC"}
-          coinValue={"0.0000000"}
-          price={"10,000"}
-          date={"YYYY.MM.DD XX:XX"}
-        />
-        <PurpleBtn
-          text={"WBTC 출금 신청"}
-          marginTop={"12px"}
-          marginBottom={"20px"}
-          onPress={() =>
-            navigation.navigate("PocketNormal", {
-              coinName: "WBTC",
-            })
-          }
-        />
-        <WalletAccBox
-          coinName={"POD"}
-          coinValue={"0.0000000"}
-          price={"10,000"}
-          date={"YYYY.MM.DD XX:XX"}
-        />
-        <PurpleBtn
-          text={"스테이킹 신청"}
-          marginTop={"12px"}
-          marginBottom={"20px"}
-          onPress={() =>
-            navigation.navigate("PocketStacking", {
-              coinName: "POD",
-            })
-          }
-        /> */}
       </LayOut>
     </>
   );

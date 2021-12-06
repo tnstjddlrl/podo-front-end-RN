@@ -140,6 +140,26 @@ export const AtomUserLevel = atom({
     default: '',
 });
 
+export const AtomUserPodo = atom({
+    key: 'AtomUserPodo',
+    default: 0,
+}); //포도 개수
+
+export const AtomUserPodo_kr = atom({
+    key: 'AtomUserPodo_kr',
+    default: 0,
+});
+
+export const AtomUserWbtc = atom({
+    key: 'AtomUserWbtc',
+    default: 0,
+}); //wbtc 개수
+
+export const AtomUserWbtc_kr = atom({
+    key: 'AtomUserWbtc_kr',
+    default: 0,
+});
+
 
 
 
