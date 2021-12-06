@@ -46,9 +46,10 @@ const LoginPodo = ({ navigation }) => {
       console.log(res.data)
       console.log(res.data.token);
       if (res.data.msg == 'success') {
+        let token = res.data.token
         setAtUserId(mb_email)
         setAtUserPWD(mb_pwd)
-        setAtUserToken(res.data.token)
+        setAtUserToken(token)
 
         try {
           AsyncsetUserId(email)
