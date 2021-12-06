@@ -102,6 +102,26 @@ const CreateAccountPodo = ({ Navigation }) => {
     })
   }
 
+  //회원가입 초안
+  function EmailCodeSendAxios() {
+    axios.post('https://softer104.cafe24.com/Open/Join/AuthEmailSend', {
+      to: mb_email,
+    }).then((res) => {
+      console.log(res.data);
+      if (res.data.msg === 'success') {
+        console.log('발송 성공!');
+      }
+    }).catch((error) => {
+      if (error.response) {
+        console.log(error.response.data)
+        console.log(error.response.data.error);
+        Alert.alert(error.response.data.error);
+      } else if (error.request) {
+        console.log(error.request);
+      }
+    })
+  }
+
   const [mb_email, setMb_email] = useState('')
   const [mb_phone, setMb_phone] = useState('')
 
@@ -157,6 +177,7 @@ const CreateAccountPodo = ({ Navigation }) => {
           onPress={() => {
             console.log('클릭됨')
             setAuthClicked(true)
+            EmailCodeSendAxios()
           }}
           onPresstxt={'인증하기'}
         />
@@ -170,8 +191,9 @@ const CreateAccountPodo = ({ Navigation }) => {
               placeholder={`인증번호를 입력해주세요`}
               width={"70%"}
               onChangeText={setMb_phone}
-              onPress={() => { console.log('클릭됨'); }}
-              onPresstxt={'인증'} />
+            // onPress={() => { console.log('클릭됨'); }}
+            // onPresstxt={'인증'}
+            />
             <View style={{ marginBottom: 20 }}></View>
           </>
         }
