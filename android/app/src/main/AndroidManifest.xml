@@ -13,9 +13,10 @@
     android:label="@string/app_name"
     android:icon="@mipmap/ic_launcher"
     android:roundIcon="@mipmap/ic_launcher_round"
-    android:allowBackup="false"
+    android:allowBackup="true"
     android:theme="@style/AppTheme"
     android:usesCleartextTraffic="true"
+
   >
     <meta-data android:name="expo.modules.updates.EXPO_UPDATE_URL" android:value="YOUR-APP-URL-HERE"/>
     <meta-data android:name="expo.modules.updates.EXPO_SDK_VERSION" android:value="YOUR-APP-SDK-VERSION-HERE"/>
@@ -30,6 +31,9 @@
       <intent-filter>
         <action android:name="android.intent.action.MAIN"/>
         <category android:name="android.intent.category.LAUNCHER"/>
+        <!-- Redirect URI: "kakao{NATIVE_APP_KEY}://oauth“ -->
+        <data android:host="oauth"
+            android:scheme="kakao{ae6a6908f6c4e7f2e0303e1ae47b33e0}" />
       </intent-filter>
     </activity>
     <activity android:name="com.facebook.react.devsupport.DevSettingsActivity"/>

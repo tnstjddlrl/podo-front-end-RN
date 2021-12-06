@@ -1,11 +1,19 @@
 package io.podopoint;
 
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.content.pm.Signature;
 import android.os.Bundle;
+import android.util.Base64;
+import android.util.Log;
 
 import com.facebook.react.ReactActivity;
 import com.facebook.react.ReactActivityDelegate;
 import com.facebook.react.ReactRootView;
 import com.swmansion.gesturehandler.react.RNGestureHandlerEnabledRootView;
+
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 
 import expo.modules.splashscreen.singletons.SplashScreen;
 import expo.modules.splashscreen.SplashScreenImageResizeMode;
@@ -22,7 +30,6 @@ public class MainActivity extends ReactActivity {
     // Below line is handled by '@expo/configure-splash-screen' command and it's discouraged to modify it manually
     SplashScreen.show(this, SplashScreenImageResizeMode.CONTAIN, ReactRootView.class, false);
   }
-
 
     /**
      * Returns the name of the main component registered from JavaScript.
