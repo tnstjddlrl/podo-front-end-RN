@@ -10,6 +10,7 @@ const Login = ({ navigation }) => {
   // const goHome = () => navigation.navigate("Home");
   return (
     <LayOut paddingTop={24}>
+
       <FacebookBtn />
       <KakaoBtn />
       <PurpleBtn

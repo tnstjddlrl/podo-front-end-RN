@@ -191,6 +191,7 @@ const CreateAccountPodo = ({ Navigation }) => {
               placeholder={`인증번호를 입력해주세요`}
               width={"70%"}
               onChangeText={setMb_phone}
+              isppp={true}
             // onPress={() => { console.log('클릭됨'); }}
             // onPresstxt={'인증'}
             />
@@ -282,22 +283,21 @@ const CreateAccountPodo = ({ Navigation }) => {
 };
 
 
-function TextInputProp({ title, placeholder, bottomtxt, onChangeText, width, onPress, onPresstxt }) {
+function TextInputProp({ title, placeholder, bottomtxt, onChangeText, width, onPress, onPresstxt, isppp }) {
 
   const [isFocus, setIsFocus] = useState(false)
 
   return (
-    <View>
+    <View style={{ width: '100%' }}>
       {title && <Title>{title}</Title>}
-      <View style={{ width: onPress ? '100%' : width, height: 48, flexDirection: 'row', alignItems: 'center' }}>
-        <View style={{ flex: 1, height: 48, borderRadius: 10, borderWidth: 1, borderColor: isFocus ? '#553AED' : '#DAE3EF', }}>
-          <TextInput style={{ height: '100%', marginLeft: 13 }} placeholder={`${placeholder}`} onChangeText={onChangeText} onFocus={() => { setIsFocus(true) }} onBlur={() => { setIsFocus(false) }} />
-
+      <View style={{ width: '100%', height: 48, flexDirection: 'row', alignItems: 'center' }}>
+        <View style={{ width: (onPress || isppp) ? width : '100%', height: 48, borderRadius: 10, borderWidth: 1, borderColor: isFocus ? '#553AED' : '#DAE3EF', }}>
+          <TextInput style={{ flex: 1, marginLeft: 13 }} placeholder={`${placeholder}`} onChangeText={onChangeText} onFocus={() => { setIsFocus(true) }} onBlur={() => { setIsFocus(false) }} />
         </View>
 
         {onPress &&
-          <TouchableOpacity onPress={onPress}>
-            <View style={{ borderRadius: 12, backgroundColor: '#553AED', width: 84, height: 48, marginLeft: 10, alignItems: "center", justifyContent: "center" }}>
+          <TouchableOpacity onPress={onPress} style={{ flex: 1, marginRight: 10 }}>
+            <View style={{ borderRadius: 12, backgroundColor: '#553AED', flex: 1, height: 48, marginLeft: 10, alignItems: "center", justifyContent: "center" }}>
               <Text style={{ color: 'white', fontSize: 14, fontFamily: fonts.bold }}>{onPresstxt}</Text>
             </View>
           </TouchableOpacity>

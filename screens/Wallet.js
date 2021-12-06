@@ -203,7 +203,6 @@ const Wallet = ({ navigation }) => {
       setatuserWbtc(data.mb_wbtc)
       setatuserWbtc_kr(data.wbtc_kr)
 
-
       setPodo(data.mb_podo)
       setPodo_kr(data.podo_kr)
 

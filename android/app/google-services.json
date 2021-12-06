@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "29603221058",
+    "project_id": "podo-9f818",
+    "storage_bucket": "podo-9f818.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:29603221058:android:e5315ded35e374329fa7db",
+        "android_client_info": {
+          "package_name": "io.podopoint"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "29603221058-uc7lqucj23vh5kdsk86orcnvtb6kj2g3.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD8dDIIGzvcD8xzbLbnYlvJyJGT08bLE9g"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "29603221058-uc7lqucj23vh5kdsk86orcnvtb6kj2g3.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
