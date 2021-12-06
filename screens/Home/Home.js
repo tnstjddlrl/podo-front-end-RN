@@ -27,6 +27,22 @@ const Home = ({ navigation }) => {
     return <ItemMediumTest {...item} navigation={navigation} />;
   };
 
+  function BannerGetAxios(params) {
+    axios.get('https://softer104.cafe24.com/Open/Banner/AllList', {
+    }).then((res) => {
+      console.log(res.data);
+      if (res.data.msg === 'success') {
+
+      }
+    }).catch((error) => {
+      if (error.response) {
+        console.log(error.response.data);
+        // Alert.alert(error.response.data.error);
+      } else if (error.request) {
+        console.log(error.request);
+      }
+    })
+  }
 
   function ProductGetAxios(params) {
     axios.get('https://softer104.cafe24.com/Open/Coupang/Product?limit=100&kinds=bestcategories&category_id=' + productCode, {
@@ -44,6 +60,10 @@ const Home = ({ navigation }) => {
       }
     })
   }
+
+  useEffect(() => {
+    BannerGetAxios()
+  }, [])
 
   useEffect(() => {
     ProductGetAxios()
