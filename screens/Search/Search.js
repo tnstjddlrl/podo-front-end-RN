@@ -24,7 +24,7 @@ const FlatList = styled.FlatList`
 const Search = ({ navigation }) => {
   const [normal, setNormal] = useState(true);
   const [isFocused, setIsFocused] = useState({
-    recentSearches: false,
+    recentSearches: true,
     seenProducts: false,
   });
   const onClickSelect = async (name) => {
@@ -61,7 +61,7 @@ const Search = ({ navigation }) => {
           );
         })}
       </TabBox>
-      {normal && (
+      {/* {normal && (
         <FlatList
           data={dummyData.all.slice(0, 10)}
           showsVerticalScrollIndicator={false}
@@ -70,7 +70,7 @@ const Search = ({ navigation }) => {
           numColumns={2}
           normal={normal}
         />
-      )}
+      )} */}
       {!normal && isFocused["recentSearches"] && <RecentSearches />}
       {!normal && isFocused["seenProducts"] && (
         <FlatList
