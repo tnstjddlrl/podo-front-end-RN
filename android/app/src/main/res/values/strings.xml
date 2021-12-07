@@ -1,3 +1,6 @@
 <resources>
     <string name="app_name">PODO</string>
+    <string name="facebook_app_id">637135563980177</string>
+    <string name="facebook_client_token">fd3fb49de0485dd7cf444d7f88b57739</string>
+    <string name="kakao_app_key">ae6a6908f6c4e7f2e0303e1ae47b33e0</string>
 </resources>

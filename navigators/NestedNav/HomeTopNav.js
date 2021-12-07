@@ -38,7 +38,7 @@ const HomeTopNav = () => {
         name="EventA"
         component={EventA}
         options={{
-          title: "가을특가 이벤트",
+          title: "이벤트 테스트",
         }}
       />
       <TopTab.Screen

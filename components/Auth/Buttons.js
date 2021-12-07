@@ -4,6 +4,15 @@ import { colors } from "../../colors";
 import { fonts } from "../../fonts";
 import { RightArrowIcon } from "../Icons";
 
+import {
+  KakaoOAuthToken,
+  KakaoProfile,
+  getProfile as getKakaoProfile,
+  login,
+  logout,
+  unlink,
+} from '@react-native-seoul/kakao-login';
+
 import auth from '@react-native-firebase/auth';
 import { LoginManager, AccessToken } from 'react-native-fbsdk-next';
 
@@ -20,6 +29,8 @@ async function onFacebookButtonPress() {
 
   if (!data) {
     throw 'Something went wrong obtaining access token';
+  } else {
+    console.log(data)
   }
 
   // Create a Firebase credential with the AccessToken
@@ -70,7 +81,11 @@ export const FacebookBtn = ({ onPress }) => {
 
 export const KakaoBtn = ({ onPress }) => {
   return (
-    <SNSBtn onPress={() => onPress && onPress()}>
+    <SNSBtn onPress={async () => {
+      await login().then((res) => {
+        console.log(res)
+      })
+    }}>
       <BtnLeftWrapper>
         <LogoImage source={require("../../assets/ic_kakao.png")} />
         <BtnText>카카오로 시작하기</BtnText>

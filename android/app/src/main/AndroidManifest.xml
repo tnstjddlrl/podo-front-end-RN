@@ -16,8 +16,10 @@
     android:allowBackup="true"
     android:theme="@style/AppTheme"
     android:usesCleartextTraffic="true"
-
   >
+    <meta-data android:name="com.facebook.sdk.ApplicationId" android:value="@string/facebook_app_id"/>
+    <meta-data android:name="com.facebook.sdk.ClientToken" android:value="@string/facebook_client_token"/>
+
     <meta-data android:name="expo.modules.updates.EXPO_UPDATE_URL" android:value="YOUR-APP-URL-HERE"/>
     <meta-data android:name="expo.modules.updates.EXPO_SDK_VERSION" android:value="YOUR-APP-SDK-VERSION-HERE"/>
     <activity
@@ -31,11 +33,20 @@
       <intent-filter>
         <action android:name="android.intent.action.MAIN"/>
         <category android:name="android.intent.category.LAUNCHER"/>
+
+      </intent-filter>
+    </activity>
+    <activity android:name="com.kakao.sdk.auth.AuthCodeHandlerActivity">
+      <intent-filter>
+        <action android:name="android.intent.action.VIEW" />
+        <category android:name="android.intent.category.DEFAULT" />
+        <category android:name="android.intent.category.BROWSABLE" />
         <!-- Redirect URI: "kakao{NATIVE_APP_KEY}://oauth“ -->
         <data android:host="oauth"
-            android:scheme="kakao{ae6a6908f6c4e7f2e0303e1ae47b33e0}" />
+            android:scheme="kakaoae6a6908f6c4e7f2e0303e1ae47b33e0" />
       </intent-filter>
     </activity>
     <activity android:name="com.facebook.react.devsupport.DevSettingsActivity"/>
+
   </application>
 </manifest>
