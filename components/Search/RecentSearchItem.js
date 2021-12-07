@@ -25,7 +25,8 @@ const RecentSearchItem = ({ item }) => {
   const [atUserSearchList, setAtUserSerachList] = useRecoilState(AtomUserCurrentSearchList);
 
   function ClickedDeleteBTN() {
-    let array = atUserSearchList.filter((res) => item.search != res.search)
+    let array = atUserSearchList.filter((res) => item.id != res.id)
+    setAtUserSerachList(array)
     console.log(array)
   }
 
