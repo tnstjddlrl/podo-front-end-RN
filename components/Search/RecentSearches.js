@@ -1,10 +1,12 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { TouchableOpacity } from "react-native";
 import styled from "styled-components/native";
 import { colors } from "../../colors";
 import LayOut from "../LayOut";
 import { RecentSearchesData } from "../Home/SampleData";
 import RecentSearchItem from "./RecentSearchItem";
+import { AsyncSetUserCurrentSearchList, AtomUserCurrentSearchList } from "../../atom/atom";
+import { useRecoilState } from "recoil";
 
 const RowWrapper = styled.View`
   width: 100%;
@@ -27,18 +29,25 @@ const FlatList = styled.FlatList`
 `;
 
 const RecentSearches = () => {
+
+  const [atUserSearchList, setAtUserSerachList] = useRecoilState(AtomUserCurrentSearchList);
+
   return (
     <LayOut backgroundColor={colors.white}>
       <RowWrapper>
         <Text fontSize={"14px"}>최근 검색어</Text>
-        <TouchableOpacity>
+        <TouchableOpacity onPress={() => {
+          console.log('클릭');
+          AsyncSetUserCurrentSearchList([]).then(() => { console.log('삭제 완료'); })
+        }}>
           <Text underline color={colors.gray}>
             전체삭제
           </Text>
         </TouchableOpacity>
       </RowWrapper>
+
       {/* <FlatList
-        data={RecentSearchesData}
+        data={atUserSearchList}
         showsVerticalScrollIndicator={false}
         keyExtractor={(item) => "" + item.id}
         renderItem={RecentSearchItem}

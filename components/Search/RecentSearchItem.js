@@ -1,6 +1,8 @@
 import React from "react";
 import { TouchableOpacity } from "react-native";
+import { useRecoilState } from "recoil";
 import styled from "styled-components/native";
+import { AtomUserCurrentSearchList } from "../../atom/atom";
 import { colors } from "../../colors";
 import { CancelIcon } from "../Icons";
 
@@ -20,12 +22,19 @@ const Text = styled.Text`
 `;
 
 const RecentSearchItem = ({ item }) => {
+  const [atUserSearchList, setAtUserSerachList] = useRecoilState(AtomUserCurrentSearchList);
+
+  function ClickedDeleteBTN() {
+    let array = atUserSearchList.filter((res) => item.search != res.search)
+    console.log(array)
+  }
+
   return (
     <Container>
-      <TouchableOpacity>
+      <TouchableOpacity onPress={(e) => { console.log(e.nativeEvent) }}>
         <Text>{item.search}</Text>
       </TouchableOpacity>
-      <TouchableOpacity>
+      <TouchableOpacity onPress={(e) => { console.log(e.nativeEvent), ClickedDeleteBTN() }}>
         <CancelIcon />
       </TouchableOpacity>
     </Container>
