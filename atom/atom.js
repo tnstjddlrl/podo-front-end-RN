@@ -134,6 +134,36 @@ export const AtomCategoryArray = atom({
 
 ///////////////////////////////////////////////////////////////////
 
+//최근 검색어 /////////////////////////////////////////////////////////
+export const AsyncGetUserCurrentSearchList = async () => {
+    try {
+        const jsonValue = await AsyncStorage.getItem('@user_current_search_list')
+        console.log(jsonValue)
+
+        return jsonValue != null ? JSON.parse(jsonValue) : [];
+    } catch (e) {
+        console.log(e)
+    }
+}
+
+export const AsyncSetUserCurrentSearchList = async (value) => {
+    try {
+        const jsonValue = JSON.stringify(value)
+        await AsyncStorage.setItem('@user_current_search_list', jsonValue)
+    } catch (e) {
+        console.log(e)
+    }
+}
+
+export const AtomUserCurrentSearchList = atom({
+    key: 'AtomUserCurrentSearchList',
+    default: AsyncGetUserCurrentSearchList(),
+});
+
+
+/////////////////////////////////////////////////////////////////////
+
+
 //유저 개인 정보 ////////////////////////////////////////////////////////
 export const AtomUserLevel = atom({
     key: 'AtomUserLevel',
