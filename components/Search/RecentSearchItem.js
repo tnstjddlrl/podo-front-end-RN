@@ -2,7 +2,7 @@ import React from "react";
 import { TouchableOpacity } from "react-native";
 import { useRecoilState } from "recoil";
 import styled from "styled-components/native";
-import { AtomUserCurrentSearchList } from "../../atom/atom";
+import { AsyncSetUserCurrentSearchList, AtomUserCurrentSearchList } from "../../atom/atom";
 import { colors } from "../../colors";
 import { CancelIcon } from "../Icons";
 
@@ -27,6 +27,7 @@ const RecentSearchItem = ({ item }) => {
   function ClickedDeleteBTN() {
     let array = atUserSearchList.filter((res) => item.id != res.id)
     setAtUserSerachList(array)
+    AsyncSetUserCurrentSearchList(array)
     console.log(array)
   }
 
