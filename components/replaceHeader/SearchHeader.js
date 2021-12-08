@@ -2,8 +2,10 @@ import { useNavigation } from "@react-navigation/core";
 import React, { useEffect, useRef } from "react";
 import { useForm } from "react-hook-form";
 import { TouchableOpacity, View } from "react-native";
+import { useRecoilState } from "recoil";
 
 import styled from "styled-components/native";
+import { AsyncSetUserCurrentSearchList, AtomUserCurrentSearchList } from "../../atom/atom";
 import { colors } from "../../colors";
 import { fonts } from "../../fonts";
 import { AlarmIcon, SearchIcon } from "../Icons";
@@ -38,10 +40,26 @@ const Input = styled.TextInput`
 const SearchHeader = ({ home }) => {
   const navigation = useNavigation();
   const goAlarm = () => navigation.navigate("Alarm");
-  const { register, handleSubmit, setValue } = useForm();
-  const onCompleted = async (data) => {
-    await navigation.navigate("SearchResult", data);
+  const { register, handleSubmit, setValue, watch } = useForm();
+
+
+
+  const onCompleted = (data) => {
+    // navigation.navigate("SearchResult", data);
+
+    console.log(data.searchText)
+    let array = atUserSearchList.concat({ id: Math.random().toString(36).substr(2, 11), search: data.searchText })
+    setAtUserSerachList(array)
+    AsyncSetUserCurrentSearchList(array).then(() => { console.log('어싱크 완료'); })
+    setValue('searchText', '')
   };
+
+  const [atUserSearchList, setAtUserSerachList] = useRecoilState(AtomUserCurrentSearchList);
+
+  // useEffect(()=>{
+
+  // },[])
+
 
   useEffect(() => {
     register("searchText", {
@@ -60,6 +78,7 @@ const SearchHeader = ({ home }) => {
             <Input
               placeholder="검색어를 입력해주세요."
               returnKeyType="done"
+              value={watch('searchText')}
               onChangeText={(text) => setValue("searchText", text)}
               onSubmitEditing={handleSubmit(onCompleted)}
             />
