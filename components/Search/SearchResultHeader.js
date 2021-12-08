@@ -61,6 +61,7 @@ const SearchResultHeader = ({ navigation, route: { params } }) => {
             value={watch("searchText")}
             returnKeyType="done"
             onChangeText={(text) => setValue("searchText", text)}
+
           />
         </LeftPart>
         <TouchableOpacity onPress={() => setValue("searchText", "")}>
