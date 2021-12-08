@@ -42,10 +42,8 @@ const SearchHeader = ({ home }) => {
   const goAlarm = () => navigation.navigate("Alarm");
   const { register, handleSubmit, setValue, watch } = useForm();
 
-
-
   const onCompleted = (data) => {
-    // navigation.navigate("SearchResult", data);
+    navigation.navigate("SearchResult", data);
 
     console.log(data.searchText)
     let array = atUserSearchList.concat({ id: Math.random().toString(36).substr(2, 11), search: data.searchText })

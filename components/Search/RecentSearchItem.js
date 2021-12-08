@@ -1,3 +1,4 @@
+import { useNavigation } from "@react-navigation/core";
 import React from "react";
 import { TouchableOpacity } from "react-native";
 import { useRecoilState } from "recoil";
@@ -22,18 +23,21 @@ const Text = styled.Text`
 `;
 
 const RecentSearchItem = ({ item }) => {
+  const navigation = useNavigation()
+
   const [atUserSearchList, setAtUserSerachList] = useRecoilState(AtomUserCurrentSearchList);
 
   function ClickedDeleteBTN() {
     let array = atUserSearchList.filter((res) => item.id != res.id)
     setAtUserSerachList(array)
     AsyncSetUserCurrentSearchList(array)
+
     console.log(array)
   }
 
   return (
     <Container>
-      <TouchableOpacity onPress={(e) => { console.log(e.nativeEvent) }}>
+      <TouchableOpacity onPress={(e) => { console.log(e.nativeEvent), navigation.navigate("SearchResult", { id: item.id, searchText: item.search }) }}>
         <Text>{item.search}</Text>
       </TouchableOpacity>
       <TouchableOpacity onPress={(e) => { console.log(e.nativeEvent), ClickedDeleteBTN() }}>
