@@ -21,14 +21,14 @@ const SearchTabText = styled.Text`
 const ResultTopTab = ({ item, isFocused, onClickSelect, setCategory }) => {
   return (
     <SearchTabContainer
-      isFocused={isFocused === item.id}
+      isFocused={isFocused == item.code}
       onPress={() => {
-        onClickSelect(item.id);
+        onClickSelect(item.code);
         setCategory(item.name);
       }}
     >
-      <SearchTabText isFocused={isFocused === item.id}>
-        {item.title}
+      <SearchTabText isFocused={isFocused == item.code}>
+        {item.name}
       </SearchTabText>
     </SearchTabContainer>
   );
