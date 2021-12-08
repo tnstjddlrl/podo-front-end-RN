@@ -88,7 +88,7 @@ const RenderItem = ({ item, setCategory }) => {
 
 const CategoryBtnBox = ({ setCategory }) => {
   const [categoryArray, setCategoryArray] = useState([])
-  const [atCategoryArray, setAtCategoryArray] = useRecoilState(AtomCategoryArray)
+  const [atCategoryArray, setAtCategoryArray] = useRecoilState(AtomCategoryArray) //아톰 카테고리 배열
 
   function CategoryGetAxios(params) {
     axios.get('https://softer104.cafe24.com/Open/Coupang/Category', {
