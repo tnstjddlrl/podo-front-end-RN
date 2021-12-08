@@ -63,22 +63,22 @@ const FavoriteBtnWrapper = styled.TouchableOpacity`
   align-items: flex-start;
 `;
 const ItemLarge = ({ item, navigation }) => {
-  const [isLike, setIsLike] = useState(item.userLike);
-  const toggleLike = () => {
-    setIsLike(!isLike);
-  };
-  const { href, reward } = item;
+  // const [isLike, setIsLike] = useState(item.userLike);
+  // const toggleLike = () => {
+  //   setIsLike(!isLike);
+  // };
+  const { productUrl } = item;
 
   const goDetailPage = () =>
-    navigation.navigate("DetailPageLink", { href, reward });
+    navigation.navigate("DetailPageLink", { productUrl });
   return (
     <ItemContainer onPress={() => goDetailPage()}>
       <LeftPart>
-        <ItemImage source={{ uri: item.thumbnail }} />
+        <ItemImage source={{ uri: item.productImage }} />
         <InfoWrapper>
-          <InfoText price>{item.price}</InfoText>
+          <InfoText price>{(item.productPrice).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}</InfoText>
           <InfoText title numberOfLines={2}>
-            {item.title}
+            {item.productName}
           </InfoText>
           <InfoText info>쇼핑몰 마크 & 배송정보</InfoText>
           <InfoText info>쇼핑몰</InfoText>
@@ -86,9 +86,9 @@ const ItemLarge = ({ item, navigation }) => {
       </LeftPart>
       <RightPart>
         <InfoText rewardPercent>{item.reward}</InfoText>
-        <FavoriteBtnWrapper onPress={() => toggleLike()}>
+        {/* <FavoriteBtnWrapper onPress={() => toggleLike()}>
           {isLike ? <FavoriteFilledSmallIcon /> : <FavoriteSmallIcon />}
-        </FavoriteBtnWrapper>
+        </FavoriteBtnWrapper> */}
       </RightPart>
     </ItemContainer>
   );
