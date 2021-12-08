@@ -43,6 +43,9 @@ const Home = ({ navigation }) => {
       }
     })
   }
+  useEffect(() => {
+    BannerGetAxios()
+  }, [])
 
   function ProductGetAxios(params) {
     axios.get('https://softer104.cafe24.com/Open/Coupang/Product?limit=100&kinds=bestcategories&category_id=' + productCode, {
@@ -61,9 +64,6 @@ const Home = ({ navigation }) => {
     })
   }
 
-  useEffect(() => {
-    BannerGetAxios()
-  }, [])
 
   useEffect(() => {
     ProductGetAxios()

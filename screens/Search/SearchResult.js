@@ -1,6 +1,9 @@
+import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { FlatList, SafeAreaView } from "react-native";
+import { useRecoilState } from "recoil";
 import dummyData from "../../assets/dummyData";
+import { AtomCategoryArray } from "../../atom/atom";
 import { colors } from "../../colors";
 import { SearchResultTabList } from "../../components/Home/SampleData";
 import ItemLarge from "../../components/ItemLarge";
@@ -10,7 +13,7 @@ import ResultTopTab from "../../components/Search/ResultTopTab";
 import SearchResultHeader from "../../components/Search/SearchResultHeader";
 
 const SearchResult = ({ navigation, route }) => {
-  const [isFocused, setIsFocused] = useState(0);
+  const [isFocused, setIsFocused] = useState(1001);
   const [category, setCategory] = useState("all");
   const [data, setData] = useState([]);
   const [offset, setOffset] = useState(0);
@@ -19,18 +22,46 @@ const SearchResult = ({ navigation, route }) => {
     setIsFocused(id);
   };
 
+  const [atCategoryArray, setAtCategoryArray] = useRecoilState(AtomCategoryArray)
+  const [axiosArray, setAxiosArray] = useState([])
+
+  function ProductGetAxios(params) {
+    axios.get('https://softer104.cafe24.com/Open/Coupang/Product?limit=100&kinds=bestcategories&category_id=' + isFocused, {
+    }).then((res) => {
+      // console.log(res.data);
+      if (res.data.msg === 'success') {
+        setAxiosArray(res.data.data)
+      }
+    }).catch((error) => {
+      if (error.response) {
+        console.log(error.response.data);
+        // Alert.alert(error.response.data.error);
+      } else if (error.request) {
+        console.log(error.request);
+      }
+    })
+  }
+
   useEffect(() => {
-    setData(dummyData[category].slice(0, limit));
+    console.log(isFocused)
+    ProductGetAxios()
+  }, [isFocused])
+
+  useEffect(() => {
+    setData(axiosArray.slice(0, limit));
     setOffset(limit);
-  }, [category]);
+  }, [category, axiosArray]);
 
   const loadMoreData = () => {
     const newData = data.concat(
-      dummyData[category].slice(offset, offset + limit)
+      axiosArray.slice(offset, offset + limit)
     );
     setData(newData);
     setOffset(offset + limit);
   };
+
+
+
 
   return (
     <>
@@ -40,8 +71,8 @@ const SearchResult = ({ navigation, route }) => {
       <LayOut backgroundColor={colors.white}>
         <SearchResultHeader navigation={navigation} route={route} />
         <FlatList
-          data={SearchResultTabList}
-          keyExtractor={(item) => "" + item.id}
+          data={atCategoryArray}
+          keyExtractor={(item) => "" + item.code}
           horizontal
           showsHorizontalScrollIndicator={false}
           style={{ marginTop: 10 }}
@@ -57,7 +88,7 @@ const SearchResult = ({ navigation, route }) => {
         <FlatList
           ListHeaderComponent={<FilterSection navigation={navigation} />}
           data={data}
-          keyExtractor={(item) => "" + item.href}
+          keyExtractor={(item) => "" + item.productUrl}
           showsVerticalScrollIndicator={false}
           renderItem={(item) => <ItemLarge {...item} navigation={navigation} />}
           onEndReachedThreshold={0.95}
