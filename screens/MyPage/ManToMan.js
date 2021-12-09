@@ -1,6 +1,6 @@
 // import { Picker } from "@react-native-picker/picker";
 import React, { useEffect, useState } from "react";
-import { FlatList, StyleSheet, Text, View } from "react-native";
+import { FlatList, Modal, SafeAreaView, ScrollView, StyleSheet, Text, View } from "react-native";
 import styled, { css } from "styled-components/native";
 import { colors } from "../../colors";
 import { DownArrowIcon } from "../../components/Icons";
@@ -18,6 +18,10 @@ import NoPage from "../../components/NoPage";
 import LayOut from "../../components/LayOut";
 
 import axios from 'axios';
+import { AtomUserId, AtomUserToken } from "../../atom/atom";
+import { useRecoilState } from "recoil";
+
+import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
 
 const MainContainer = styled.View`
   flex: 1;
@@ -173,6 +177,46 @@ const PurpleBtnWrap = styled.View`
   margin-top: 64px;
 `;
 
+const PopupText = styled.Text`
+  font-size: 15px;
+  color: #2f3741;
+  margin-bottom: 16px;
+  ${(p) =>
+    p.title &&
+    css`
+      font-size: 20px;
+      font-family: ${fonts.bold};
+      margin-bottom: 4px;
+    `}
+  ${(p) =>
+    p.description &&
+    css`
+      min-height: 60px;
+    `}
+`;
+
+export const PurpleLineBtn = ({
+  width,
+  height,
+  marginTop,
+  text,
+  onPress,
+  marginBottom,
+  fontSize,
+}) => {
+  return (
+    <LineBtn
+      width={width}
+      height={height}
+      marginTop={marginTop}
+      marginBottom={marginBottom}
+      onPress={() => onPress && onPress()}
+    >
+      <LineBtnText fontSize={fontSize}>{text}</LineBtnText>
+    </LineBtn>
+  );
+};
+
 const tabList = [
   {
     id: 1,
@@ -189,15 +233,15 @@ const tabList = [
 const dropdownList = [
   {
     label: "접속 문의",
-    value: "connect",
+    value: "접속 문의",
   },
   {
     label: "설정 문의",
-    value: "setting",
+    value: "설정 문의",
   },
   {
     label: "기타 문의",
-    value: "others",
+    value: "기타 문의",
   },
 ];
 
@@ -241,7 +285,7 @@ const requestHistory = [
   },
 ];
 
-const ManToMan = () => {
+const ManToMan = ({ navigation }) => {
   const [isFocused, setIsFocused] = useState({
     Request: true,
     History: false,
@@ -250,18 +294,32 @@ const ManToMan = () => {
   const [requestType, setRequestType] = useState();
   const [sendOn, setSendOn] = useState(false);
 
-  function HistoryLoadAxios(params) {
-    axios.get('https://softer104.cafe24.com/Open/Coupang/Brands', {
+  const [atUserToken, setAtUserToken] = useRecoilState(AtomUserToken)
+
+  const [atUserId, setAtUserId] = useRecoilState(AtomUserId)  //유저아이디
+
+  const [userPhone, setUserPhone] = useState('')
+  const [userid, setuserid] = useState(atUserId)
+  const [qusetionTitle, setQuestionTitle] = useState('')
+  const [questionContent, setQuestionContest] = useState('')
+
+  const [imgbase64, setImgbase64] = useState('')
+
+
+  function HistoryLoadAxios(params) { //1대1 문의 내역 가져오기
+    axios.get('https://softer104.cafe24.com/V1/Inquiry/List', {
+      headers: {
+        Authorization: `Bearer ${atUserToken}`
+      },
+      params: {
+        limit: 10,
+        offset: 0,
+        w_name: 'num',
+        w_para: 4
+      }
     }).then((res) => {
-      console.log(res.data);
       if (res.data.msg === 'success') {
-        // var array = []
-
-        // for (var i = 0; i < Object.keys(res.data).length - 3; i++) {
-        //   array.push(Object.values(res.data)[i])
-        // }
-
-        // setBrandArray(array)
+        console.log(res.data.list);
       }
     }).catch((error) => {
       if (error.response) {
@@ -273,9 +331,47 @@ const ManToMan = () => {
     })
   }
 
+
+  function WriteQuestionAxios(params) { //1대1 문의 내역 가져오기
+    axios.get('https://softer104.cafe24.com/V1/Inquiry/Register', {
+      headers: {
+        Authorization: `Bearer ${atUserToken}`
+      },
+      params: {
+        phone: userPhone,
+        email: userid,
+        type: requestType,
+        title: qusetionTitle,
+        content: questionContent,
+
+      }
+    }).then((res) => {
+      if (res.data.msg === 'success') {
+        console.log(res.data.list);
+      }
+    }).catch((error) => {
+      if (error.response) {
+        console.log(error.response.data);
+        // Alert.alert(error.response.data.error);
+      } else if (error.request) {
+        console.log(error.request);
+      }
+    })
+  }
   useEffect(() => {
     HistoryLoadAxios()
+
+    // launchImageLibrary({
+    //   mediaType: 'photo',
+    //   quality: 0.2,
+    //   includeBase64: true,
+    // }).then((res) => {
+    //   console.log(res.assets[0].base64)
+    // setImgbase64(res.assets[0].base64)
+    // });
+
   }, [])
+
 
   const onClickSelect = (name) => {
     setIsFocused({
@@ -300,7 +396,13 @@ const ManToMan = () => {
 
   const onPressSendOn = () => {
     setSendOn(!sendOn);
+    WriteQuestionAxios()
   };
+
+  function modalOk(params) {
+    setSendOn(!sendOn);
+    navigation.goBack()
+  }
 
   const renderItem = ({ item }) => {
     return (
@@ -375,67 +477,90 @@ const ManToMan = () => {
         })}
       </TabBox>
       {isFocused.Request === true && (
-        <RequestWrap>
-          <Input width={"100%"} placeholder={"이메일"} marginBottom={"8px"} />
-          <Input width={"100%"} placeholder={"연락처"} marginBottom={"20px"} />
-          <Divider>
-            <UnderLine height={6} />
-          </Divider>
-          <DropdownWrap>
-            <RNPickerSelect
-              placeholder={{
-                label: "유형 선택",
-                value: null,
-                color: colors.gray,
-              }}
-              value={requestType}
-              onValueChange={(value) => setRequestType(value)}
-              items={dropdownList}
-              style={{
-                ...pickerSelectStyles,
-              }}
+        <ScrollView showsVerticalScrollIndicator={false}>
+          <RequestWrap>
+            <Input width={"100%"} placeholder={"이메일"} marginBottom={"8px"} value={userid} onChangeText={setuserid} />
+            <Input width={"100%"} placeholder={"연락처"} marginBottom={"20px"} onChangeText={userPhone} />
+            <Divider>
+              <UnderLine height={6} />
+            </Divider>
+            <DropdownWrap>
+              <RNPickerSelect
+                placeholder={{
+                  label: "유형 선택",
+                  value: null,
+                  color: colors.gray,
+                }}
+                value={requestType}
+                onValueChange={(value) => setRequestType(value)}
+                items={dropdownList}
+                style={{
+                  ...pickerSelectStyles,
+                }}
+              />
+            </DropdownWrap>
+            <Input
+              width={"100%"}
+              placeholder={"제목을 입력해주세요."}
+              marginBottom={"8px"}
+              onChangeText={setQuestionTitle}
             />
-          </DropdownWrap>
-          <Input
-            width={"100%"}
-            placeholder={"제목을 입력해주세요."}
-            marginBottom={"8px"}
-          />
-          <Input
-            width={"100%"}
-            placeholder={"내용을 입력해주세요."}
-            multiline
-            height={"200px"}
-          />
-          <UploaderWrap>
-            <UrlDisplay>
-              <UrlText>PNG,JPG 파일 첨부 가능합니다.</UrlText>
-            </UrlDisplay>
-            <PurpleBtn width={"84px"} text={"파일첨부"} />
-          </UploaderWrap>
-          <PurpleBtn
-            width={"100%"}
-            text={"전송"}
-            marginTop={"auto"}
-            onPress={onPressSendOn}
-          />
-        </RequestWrap>
+            <Input
+              width={"100%"}
+              placeholder={"내용을 입력해주세요."}
+              multiline
+              height={"200px"}
+              onChangeText={setQuestionTitle}
+            />
+            <UploaderWrap>
+              <UrlDisplay>
+                <UrlText>PNG,JPG 파일 첨부 가능합니다.</UrlText>
+              </UrlDisplay>
+              <PurpleBtn width={"84px"} text={"파일첨부"} />
+            </UploaderWrap>
+            <PurpleBtn
+              width={"100%"}
+              text={"전송"}
+              marginTop={"auto"}
+              onPress={onPressSendOn}
+            />
+          </RequestWrap>
+        </ScrollView>
       )}
       {isFocused.History === true && (
         <>
           <UnderLine height={2} />
-          <NoPage horizontalZero={true} left={-24} />
-          {/* <FlatList
+          {/* <NoPage horizontalZero={true} left={-24} /> */}
+          <FlatList
             style={{
               backgroundColor: "#fff",
             }}
             data={requestHistory}
             renderItem={renderItem}
             keyExtractor={(item) => "" + item.id}
-          /> */}
+            showsVerticalScrollIndicator={false}
+          />
         </>
       )}
-      {sendOn && (
+
+      <Modal visible={sendOn} transparent={true}>
+        <SafeAreaView style={{ flex: 1, backgroundColor: 'rgba(0,0,0,0.5)', alignItems: "center", justifyContent: "center" }}>
+          <View style={{ width: screenSize.width - 40, backgroundColor: 'white', borderRadius: 14, padding: 20 }}>
+            <PopupText title>1:1 문의 접수</PopupText>
+            <PopupText description>문의하신 내용은 문의하기{'>'}내역확인에서 확인하실 수 있습니다.</PopupText>
+            <PurpleBtn
+              width={"100%"}
+              marginTop={"auto"}
+              text={"확인"}
+              onPress={() => modalOk()}
+            />
+          </View>
+        </SafeAreaView>
+      </Modal>
+
+
+
+      {/* {sendOn && (
         <NormalPopup
           title={"1:1 문의 접수"}
           description={
@@ -444,7 +569,7 @@ const ManToMan = () => {
           btnText={"확인"}
           onPress={onPressSendOn}
         />
-      )}
+      )} */}
     </MainContainer>
   );
 };
