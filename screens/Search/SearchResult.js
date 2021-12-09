@@ -24,6 +24,7 @@ const SearchResult = ({ navigation, route }) => {
 
   const [atCategoryArray, setAtCategoryArray] = useRecoilState(AtomCategoryArray)
   const [axiosArray, setAxiosArray] = useState([])
+  const [searchText, SetSearchText] = useState('')
 
   function ProductGetAxios(params) {
     axios.get('https://softer104.cafe24.com/Open/Coupang/Product?limit=100&kinds=bestcategories&category_id=' + isFocused, {
@@ -50,7 +51,7 @@ const SearchResult = ({ navigation, route }) => {
   useEffect(() => {
     setData(axiosArray.slice(0, limit));
     setOffset(limit);
-  }, [category, axiosArray]);
+  }, [axiosArray]);
 
   const loadMoreData = () => {
     const newData = data.concat(
@@ -59,6 +60,10 @@ const SearchResult = ({ navigation, route }) => {
     setData(newData);
     setOffset(offset + limit);
   };
+
+  useEffect(() => {
+    console.log(searchText);
+  }, [searchText])
 
 
 
@@ -69,7 +74,7 @@ const SearchResult = ({ navigation, route }) => {
         style={{ paddingTop: "9%", backgroundColor: colors.white }}
       />
       <LayOut backgroundColor={colors.white}>
-        <SearchResultHeader navigation={navigation} route={route} />
+        <SearchResultHeader navigation={navigation} route={route} setSearchText={SetSearchText} />
         <FlatList
           data={atCategoryArray}
           keyExtractor={(item) => "" + item.code}

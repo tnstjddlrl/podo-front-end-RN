@@ -118,10 +118,12 @@ export const Input = ({
   fontSize,
   height,
   multiline,
-  onChangeText
+  onChangeText,
+  value
 }) => {
   return (
     <InputA
+      value={value}
       secureTextEntry={secure}
       placeholder={placeholder}
       width={width}

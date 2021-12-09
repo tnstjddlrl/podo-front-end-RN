@@ -157,6 +157,7 @@ const Wallet = ({ navigation }) => {
 
   const [requirePodoStaking, setRequirePodoStaking] = useState(0)
   const [userLevel, setUserLevel] = useState(0)
+  const [levelPercent, setLevelPercent] = useState(0)
 
   const [atuserPodo, setatuserPodo] = useRecoilState(AtomUserPodo)
   const [atuserPodo_kr, setatuserPodo_kr] = useRecoilState(AtomUserPodo_kr)
@@ -209,6 +210,8 @@ const Wallet = ({ navigation }) => {
       setWbtc(data.mb_wbtc)
       setWbtc_kr(data.wbtc_kr)
 
+      setLevelPercent(Number(data.level_per))
+
 
     }).catch((error) => {
       console.log(error);
@@ -255,7 +258,7 @@ const Wallet = ({ navigation }) => {
               <LevelText isTitle>로그인을 먼저 해주세요!</LevelText>
             }
             <Gauge>
-              <GaugeStatus percent={gaugePercent} />
+              <GaugeStatus percent={levelPercent} />
             </Gauge>
             <LevelText>다음 레벨까지 {requirePodoStaking} Stacking 필요!</LevelText>
           </LevelSection>

@@ -1,6 +1,9 @@
-import React, { useState } from "react";
+import axios from "axios";
+import React, { useEffect, useState } from "react";
 import { ScrollView } from "react-native";
+import { useRecoilState } from "recoil";
 import styled, { css } from "styled-components/native";
+import { AtomUserPodo, AtomUserPodo_kr, AtomUserToken } from "../../atom/atom";
 import { colors } from "../../colors";
 import LayOut from "../../components/LayOut";
 import { StackingBox } from "../../components/Wallet/WalletAccBox";
@@ -188,6 +191,162 @@ const PocketStacking = ({ navigation }) => {
   //   }
   // };
 
+  const [atUserToken, setAtUserToken] = useRecoilState(AtomUserToken) //유저 토큰
+
+  const [atuserPodo, setatuserPodo] = useRecoilState(AtomUserPodo)
+  const [atuserPodo_kr, setatuserPodo_kr] = useRecoilState(AtomUserPodo_kr)
+
+  const [stakingHistoryArray, setStakingHistoryArray] = useState([])
+  const [stakingCompleteHistoryArray, setStakingCompleteHistoryArray] = useState([])
+  const [UnstakingHistoryArray, setUnStakingHistoryArray] = useState([])
+  const [UnstakingCompleteHistoryArray, setUnStakingCompleteHistoryArray] = useState([])
+
+  const [AllStakingArray, setAllStakingArray] = useState([])
+  const [AllUnStakingArray, setAllUnStakingArray] = useState([])
+
+  const [AllArray, setAllarray] = useState([])
+
+  function StakingHistoryLoadAxios(params) { //스테이킹 신청내역
+    axios.get('https://softer104.cafe24.com/V1/Podo/StakeList', {
+      headers: {
+        Authorization: `Bearer ${atUserToken}`
+      },
+      params: {
+        limit: 10,
+        offset: 0,
+      }
+    }).then((res) => {
+      console.log('스테이킹 내역:')
+      console.log(res.data);
+      if (res.data.msg === 'success') {
+        setStakingHistoryArray(res.data)
+      }
+    }).catch((error) => {
+      if (error.response) {
+        console.log(error.response.data);
+        // Alert.alert(error.response.data.error);
+      } else if (error.request) {
+        console.log(error.request);
+      }
+    })
+  }
+
+  function StakingCompleteHistoryLoadAxios(params) { //스테이킹 신청내역
+    axios.get('https://softer104.cafe24.com/V1/Podo/StakeListComp', {
+      headers: {
+        Authorization: `Bearer ${atUserToken}`
+      },
+      params: {
+        limit: 10,
+        offset: 0,
+      }
+    }).then((res) => {
+      console.log('스테이킹 완료 내역:')
+      console.log(res.data);
+      if (res.data.msg === 'success') {
+        setStakingCompleteHistoryArray(res.data)
+      }
+    }).catch((error) => {
+      if (error.response) {
+        console.log(error.response.data);
+        // Alert.alert(error.response.data.error);
+      } else if (error.request) {
+        console.log(error.request);
+      }
+    })
+  }
+
+  function UnStakingHistoryLoadAxios(params) { //스테이킹 신청내역
+    axios.get('https://softer104.cafe24.com/V1/Podo/UnStakeList', {
+      headers: {
+        Authorization: `Bearer ${atUserToken}`
+      },
+      params: {
+        limit: 10,
+        offset: 0,
+      }
+    }).then((res) => {
+      console.log('언스테이킹 내역:')
+      console.log(res.data);
+      if (res.data.msg === 'success') {
+        setUnStakingHistoryArray(res.data)
+      }
+    }).catch((error) => {
+      if (error.response) {
+        console.log(error.response.data);
+        // Alert.alert(error.response.data.error);
+      } else if (error.request) {
+        console.log(error.request);
+      }
+    })
+  }
+
+  function UnStakingCompleteHistoryLoadAxios(params) { //스테이킹 신청내역
+    axios.get('https://softer104.cafe24.com/V1/Podo/UnStakeListComp', {
+      headers: {
+        Authorization: `Bearer ${atUserToken}`
+      },
+      params: {
+        limit: 10,
+        offset: 0,
+      }
+    }).then((res) => {
+      console.log('언스테이킹 완료 내역:')
+      console.log(res.data);
+      if (res.data.msg === 'success') {
+        setUnStakingCompleteHistoryArray(res.data)
+      }
+    }).catch((error) => {
+      if (error.response) {
+        console.log(error.response.data);
+        // Alert.alert(error.response.data.error);
+      } else if (error.request) {
+        console.log(error.request);
+      }
+    })
+  }
+
+  useEffect(() => {
+    StakingHistoryLoadAxios()
+    StakingCompleteHistoryLoadAxios()
+
+    UnStakingHistoryLoadAxios()
+    UnStakingCompleteHistoryLoadAxios()
+  }, [])
+
+  useEffect(() => {
+    let array = []
+    array = array.concat(stakingCompleteHistoryArray, stakingHistoryArray)
+
+    array.sort((a, b) => {
+      return a.complete_date - b.complete_date;
+    })
+
+    setAllStakingArray(array)
+  }, [stakingHistoryArray, stakingCompleteHistoryArray])
+
+  useEffect(() => {
+    let array = []
+    array = array.concat(UnstakingHistoryArray, UnstakingCompleteHistoryArray)
+
+    array.sort((a, b) => {
+      return a.complete_date - b.complete_date;
+    })
+
+    setAllUnStakingArray(array)
+  }, [UnstakingHistoryArray, UnstakingCompleteHistoryArray])
+
+  useEffect(() => {
+    let array = []
+    array = array.concat(AllStakingArray, AllUnStakingArray)
+
+    array.sort((a, b) => {
+      return a.complete_date - b.complete_date;
+    })
+
+    setAllarray(array)
+  }, [AllStakingArray, AllUnStakingArray])
+
   const onClickFocused = (index) => {
     setIsFocused(index);
   };
@@ -195,10 +354,10 @@ const PocketStacking = ({ navigation }) => {
     <LayOut>
       <StackingBox
         coinName={"POD Coin"}
-        coinValue={"0"}
+        coinValue={atuserPodo}
         // price={"10,000"}
         // date={"YYYY.MM.DD XX:XX"}
-        price={"0"}
+        price={atuserPodo_kr}
         date={`${current.getFullYear()}.${zeroPlus(
           current.getMonth() + 1
         )}.${zeroPlus(current.getDate())} ${zeroPlus(
