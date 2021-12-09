@@ -5,6 +5,8 @@ import { colors } from "../../colors";
 import { fonts } from "../../fonts";
 import { BackArrowIcon, CancelIcon, SearchIcon } from "../Icons";
 import { useForm } from "react-hook-form";
+import { AsyncSetUserCurrentSearchList, AtomUserCurrentSearchList } from "../../atom/atom";
+import { useRecoilState } from "recoil";
 
 const Container = styled.View`
   flex-direction: row;
@@ -39,9 +41,19 @@ const SearchResultHeader = ({ navigation, route: { params } }) => {
     },
   });
 
-  const onCompleted = async (data) => {
-    await navigation.replace("SearchResult", data);
+  const onCompleted = (data) => {
+    navigation.navigate("SearchResult", data);
+
+    console.log(data.searchText)
+    let array = atUserSearchList.concat({ id: Math.random().toString(36).substr(2, 11), search: data.searchText })
+    setAtUserSerachList(array)
+    AsyncSetUserCurrentSearchList(array).then(() => { console.log('어싱크 완료'); })
+    // setValue('searchText', '')
   };
+
+  const [atUserSearchList, setAtUserSerachList] = useRecoilState(AtomUserCurrentSearchList);
+
+
   useEffect(() => {
     register("searchText", { required: true });
   });
@@ -61,7 +73,7 @@ const SearchResultHeader = ({ navigation, route: { params } }) => {
             value={watch("searchText")}
             returnKeyType="done"
             onChangeText={(text) => setValue("searchText", text)}
-
+            onSubmitEditing={handleSubmit(onCompleted)}
           />
         </LeftPart>
         <TouchableOpacity onPress={() => setValue("searchText", "")}>
