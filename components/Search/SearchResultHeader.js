@@ -34,7 +34,7 @@ const Input = styled.TextInput`
   font-family: ${fonts.medium};
 `;
 
-const SearchResultHeader = ({ navigation, route: { params } }) => {
+const SearchResultHeader = ({ navigation, route: { params }, setSearchText }) => {
   const { register, handleSubmit, setValue, watch } = useForm({
     defaultValues: {
       searchText: params?.searchText,
@@ -42,12 +42,14 @@ const SearchResultHeader = ({ navigation, route: { params } }) => {
   });
 
   const onCompleted = (data) => {
-    navigation.navigate("SearchResult", data);
-
+    // navigation.navigate("SearchResult", data);
     console.log(data.searchText)
+    setSearchText(data.searchText)
     let array = atUserSearchList.concat({ id: Math.random().toString(36).substr(2, 11), search: data.searchText })
     setAtUserSerachList(array)
     AsyncSetUserCurrentSearchList(array).then(() => { console.log('어싱크 완료'); })
+
+
     // setValue('searchText', '')
   };
 
