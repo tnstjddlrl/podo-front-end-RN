@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled, { css } from "styled-components/native";
 import { colors } from "../../colors";
 import LayOut from "../../components/LayOut";
@@ -7,6 +7,9 @@ import { SmallWalletAccBox } from "../../components/Wallet/WalletAccBox";
 import { screenSize } from "../../constants";
 import { fonts } from "../../fonts";
 import { ScrollView } from "react-native";
+import { AtomUserToken, AtomUserWbtc, AtomUserWbtc_kr } from "../../atom/atom";
+import { useRecoilState } from "recoil";
+import axios from "axios";
 
 const BtnBox = styled.View`
   width: 100%;
@@ -176,6 +179,57 @@ const zeroPlus = (num) => {
 
 const PocketNormal = ({ navigation }) => {
   const [isFocused, setIsFocused] = useState(0);
+  const [atUserToken, setAtUserToken] = useRecoilState(AtomUserToken)
+
+
+  const [atuserWbtc, setatuserWbtc] = useRecoilState(AtomUserWbtc)
+  const [atuserWbtc_kr, setatuserWbtc_kr] = useRecoilState(AtomUserWbtc_kr)
+
+  useEffect(() => {
+    LoadWbtcPayOutHistoryComplteAxios()
+    LoadWbtcPayOutHistoryAxios()
+  }, [])
+
+  function LoadWbtcPayOutHistoryComplteAxios(params) {
+    axios.get('https://softer104.cafe24.com/V1/Wbtc/List', {
+      headers: {
+        Authorization: `Bearer ${atUserToken}`
+      },
+      params: {
+        limit: 100,
+        offset: 0
+      }
+    }).then((res) => {
+      console.log('완료된것');
+      console.log(res.data);
+
+
+    }).catch((error) => {
+      console.log(error);
+    })
+  }
+
+  function LoadWbtcPayOutHistoryAxios(params) {
+    axios.get('https://softer104.cafe24.com/V1/Wbtc/EntranceList', {
+      headers: {
+        Authorization: `Bearer ${atUserToken}`
+      },
+      params: {
+        limit: 100,
+        offset: 0
+      }
+    }).then((res) => {
+      console.log('완료안된것');
+      console.log(res.data);
+
+
+    }).catch((error) => {
+      console.log(error);
+    })
+  }
+
+
+
   // const [historyList, setHistoryList] = useState(sampleHistory);
   const historyList = null;
 
@@ -197,10 +251,10 @@ const PocketNormal = ({ navigation }) => {
     <LayOut paddingTop={4}>
       <SmallWalletAccBox
         coinName={"WBTC"}
-        coinValue={"0"}
+        coinValue={atuserWbtc}
         // price={"10,000"}
         // date={"YYYY.MM.DD XX:XX"}
-        price={"0"}
+        price={atuserWbtc_kr}
         date={`${current.getFullYear()}.${zeroPlus(
           current.getMonth() + 1
         )}.${zeroPlus(current.getDate())} ${zeroPlus(

@@ -1,5 +1,8 @@
-import React, { useState } from "react";
+import axios from "axios";
+import React, { useEffect, useState } from "react";
+import { useRecoilState } from "recoil";
 import styled from "styled-components/native";
+import { AtomUserToken } from "../../atom/atom";
 import HistoryItem from "../../components/HistoryItem";
 import { AlarmData, AlarmTabList } from "../../components/Home/SampleData";
 import LayOut from "../../components/LayOut";
@@ -21,6 +24,36 @@ const FlatList = styled.FlatList`
 `;
 
 const Alarm = () => {
+  const [atUserToken, setAtUserToken] = useRecoilState(AtomUserToken) //유저 토큰
+
+  useEffect(() => {
+    AlarmLoadAxios()
+  }, [])
+
+  function AlarmLoadAxios(params) { //스테이킹 신청내역
+    axios.get('https://softer104.cafe24.com/V1/Alarm/List', {
+      headers: {
+        Authorization: `Bearer ${atUserToken}`
+      },
+      params: {
+      }
+    }).then((res) => {
+
+      console.log(res.data);
+      if (res.data.msg === 'success') {
+        // setSelectedList(res.data.list)
+      }
+    }).catch((error) => {
+      if (error.response) {
+        console.log(error.response.data);
+        // Alert.alert(error.response.data.error);
+      } else if (error.request) {
+        console.log(error.request);
+      }
+    })
+  }
+
+
   // const [list, setList] = useState(
   //   AlarmData.filter((item) => item.type === "marketing")
   // );

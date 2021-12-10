@@ -33,10 +33,12 @@ const RecentSearches = () => {
 
   const [atUserSearchList, setAtUserSerachList] = useRecoilState(AtomUserCurrentSearchList);
 
-  // useEffect(() => {
-  //   let plus = atUserSearchList.concat({ id: atUserSearchList.length + 1, search: '추가됨!' })
-  //   setAtUserSerachList(plus)
-  // }, [])
+  useEffect(() => {
+    // let plus = atUserSearchList.concat({ id: atUserSearchList.length + 1, search: '추가됨!' })
+    // setAtUserSerachList(plus)
+
+    console.log(atUserSearchList)
+  }, [])
 
   return (
     <LayOut backgroundColor={colors.white}>

@@ -6,5 +6,8 @@
   const [atCategoryArray,setAtCategoryArray] = useRecoilState(AtomCategoryArray) //카테고리 아톰 어레이
 
 
-  const [atuserPodo, setatuserPodo] = useRecoilState(AtomUserPodo) //유저 포도
+  const [atuserPodo, setatuserPodo] = useRecoilState(AtomUserPodo)
   const [atuserPodo_kr, setatuserPodo_kr] = useRecoilState(AtomUserPodo_kr)
+
+  const [atuserWbtc, setatuserWbtc] = useRecoilState(AtomUserWbtc)
+  const [atuserWbtc_kr, setatuserWbtc_kr] = useRecoilState(AtomUserWbtc_kr)

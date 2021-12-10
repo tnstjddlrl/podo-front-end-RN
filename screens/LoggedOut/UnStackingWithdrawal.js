@@ -1,6 +1,9 @@
-import React, { useState } from "react";
-import { ScrollView } from "react-native";
+import axios from "axios";
+import React, { useEffect, useState } from "react";
+import { Alert, ScrollView, View } from "react-native";
+import { useRecoilState } from "recoil";
 import styled, { css } from "styled-components/native";
+import { AtomUserToken } from "../../atom/atom";
 import { colors } from "../../colors";
 import LayOut from "../../components/LayOut";
 import { CancelBtn, Input, PurpleBtn } from "../../components/share";
@@ -136,25 +139,78 @@ const sampleHistory = [
 const withDrawalStatus = ["unstackingSuccess", "unstackingFailure"];
 
 const UnStackingWithdrawal = ({ navigation }) => {
-  const [seeAll, setSeeAll] = useState(false);
-  // const [selectedList, setSelectedList] = useState([]);
-  const selectedList = null;
+  const [atUserToken, setAtUserToken] = useRecoilState(AtomUserToken) //유저 토큰
+
+  const [selectedList, setSelectedList] = useState([])
+
   const [popOn, setPopOn] = useState("");
 
-  const onClickSetSeeAll = () => {
-    setSeeAll(true);
-  };
+  useEffect(() => {
+    StakingCompleteHistoryLoadAxios()
+  }, [])
 
+  function StakingCompleteHistoryLoadAxios(params) { //스테이킹 신청내역
+    axios.get('https://softer104.cafe24.com/V1/Podo/StakeListComp', {
+      headers: {
+        Authorization: `Bearer ${atUserToken}`
+      },
+      params: {
+        limit: 100,
+        offset: 0,
+      }
+    }).then((res) => {
+      console.log('스테이킹 완료 내역:')
+      console.log(res.data);
+      if (res.data.msg === 'success') {
+        setSelectedList(res.data.list)
+      }
+    }).catch((error) => {
+      if (error.response) {
+        console.log(error.response.data);
+        // Alert.alert(error.response.data.error);
+      } else if (error.request) {
+        console.log(error.request);
+      }
+    })
+  }
+
+  function UnStakingAxios(params) { //스테이킹 신청내역
+    axios.get('https://softer104.cafe24.com/V1/Podo/UnStake', {
+      headers: {
+        Authorization: `Bearer ${atUserToken}`
+      },
+      params: {
+        customer_wallet: walletAddress,
+        target_num: selectNum,
+      }
+    }).then((res) => {
+      console.log('스테이킹 완료 내역:')
+      console.log(res.data);
+      if (res.data.msg === 'success') {
+        Alert.alert('언스테이킹을 신청하였습니다.', '', [
+          { text: "확인", onPress: () => navigation.goBack() }
+        ])
+      }
+    }).catch((error) => {
+      Alert.alert('오류가 발생하였습니다.', '잠시후 다시 시도해주세요', [
+        { text: "확인", onPress: () => navigation.goBack() }
+      ])
+      if (error.response) {
+        console.log(error.response.data);
+        // Alert.alert(error.response.data.error);
+      } else if (error.request) {
+        console.log(error.request);
+      }
+    })
+  }
+
+
+
+
+  const [walletAddress, setWalletAddress] = useState('')
+  const [selectNum, setSelectNum] = useState()
   const onClickAddListToggle = (index) => {
-    if (
-      selectedList.filter((item) => item === sampleHistory[index]).length === 0
-    ) {
-      setSelectedList(selectedList.concat(sampleHistory[index]));
-    } else {
-      setSelectedList(
-        selectedList.filter((item) => item !== sampleHistory[index])
-      );
-    }
+    setSelectNum(index)
   };
 
   const onClickPopOn = (str) => {
@@ -176,7 +232,7 @@ const UnStackingWithdrawal = ({ navigation }) => {
   const statusRandom = withDrawalStatus[Math.floor(Math.random() * 2)];
   return (
     <ScrollView>
-      <LayOut paddingTop={66} backgroundColor={"#fff"} heightFull={true}>
+      <LayOut paddingTop={30} backgroundColor={"#fff"} heightFull={true}>
         <TextWrapper>
           <PageTitle>POD 언스테이킹 신청</PageTitle>
           <PageCaption>POD 언스테이킹을 신청합니다.</PageCaption>
@@ -193,74 +249,52 @@ const UnStackingWithdrawal = ({ navigation }) => {
             아직 언스테이킹 할 스테이킹 이력이 없습니다.
           </HistoryText>
         )}
-        {selectedList && !seeAll && (
-          <>
-            <HistoryBox
-              onPress={() => onClickAddListToggle(0)}
-              selected={
-                selectedList.filter((list) => list === sampleHistory[0])
-                  .length !== 0
-              }
-            >
-              <HistoryTextBlock>
-                <HistoryText date>{sampleHistory[0].date}</HistoryText>
-                <HistoryText quantity>{sampleHistory[0].quantity}</HistoryText>
-              </HistoryTextBlock>
-              <HistoryStatus>
-                <HistoryStatusText>스테이킹 완료</HistoryStatusText>
-              </HistoryStatus>
-            </HistoryBox>
-            <SeeAllBtn onPress={() => onClickSetSeeAll()}>
-              <SeeAllBtnText>+ 신청이력 더보기</SeeAllBtnText>
-            </SeeAllBtn>
-          </>
-        )}
-        {selectedList && seeAll && (
-          <ScrollView>
-            {sampleHistory.map((item, index) => {
-              return (
-                <HistoryBox
-                  key={index}
-                  onPress={() => onClickAddListToggle(index)}
-                  selected={
-                    selectedList.filter((list) => list === item).length !== 0
-                  }
-                >
-                  <HistoryTextBlock>
-                    <HistoryText date>{item.date}</HistoryText>
-                    <HistoryText quantity>{item.quantity}</HistoryText>
-                  </HistoryTextBlock>
-                  <HistoryStatus>
-                    <HistoryStatusText>스테이킹 완료</HistoryStatusText>
-                  </HistoryStatus>
-                </HistoryBox>
-              );
-            })}
-          </ScrollView>
-        )}
+        <ScrollView showsVerticalScrollIndicator={false}>
+          {selectedList.map((item, index) => {
+            return (
+              <HistoryBox
+                key={index}
+                onPress={() => onClickAddListToggle(item.num)}
+                selected={
+                  (item.num == selectNum)
+                }>
+                <HistoryTextBlock>
+                  <HistoryText date>{item.complete_date}</HistoryText>
+                  <HistoryText quantity>{item.podo}</HistoryText>
+                </HistoryTextBlock>
+                <HistoryStatus>
+                  <HistoryStatusText>스테이킹 완료</HistoryStatusText>
+                </HistoryStatus>
+              </HistoryBox>
+            );
+          })}
+        </ScrollView>
+
         <PageCaption notTitle>2. 개인 지갑 Address</PageCaption>
-        <Input width={"100%"} placeholder={"개인 지갑 주소를 입력해주세요."} />
-        <BtnWrapper>
-          <CancelBtn
-            width={"49%"}
-            text={"취소"}
-            onPress={() => onClickPopOn("cancel")}
-          />
-          <PurpleBtn
-            width={"49%"}
-            text={"확인"}
-            onPress={() =>
-              onClickPopOn(selectedList ? statusRandom : "unstackingNoData")
-            }
-          />
-        </BtnWrapper>
-        {popOn !== "" && (
+        <Input width={"100%"} placeholder={"개인 지갑 주소를 입력해주세요."} onChangeText={setWalletAddress} />
+        <View style={{ marginBottom: 10 }}>
+          <BtnWrapper>
+            <CancelBtn
+              width={"49%"}
+              text={"취소"}
+              onPress={() => navigation.goBack()}
+            />
+            <PurpleBtn
+              width={"49%"}
+              text={"확인"}
+              onPress={() =>
+                UnStakingAxios()
+              }
+            />
+          </BtnWrapper>
+        </View>
+        {/* {popOn !== "" && (
           <WalletPopup
             onPress={() => onPressNavigate(popOn)}
             status={popOn}
             onPressCancel={() => onClickPopOff()}
           />
-        )}
+        )} */}
       </LayOut>
     </ScrollView>
   );
