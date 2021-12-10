@@ -1,5 +1,9 @@
-import React, { useState } from "react";
+import axios from "axios";
+import React, { useEffect, useState } from "react";
+import { Alert } from "react-native";
+import { useRecoilState } from "recoil";
 import styled from "styled-components/native";
+import { AtomUserToken } from "../../atom/atom";
 import { colors } from "../../colors";
 import LayOut from "../../components/LayOut";
 import { CancelBtn, Input, PurpleBtn } from "../../components/share";
@@ -36,8 +40,12 @@ const BtnWrapper = styled.View`
   bottom: 24px;
 `;
 
-const StackingEnd = ({ navigation }) => {
+const StackingEnd = ({ navigation, route }) => {
+  const [atUserToken, setAtUserToken] = useRecoilState(AtomUserToken) //유저 토큰
+
   const [popOn, setPopOn] = useState("");
+
+  const [transcation, setTranscation] = useState('')
 
   const onClickPopOn = (str) => {
     setPopOn(str);
@@ -46,6 +54,39 @@ const StackingEnd = ({ navigation }) => {
   const onClickPopOff = () => {
     setPopOn("");
   };
+
+  useEffect(() => {
+    console.log(route.params)
+  }, [])
+
+  function StakingAxios(params) { //스테이킹 신청내역
+    axios.get('https://softer104.cafe24.com/V1/Podo/Stake', {
+      headers: {
+        Authorization: `Bearer ${atUserToken}`
+      },
+      params: {
+        transactionId: transcation,
+        customer_wallet: route.params.address,
+        podo: route.params.podo
+      }
+    }).then((res) => {
+      console.log(res.data);
+      if (res.data.msg === 'success') {
+        onClickPopOn("stacking")
+      }
+    }).catch((error) => {
+      Alert.alert('오류가 발생하였습니다!', '', [
+        { text: "OK", onPress: () => navigation.navigate("PocketStacking") }
+      ])
+      if (error.response) {
+        console.log(error.response.data);
+        // Alert.alert(error.response.data.error);
+      } else if (error.request) {
+        console.log(error.request);
+      }
+    })
+  }
+
   return (
     <LayOut paddingTop={66}>
       <TextWrapper>
@@ -56,7 +97,7 @@ const StackingEnd = ({ navigation }) => {
           거래의 정확성을 위한 확인절차를 위해서 사용됩니다.
         </PageCaption>
       </TextWrapper>
-      <Input width={"100%"} placeholder={"Transaction ID를 입력해주세요."} />
+      <Input width={"100%"} placeholder={"Transaction ID를 입력해주세요."} onChangeText={setTranscation} />
       <BtnWrapper>
         <CancelBtn
           width={"49%"}
@@ -66,13 +107,13 @@ const StackingEnd = ({ navigation }) => {
         <PurpleBtn
           width={"49%"}
           text={"확인"}
-          onPress={() => onClickPopOn("stacking")}
+          onPress={() => { StakingAxios() }}
         />
       </BtnWrapper>
       {popOn !== "" && (
         <WalletPopup
           status={popOn}
-          onPressCancel={() => onClickPopOff()}
+          onPressCancel={() => { onClickPopOff() }}
           onPress={() => navigation.navigate("PocketStacking")}
         />
       )}

@@ -86,28 +86,30 @@ const CoinBtnText = styled.Text`
         `}
 `;
 
-const priceList = ["200,000", "500,000", "1,000,000"];
+const priceList = ["200000", "500000", "1000000"];
 
 const StackingWithdrawal = ({ navigation }) => {
   const [isChecked, setIsChecked] = useState(null);
   const [userWalletAddress, setUserWalletAddress] = useState('')
   const [userCustomPodo, setUserCustomPodo] = useState('')
 
-  useEffect(() => {
-    console.log(userCustomPodo);
-    if (userCustomPodo && isChecked != null) {
-      setIsChecked(null)
-      Alert.alert('직접 입력시 버튼 입력은 불가능합니다!')
-    }
-  }, [userCustomPodo, isChecked])
+  // useEffect(() => {
+  //   console.log(userCustomPodo);
+  //   if (userCustomPodo && isChecked != null) {
+  //     setIsChecked(null)
+  //     Alert.alert('직접 입력시 버튼 입력은 불가능합니다!')
+  //   }
+  // }, [userCustomPodo, isChecked])
 
 
-  const onClickChecked = (index) => {
+  const onClickChecked = (index, item) => {
     if (isChecked === index) {
       setIsChecked();
     } else {
       setIsChecked(index);
     }
+    console.log(item)
+    setUserCustomPodo(item)
   };
   return (
     <LayOut paddingTop={66}>
@@ -119,13 +121,13 @@ const StackingWithdrawal = ({ navigation }) => {
           <PageCaption>주소는 아래의 Wallet address를 확인하세요.</PageCaption>
         </TextWrapper>
         <InputWithBtnWrap>
-          <Input width={"75%"} placeholder={"Mother wallet address"} onChangeText={setUserWalletAddress} />
+          <Input width={"75%"} placeholder={"Mother wallet address"} />
           <PurpleBtn text={"복사"} width={"74px"} />
         </InputWithBtnWrap>
         <PageCaption notTitle marginTop={32}>
           1. 전송하실 개인 지갑의 address를 입력해주세요.
         </PageCaption>
-        <Input width={"100%"} placeholder={"개인 지갑 주소"} />
+        <Input width={"100%"} placeholder={"개인 지갑 주소"} onChangeText={setUserWalletAddress} />
         <PageCaption notTitle marginTop={24}>
           2. 스테이킹 하실 코인 수량을 입력해주세요.
         </PageCaption>
@@ -134,10 +136,10 @@ const StackingWithdrawal = ({ navigation }) => {
             return (
               <CoinBtn
                 key={index}
-                onPress={() => onClickChecked(index)}
+                onPress={() => onClickChecked(index, item)}
                 checked={isChecked === index}
               >
-                <CoinBtnText checked={(isChecked) === index}>{item}</CoinBtnText>
+                <CoinBtnText checked={(isChecked) === index}>{item.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}</CoinBtnText>
               </CoinBtn>
             );
           })}
@@ -146,7 +148,7 @@ const StackingWithdrawal = ({ navigation }) => {
           *위의 금액은 리워드를 추가로 받으실 수 있는 등급의 기준 코인 갯수입니다.
           미달되는 스테이킹을 하실 경우 리워드가 적용되지 않습니다.
         </PageCaption>
-        <Input width={"100%"} placeholder={"그 외"} onChangeText={setUserCustomPodo} />
+        <Input width={"100%"} placeholder={"그 외"} onChangeText={setUserCustomPodo} value={userCustomPodo} />
         <PageCaption notTitle marginTop={24}>
           3. 확인을 눌러주세요.
         </PageCaption>
@@ -159,7 +161,7 @@ const StackingWithdrawal = ({ navigation }) => {
           <PurpleBtn
             width={"49%"}
             text={"확인"}
-            onPress={() => navigation.navigate("StackingEnd")}
+            onPress={() => navigation.navigate("StackingEnd", { address: userWalletAddress, podo: userCustomPodo })}
           />
         </BtnWrapper>
       </ScrollView>
