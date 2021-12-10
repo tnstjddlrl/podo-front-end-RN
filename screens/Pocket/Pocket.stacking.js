@@ -212,7 +212,7 @@ const PocketStacking = ({ navigation }) => {
         Authorization: `Bearer ${atUserToken}`
       },
       params: {
-        limit: 10,
+        limit: 100,
         offset: 0,
       }
     }).then((res) => {
@@ -237,7 +237,7 @@ const PocketStacking = ({ navigation }) => {
         Authorization: `Bearer ${atUserToken}`
       },
       params: {
-        limit: 10,
+        limit: 100,
         offset: 0,
       }
     }).then((res) => {
@@ -262,7 +262,7 @@ const PocketStacking = ({ navigation }) => {
         Authorization: `Bearer ${atUserToken}`
       },
       params: {
-        limit: 10,
+        limit: 100,
         offset: 0,
       }
     }).then((res) => {
@@ -287,7 +287,7 @@ const PocketStacking = ({ navigation }) => {
         Authorization: `Bearer ${atUserToken}`
       },
       params: {
-        limit: 10,
+        limit: 100,
         offset: 0,
       }
     }).then((res) => {
@@ -307,12 +307,21 @@ const PocketStacking = ({ navigation }) => {
   }
 
   useEffect(() => {
-    StakingHistoryLoadAxios()
-    StakingCompleteHistoryLoadAxios()
 
-    UnStakingHistoryLoadAxios()
-    UnStakingCompleteHistoryLoadAxios()
   }, [])
+
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('focus', () => {
+      StakingHistoryLoadAxios()
+      StakingCompleteHistoryLoadAxios()
+
+      UnStakingHistoryLoadAxios()
+      UnStakingCompleteHistoryLoadAxios()
+    });
+
+    // Return the function to unsubscribe from the event so it gets removed on unmount
+    return unsubscribe;
+  }, [navigation]);
 
   useEffect(() => {
     let array = []
@@ -346,6 +355,8 @@ const PocketStacking = ({ navigation }) => {
 
     setAllarray(array)
   }, [AllStakingArray, AllUnStakingArray])
+
+
 
   const onClickFocused = (index) => {
     setIsFocused(index);
