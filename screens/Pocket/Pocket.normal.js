@@ -123,7 +123,7 @@ const HistoryStatusText = styled.Text`
   font-size: 10px;
 `;
 
-const tabList = ["전체", "출금 이력", "리워드 이력"];
+const tabList = ["전체", "출금 이력"];
 
 // const sampleHistory = [
 //   {
@@ -181,14 +181,21 @@ const PocketNormal = ({ navigation }) => {
   const [isFocused, setIsFocused] = useState(0);
   const [atUserToken, setAtUserToken] = useRecoilState(AtomUserToken)
 
-
   const [atuserWbtc, setatuserWbtc] = useRecoilState(AtomUserWbtc)
   const [atuserWbtc_kr, setatuserWbtc_kr] = useRecoilState(AtomUserWbtc_kr)
 
+  const [compArray,setCompArray] =useState([])
+  const [HistoryArray,setHistoryArray]=useState([])
+
   useEffect(() => {
-    LoadWbtcPayOutHistoryComplteAxios()
-    LoadWbtcPayOutHistoryAxios()
-  }, [])
+    const unsubscribe = navigation.addListener('focus', () => {
+      console.log('토큰 : ' + atUserToken);
+      LoadWbtcPayOutHistoryComplteAxios()
+      LoadWbtcPayOutHistoryAxios()
+    });
+
+    return unsubscribe;
+  }, [navigation]);
 
   function LoadWbtcPayOutHistoryComplteAxios(params) {
     axios.get('https://softer104.cafe24.com/V1/Wbtc/List', {
@@ -201,8 +208,8 @@ const PocketNormal = ({ navigation }) => {
       }
     }).then((res) => {
       console.log('완료된것');
-      console.log(res.data);
-
+      console.log(res.data.list);
+setCompArray(res.data.list)
 
     }).catch((error) => {
       console.log(error);
@@ -220,7 +227,8 @@ const PocketNormal = ({ navigation }) => {
       }
     }).then((res) => {
       console.log('완료안된것');
-      console.log(res.data);
+      console.log(res.data.list);
+      setHistoryArray(res.data.list)
 
 
     }).catch((error) => {

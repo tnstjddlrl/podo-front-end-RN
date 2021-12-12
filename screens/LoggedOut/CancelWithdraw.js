@@ -1,6 +1,9 @@
-import React, { useState } from "react";
-import { ScrollView } from "react-native";
+import axios from "axios";
+import React, { useEffect, useState } from "react";
+import { Alert, ScrollView } from "react-native";
+import { useRecoilState } from "recoil";
 import styled, { css } from "styled-components/native";
+import { AtomUserToken } from "../../atom/atom";
 import { colors } from "../../colors";
 import LayOut from "../../components/LayOut";
 import { CancelBtn, PurpleBtn } from "../../components/share";
@@ -134,24 +137,63 @@ const sampleHistory = [
 ];
 
 const CancelWithdraw = ({ navigation }) => {
-  const [seeAll, setSeeAll] = useState(false);
-  // const [selectedList, setSelectedList] = useState([]);
-  const selectedList = null;
+  const [atUserToken, setAtUserToken] = useRecoilState(AtomUserToken)
 
-  const onClickSetSeeAll = () => {
-    setSeeAll(true);
-  };
+
+  const [seeAll, setSeeAll] = useState(false);
+  const [selectedList, setSelectedList] = useState([]);
+  const [selectNum,setSelectNum] =useState('')
+
+  useEffect(() => {
+    LoadWbtcPayOutHistoryAxios()
+  }, [])
+
+  function LoadWbtcPayOutHistoryAxios(params) {
+    axios.get('https://softer104.cafe24.com/V1/Wbtc/EntranceList', {
+      headers: {
+        Authorization: `Bearer ${atUserToken}`
+      },
+      params: {
+        limit: 100,
+        offset: 0
+      }
+    }).then((res) => {
+      console.log('완료안된것');
+      console.log(res.data.data);
+      var array = selectedList.concat(res.data.data)
+      setSelectedList(array)
+
+    }).catch((error) => {
+      console.log(error);
+    })
+  }
+
+  function CancelAxios(params) {
+    axios.get('https://softer104.cafe24.com/V1/Wbtc/Cancel', {
+      headers: {
+        Authorization: `Bearer ${atUserToken}`
+      },
+      params: {
+        num: selectNum,
+      }
+    }).then((res) => {
+      console.log('신청완료');
+      console.log(res.data);
+      if (res.data.msg === 'success') {
+        Alert.alert('취소 신청을 완료하였습니다.')
+        navigation.navigate("PocketNormal")
+      }
+
+    }).catch((error) => {
+      console.log(error);
+      Alert.alert('오류가 발생하였습니다.')
+        navigation.navigate("PocketNormal")
+    })
+  }
+
 
   const onClickAddListToggle = (index) => {
-    if (
-      selectedList.filter((item) => item === sampleHistory[index]).length === 0
-    ) {
-      setSelectedList(selectedList.concat(sampleHistory[index]));
-    } else {
-      setSelectedList(
-        selectedList.filter((item) => item !== sampleHistory[index])
-      );
-    }
+    setSelectNum(index)
   };
   return (
     <LayOut paddingTop={96}>
@@ -165,42 +207,19 @@ const CancelWithdraw = ({ navigation }) => {
           아직 취소하실 출금 신청 이력이 없습니다.
         </HistoryText>
       )}
-      {selectedList && !seeAll && (
-        <>
-          <HistoryBox
-            onPress={() => onClickAddListToggle(0)}
-            selected={
-              selectedList.filter((list) => list === sampleHistory[0])
-                .length !== 0
-            }
-          >
-            <HistoryTextBlock>
-              <HistoryText date>{sampleHistory[0].date}</HistoryText>
-              <HistoryText quantity>{sampleHistory[0].quantity}</HistoryText>
-            </HistoryTextBlock>
-            <HistoryStatus>
-              <HistoryStatusText>출금신청</HistoryStatusText>
-            </HistoryStatus>
-          </HistoryBox>
-          <SeeAllBtn onPress={() => onClickSetSeeAll()}>
-            <SeeAllBtnText>+ 신청이력 더보기</SeeAllBtnText>
-          </SeeAllBtn>
-        </>
-      )}
-      {selectedList && seeAll && (
         <ScrollView>
-          {sampleHistory.map((item, index) => {
+          {selectedList.map((item, index) => {
             return (
               <HistoryBox
                 key={index}
-                onPress={() => onClickAddListToggle(index)}
+                onPress={() => onClickAddListToggle(item.num)}
                 selected={
-                  selectedList.filter((list) => list === item).length !== 0
+                  item.num == selectNum
                 }
               >
                 <HistoryTextBlock>
-                  <HistoryText date>{item.date}</HistoryText>
-                  <HistoryText quantity>{item.quantity}</HistoryText>
+                  <HistoryText date>{item.entrance_date}</HistoryText>
+                  <HistoryText quantity>{item.wbtc}</HistoryText>
                 </HistoryTextBlock>
                 <HistoryStatus>
                   <HistoryStatusText>출금신청</HistoryStatusText>
@@ -209,7 +228,6 @@ const CancelWithdraw = ({ navigation }) => {
             );
           })}
         </ScrollView>
-      )}
       <BtnWrapper absolute={seeAll}>
         <CancelBtn
           width={"49%"}
@@ -219,7 +237,7 @@ const CancelWithdraw = ({ navigation }) => {
         <PurpleBtn
           width={"49%"}
           text={"확인"}
-          onPress={() => navigation.navigate("PocketNormal")}
+          onPress={() => CancelAxios()}
         />
       </BtnWrapper>
     </LayOut>
