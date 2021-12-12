@@ -30,12 +30,13 @@ const Alarm = () => {
     AlarmLoadAxios()
   }, [])
 
-  function AlarmLoadAxios(params) { //스테이킹 신청내역
+  function AlarmLoadAxios(params) { 
     axios.get('https://softer104.cafe24.com/V1/Alarm/List', {
       headers: {
         Authorization: `Bearer ${atUserToken}`
       },
       params: {
+        mb_no:2
       }
     }).then((res) => {
 
