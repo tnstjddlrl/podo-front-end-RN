@@ -125,41 +125,41 @@ const HistoryStatusText = styled.Text`
 
 const tabList = ["전체", "출금 이력"];
 
-// const sampleHistory = [
-//   {
-//     date: "2021.06.16",
-//     description: "06.14 출금 신청 건",
-//     transaction: "XXXXXXXXXXXXXXX",
-//     status: {
-//       code: "withDrawEnd",
-//       text: "출금완료",
-//     },
-//   },
-//   {
-//     date: "2021.06.16",
-//     description: "06.14 출금 신청 건",
-//     status: {
-//       code: "withDrawing",
-//       text: "출금 처리중",
-//     },
-//   },
-//   {
-//     date: "2021.06.16",
-//     description: "리워드 지급",
-//     status: {
-//       code: "reward",
-//       text: "리워드",
-//     },
-//   },
-//   {
-//     date: "2021.06.23",
-//     description: "06.23 출금 신청 건",
-//     status: {
-//       code: "sendWithDraw",
-//       text: "출금 신청",
-//     },
-//   },
-// ];
+const sampleHistory = [
+  {
+    date: "2021.06.16",
+    description: "06.14 출금 신청 건",
+    transaction: "XXXXXXXXXXXXXXX",
+    status: {
+      code: "withDrawEnd",
+      text: "출금완료",
+    },
+  },
+  {
+    date: "2021.06.16",
+    description: "06.14 출금 신청 건",
+    status: {
+      code: "withDrawing",
+      text: "출금 처리중",
+    },
+  },
+  {
+    date: "2021.06.16",
+    description: "리워드 지급",
+    status: {
+      code: "reward",
+      text: "리워드",
+    },
+  },
+  {
+    date: "2021.06.23",
+    description: "06.23 출금 신청 건",
+    status: {
+      code: "sendWithDraw",
+      text: "출금 신청",
+    },
+  },
+];
 
 // const sampleWithDrawHistory = sampleHistory.filter((item) =>
 //   item.status.code.toLowerCase().includes("withdraw")
@@ -184,8 +184,9 @@ const PocketNormal = ({ navigation }) => {
   const [atuserWbtc, setatuserWbtc] = useRecoilState(AtomUserWbtc)
   const [atuserWbtc_kr, setatuserWbtc_kr] = useRecoilState(AtomUserWbtc_kr)
 
-  const [compArray,setCompArray] =useState([])
-  const [HistoryArray,setHistoryArray]=useState([])
+  const [compArray, setCompArray] = useState([])
+  const [HistoryArray, setHistoryArray] = useState([])
+  const [allArray, setAllArray] = useState([])
 
   useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
@@ -196,6 +197,17 @@ const PocketNormal = ({ navigation }) => {
 
     return unsubscribe;
   }, [navigation]);
+
+  useEffect(() => {
+
+    if (compArray != null && HistoryArray != null) {
+      let array = []
+      array = array.concat(compArray, HistoryArray)
+      setAllArray(array)
+    }
+
+    console.log(allArray);
+  }, [compArray, HistoryArray])
 
   function LoadWbtcPayOutHistoryComplteAxios(params) {
     axios.get('https://softer104.cafe24.com/V1/Wbtc/List', {
@@ -209,7 +221,7 @@ const PocketNormal = ({ navigation }) => {
     }).then((res) => {
       console.log('완료된것');
       console.log(res.data.list);
-setCompArray(res.data.list)
+      setCompArray(res.data.list)
 
     }).catch((error) => {
       console.log(error);
@@ -235,11 +247,6 @@ setCompArray(res.data.list)
       console.log(error);
     })
   }
-
-
-
-  // const [historyList, setHistoryList] = useState(sampleHistory);
-  const historyList = null;
 
   // const onClickFocused = (index) => {
   //   setIsFocused(index);
@@ -290,31 +297,31 @@ setCompArray(res.data.list)
           );
         })}
       </TabBox>
-      <ScrollView>
-        {!historyList && (
+      <ScrollView showsVerticalScrollIndicator>
+        {(allArray == []) && (
           <HistoryText noHistory>아직 출금 신청 이력이 없습니다.</HistoryText>
         )}
-        {historyList &&
-          historyList.map((item, index) => {
+        {(allArray != [] && allArray != undefined) &&
+          allArray.map((item, index) => {
             return (
               <HistoryBox key={index}>
                 <HistoryTextBlock>
-                  <HistoryText date>{item.date}</HistoryText>
+                  <HistoryText date>{item.entrance_date}</HistoryText>
                   <HistoryText
                     description
-                    hasTransaction={item.transaction && true}
+                    hasTransaction={item.transactionId && true}
                   >
-                    {item.description}
+                    {item.wbtc} WBTC
                   </HistoryText>
-                  {item.transaction && (
+                  {(item.transactionId !== null && item.transactionId != '') && (
                     <>
                       <HistoryText caption>Transaction Id :</HistoryText>
-                      <HistoryText caption>{item.transaction}</HistoryText>
+                      <HistoryText caption>{item.transactionId}</HistoryText>
                     </>
                   )}
                 </HistoryTextBlock>
-                <HistoryStatus status={item.status.code}>
-                  <HistoryStatusText>{item.status.text}</HistoryStatusText>
+                <HistoryStatus status={item.state == '3' ? 'withDrawEnd' : 'withDrawing'}>
+                  <HistoryStatusText>{item.state == '3' ? '출금 완료' : '출금 처리중'}</HistoryStatusText>
                 </HistoryStatus>
               </HistoryBox>
             );
