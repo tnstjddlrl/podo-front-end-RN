@@ -3,7 +3,7 @@ import styled from "styled-components/native";
 import { colors } from "../../colors";
 import LayOut from "../../components/LayOut";
 import CheckRow from "../../components/Auth/CheckRow";
-import { Alert, Keyboard, SafeAreaView, Text, TextInput, TouchableOpacity, View } from "react-native";
+import { Alert, Dimensions, Keyboard, Modal, SafeAreaView, Text, TextInput, TouchableOpacity, View } from "react-native";
 import { TextPopup } from "../../components/Auth/Terms";
 import FormBox from "../../components/Auth/FormBox";
 import { Input } from "../../components/share";
@@ -14,6 +14,7 @@ import axios from 'axios';
 import { fonts } from "../../fonts";
 import { ScrollView } from "react-native-gesture-handler";
 import { Center } from "native-base";
+import { useNavigation } from "@react-navigation/native";
 
 const AgreeBox = styled.View`
   width: 100%;
@@ -47,11 +48,18 @@ const FormBoxText = styled.Text`
   margin-left: 4px;
 `;
 
+const chwidth = Dimensions.get('screen').width
+const chheight = Dimensions.get('screen').height
+
 
 const CreateAccountPodo = ({ Navigation }) => {
+  const navigation = useNavigation()
 
   useEffect(() => {
     policyLoadAxios()
+    // setTimeout(() => {
+    //   navigation.navigate('LoginPodo');
+    // }, 1500);
   }, [])
 
   const [policyText, setPolicyText] = useState('')
@@ -62,7 +70,7 @@ const CreateAccountPodo = ({ Navigation }) => {
   function policyLoadAxios(params) {
     axios.post('https://softer104.cafe24.com/Open/Term/Call', {}).then((res) => {
       if (res.data.msg == 'success') {
-        console.log(res.data[0]);
+        // console.log(res.data[0]);
         setPolicyText(res.data[0].privacy_policy)
         setTermText(res.data[0].terms)
       }
@@ -78,28 +86,32 @@ const CreateAccountPodo = ({ Navigation }) => {
 
 
   //회원가입 초안
-  function PhoneAuthAxios(phone) {
-    axios.post('https://softer104.cafe24.com/Open/Auth/PhoneAuth', {
-      type: 'email',
-      mb_email: 'test1@test.com',
-      mb_phone: '01022272013',
-      mb_password: 'asdf1234!',
-      mb_password_check: 'asdf1234!',
-      mb_agree_email: 'Y'
-    }).then((res) => {
-      console.log(res.data);
-      if (res.data.msg === 'success') {
-        console.log('회원가입 성공');
-        Navigation.navigate('test');
-      }
-    }).catch((error) => {
-      if (error.response) {
-        console.log(error.response.data.error);
-        Alert.alert(error.response.data.error);
-      } else if (error.request) {
-        console.log(error.request);
-      }
-    })
+  function registerAxios(phone) {
+    if (mb_pwd === pwdCheck) {
+      axios.post('https://softer104.cafe24.com/Open/Join', {
+        email_auth: inzeng,
+        email: mb_email,
+        phone: mb_phone,
+        password: mb_pwd,
+      }).then((res) => {
+        console.log(res.data);
+        if (res.data.msg === 'success') {
+          console.log('회원가입 성공');
+          Alert.alert('회원가입 성공')
+          navigation.navigate('LoginPodo');
+        }
+      }).catch((error) => {
+        if (error.response) {
+          console.log(error.response.data.error);
+          Alert.alert(error.response.data.error);
+        } else if (error.request) {
+          console.log(error.request);
+        }
+      })
+    } else {
+      Alert.alert('비밀번호를 확인해주세요')
+    }
+
   }
 
   //회원가입 초안
@@ -124,6 +136,9 @@ const CreateAccountPodo = ({ Navigation }) => {
 
   const [mb_email, setMb_email] = useState('')
   const [mb_phone, setMb_phone] = useState('')
+  const [inzeng, setInzeng] = useState('')
+  const [mb_pwd, setMb_Pwd] = useState('')
+  const [pwdCheck, setPwdCheck] = useState('')
 
   const [isTerm, setIsTerm] = useState(false);
   const [isPolicy, setIsPolicy] = useState(false);
@@ -190,7 +205,7 @@ const CreateAccountPodo = ({ Navigation }) => {
               title={'인증번호'}
               placeholder={`인증번호를 입력해주세요`}
               width={"70%"}
-              onChangeText={setMb_phone}
+              onChangeText={setInzeng}
               isppp={true}
             // onPress={() => { console.log('클릭됨'); }}
             // onPresstxt={'인증'}
@@ -214,7 +229,9 @@ const CreateAccountPodo = ({ Navigation }) => {
         <TextInputProp
           width={'100%'}
           title={'비밀번호'}
-          placeholder={'비밀번호를 입력해주세요.'} />
+          placeholder={'비밀번호를 입력해주세요.'}
+          onChangeText={setMb_Pwd}
+        />
 
         {/* 간격 조정 */}
         <View style={{ marginBottom: 20 }}></View>
@@ -223,7 +240,9 @@ const CreateAccountPodo = ({ Navigation }) => {
         <TextInputProp
           width={'100%'}
           title={'비밀번호 확인'}
-          placeholder={'비밀번호를 확인해주세요.'} />
+          placeholder={'비밀번호를 확인해주세요.'}
+          onChangeText={setPwdCheck}
+        />
 
         {/* 간격 조정 */}
         <View style={{ marginBottom: 20 }}></View>
@@ -271,13 +290,55 @@ const CreateAccountPodo = ({ Navigation }) => {
             isSelected={isSelected}
           />
         </AgreeBox>
-        {isTerm && <TextPopup onPress={onClickConfirm} txt={termText} />}
-        {isPolicy && <TextPopup onPress={onClickConfirm} txt={policyText} />}
+
+
+
+
+        {/* {isPolicy && <TextPopup onPress={onClickConfirm} txt={policyText} />} */}
 
       </ScrollView>
-      <View style={{ width: '100%', height: 52, borderRadius: 12, backgroundColor: '#553AED', marginTop: 10, alignItems: "center", justifyContent: "center" }}>
-        <Text style={{ color: 'white', fontFamily: fonts.bold, fontSize: 16 }}>PODO 신규 가입하기</Text>
-      </View>
+
+      <TouchableOpacity onPress={() => { registerAxios() }}>
+        <View style={{ width: '100%', height: 52, borderRadius: 12, backgroundColor: '#553AED', marginTop: 10, alignItems: "center", justifyContent: "center" }}>
+          <Text style={{ color: 'white', fontFamily: fonts.bold, fontSize: 16 }}>PODO 신규 가입하기</Text>
+        </View>
+      </TouchableOpacity>
+
+      <Modal visible={isTerm} transparent={true}>
+        <SafeAreaView style={{ backgroundColor: 'rgba(0,0,0,0.3)', flex: 1, alignItems: "center", justifyContent: "center" }}>
+          <View style={{ backgroundColor: 'white', width: chwidth - 60, height: chheight - 160, padding: 20, borderRadius: 13 }}>
+            <ScrollView>
+              <Text>
+                {termText}
+              </Text>
+            </ScrollView>
+            <TouchableOpacity onPress={() => { setIsTerm(false) }}>
+              <View style={{ width: '100%', height: 52, borderRadius: 12, backgroundColor: '#553AED', marginTop: 10, alignItems: "center", justifyContent: "center" }}>
+                <Text style={{ color: 'white', fontFamily: fonts.bold, fontSize: 16 }}>확인</Text>
+              </View>
+            </TouchableOpacity>
+          </View>
+        </SafeAreaView>
+      </Modal>
+
+      <Modal visible={isPolicy} transparent={true}>
+        <SafeAreaView style={{ backgroundColor: 'rgba(0,0,0,0.3)', flex: 1, alignItems: "center", justifyContent: "center" }}>
+          <View style={{ backgroundColor: 'white', width: chwidth - 60, height: chheight - 160, padding: 20, borderRadius: 13 }}>
+            <ScrollView>
+              <Text>
+                {policyText}
+              </Text>
+            </ScrollView>
+            <TouchableOpacity onPress={() => { setIsPolicy(false) }}>
+              <View style={{ width: '100%', height: 52, borderRadius: 12, backgroundColor: '#553AED', marginTop: 10, alignItems: "center", justifyContent: "center" }}>
+                <Text style={{ color: 'white', fontFamily: fonts.bold, fontSize: 16 }}>확인</Text>
+              </View>
+            </TouchableOpacity>
+          </View>
+        </SafeAreaView>
+      </Modal>
+
+
     </SafeAreaView>
   );
 };

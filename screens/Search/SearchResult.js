@@ -1,9 +1,10 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { FlatList, SafeAreaView } from "react-native";
+import { Alert, FlatList, SafeAreaView } from "react-native";
+import { ScrollView } from "react-native-gesture-handler";
 import { useRecoilState } from "recoil";
 import dummyData from "../../assets/dummyData";
-import { AtomCategoryArray } from "../../atom/atom";
+import { AtomCategoryArray, AtomUserToken } from "../../atom/atom";
 import { colors } from "../../colors";
 import { SearchResultTabList } from "../../components/Home/SampleData";
 import ItemLarge from "../../components/ItemLarge";
@@ -13,7 +14,7 @@ import ResultTopTab from "../../components/Search/ResultTopTab";
 import SearchResultHeader from "../../components/Search/SearchResultHeader";
 
 const SearchResult = ({ navigation, route }) => {
-  const [isFocused, setIsFocused] = useState(1001);
+  const [isFocused, setIsFocused] = useState(route.params.code ? route.params.code : '9999');
   const [category, setCategory] = useState("all");
   const [data, setData] = useState([]);
   const [offset, setOffset] = useState(0);
@@ -23,15 +24,21 @@ const SearchResult = ({ navigation, route }) => {
   };
 
   const [atCategoryArray, setAtCategoryArray] = useRecoilState(AtomCategoryArray)
+  const [searchCategory, setSearchCategory] = useState([{ code: '9999', name: '전체' }])
   const [axiosArray, setAxiosArray] = useState([])
-  const [searchText, SetSearchText] = useState('')
+  const [searchText, SetSearchText] = useState(route.params.searchText)
+  const [atUserToken, setAtUserToken] = useRecoilState(AtomUserToken)
 
   function ProductGetAxios(params) {
-    axios.get('https://softer104.cafe24.com/Open/Coupang/Product?limit=100&kinds=bestcategories&category_id=' + isFocused, {
+    axios.get(`https://softer104.cafe24.com/Open/Coupang/ProductSearch?keyword=${searchText}&category_id=${isFocused === '9999' ? '' : isFocused}&kinds=bestcategories,coupangPL,goldbox`, {
+      headers: {
+        Authorization: `Bearer ${atUserToken}`
+      },
     }).then((res) => {
-      // console.log(res.data);
+      console.log(res.data);
       if (res.data.msg === 'success') {
-        setAxiosArray(res.data.data)
+
+        setAxiosArray(res.data.list)
       }
     }).catch((error) => {
       if (error.response) {
@@ -44,9 +51,15 @@ const SearchResult = ({ navigation, route }) => {
   }
 
   useEffect(() => {
-    console.log(isFocused)
+    console.log(isFocused, searchText, route.params)
+    // Alert.alert(isFocused, searchText, route.params)
     ProductGetAxios()
+
   }, [isFocused])
+
+  useEffect(() => {
+
+  }, [])
 
   useEffect(() => {
     setData(axiosArray.slice(0, limit));
@@ -67,7 +80,6 @@ const SearchResult = ({ navigation, route }) => {
 
 
 
-
   return (
     <>
       <SafeAreaView
@@ -76,8 +88,8 @@ const SearchResult = ({ navigation, route }) => {
       <LayOut backgroundColor={colors.white}>
         <SearchResultHeader navigation={navigation} route={route} setSearchText={SetSearchText} />
         <FlatList
-          data={atCategoryArray}
-          keyExtractor={(item) => "" + item.code}
+          data={(searchCategory.concat(atCategoryArray))}
+          keyExtractor={(item) => '' + item.code}
           horizontal
           showsHorizontalScrollIndicator={false}
           style={{ marginTop: 10 }}
@@ -90,10 +102,24 @@ const SearchResult = ({ navigation, route }) => {
             />
           )}
         />
+
+        {/* <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{ marginTop: 10 }}>
+          {(searchCategory.concat(atCategoryArray)).map((item, index) => {
+            return (
+              <ResultTopTab
+                item={item}
+                key={index}
+                isFocused={isFocused}
+                onClickSelect={onClickSelect}
+                setCategory={setCategory}
+              />
+            )
+          })}
+        </ScrollView> */}
         <FlatList
-          ListHeaderComponent={<FilterSection navigation={navigation} />}
+          style={{ marginTop: 10 }}
           data={data}
-          keyExtractor={(item) => "" + item.productUrl}
+          keyExtractor={(item) => "" + item.productId}
           showsVerticalScrollIndicator={false}
           renderItem={(item) => <ItemLarge {...item} navigation={navigation} />}
           onEndReachedThreshold={0.95}
@@ -103,5 +129,7 @@ const SearchResult = ({ navigation, route }) => {
     </>
   );
 };
+
+
 
 export default SearchResult;

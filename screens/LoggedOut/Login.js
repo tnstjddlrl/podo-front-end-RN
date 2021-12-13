@@ -11,8 +11,8 @@ const Login = ({ navigation }) => {
   return (
     <LayOut paddingTop={24}>
 
-      <FacebookBtn />
-      <KakaoBtn />
+      {/* <FacebookBtn />
+      <KakaoBtn /> */}
       <PurpleBtn
         width={"100%"}
         height={"52px"}

@@ -34,7 +34,7 @@ const HomeTopNav = () => {
       }}
     >
       <TopTab.Screen name="Home" component={Home} options={{ title: "홈" }} />
-      <TopTab.Screen
+      {/* <TopTab.Screen
         name="EventA"
         component={EventA}
         options={{
@@ -61,7 +61,7 @@ const HomeTopNav = () => {
         options={{
           title: "슬기로운 기획전",
         }}
-      />
+      /> */}
     </TopTab.Navigator>
   );
 };

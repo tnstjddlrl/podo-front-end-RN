@@ -1,6 +1,6 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { ScrollView } from "react-native";
+import { Dimensions, ScrollView } from "react-native";
 import { useRecoilState } from "recoil";
 import styled, { css } from "styled-components/native";
 import { AtomUserPodo, AtomUserPodo_kr, AtomUserToken } from "../../atom/atom";
@@ -43,6 +43,7 @@ const HistoryBox = styled.View`
 `;
 
 const HistoryText = styled.Text`
+  width: ${(p) => (p.width ? p.width : '100%')}
   ${(p) =>
     p.date &&
     css`
@@ -86,7 +87,7 @@ const HistoryStatus = styled.TouchableOpacity`
   justify-content: center;
   align-items: center;
   ${(p) =>
-    p.status === "stackingEnd" &&
+    p.status === "stake/3" &&
     css`
       background: #78879c;
     `}
@@ -96,12 +97,12 @@ const HistoryStatus = styled.TouchableOpacity`
       background: #e83535;
     `}
   ${(p) =>
-    p.status.toLowerCase().includes("unstacking") &&
+    (p.status === "unstake/1" || p.status === "unstake/3") &&
     css`
       background: #2a1795;
     `}
     ${(p) =>
-    p.status === "stackingApply" &&
+    (p.status === "stake/1") &&
     css`
       background: #20c06a;
     `}
@@ -219,7 +220,7 @@ const PocketStacking = ({ navigation }) => {
       console.log('스테이킹 내역:')
       console.log(res.data);
       if (res.data.msg === 'success') {
-        setStakingHistoryArray(res.data)
+        setStakingHistoryArray(res.data.list)
       }
     }).catch((error) => {
       if (error.response) {
@@ -244,7 +245,7 @@ const PocketStacking = ({ navigation }) => {
       console.log('스테이킹 완료 내역:')
       console.log(res.data);
       if (res.data.msg === 'success') {
-        setStakingCompleteHistoryArray(res.data)
+        setStakingCompleteHistoryArray(res.data.list)
       }
     }).catch((error) => {
       if (error.response) {
@@ -269,7 +270,7 @@ const PocketStacking = ({ navigation }) => {
       console.log('언스테이킹 내역:')
       console.log(res.data);
       if (res.data.msg === 'success') {
-        setUnStakingHistoryArray(res.data)
+        setUnStakingHistoryArray(res.data.list)
       }
     }).catch((error) => {
       if (error.response) {
@@ -294,7 +295,7 @@ const PocketStacking = ({ navigation }) => {
       console.log('언스테이킹 완료 내역:')
       console.log(res.data);
       if (res.data.msg === 'success') {
-        setUnStakingCompleteHistoryArray(res.data)
+        setUnStakingCompleteHistoryArray(res.data.list)
       }
     }).catch((error) => {
       if (error.response) {
@@ -354,6 +355,8 @@ const PocketStacking = ({ navigation }) => {
     })
 
     setAllarray(array)
+
+    console.log(array)
   }, [AllStakingArray, AllUnStakingArray])
 
 
@@ -388,33 +391,33 @@ const PocketStacking = ({ navigation }) => {
           );
         })}
       </TabBox>
-      <ScrollView>
-        {!historyList && (
+      <ScrollView showsVerticalScrollIndicator={false}>
+        {!AllArray && (
           <HistoryText noHistory>
             아직 스테이킹 신청 이력이 없습니다.
           </HistoryText>
         )}
-        {historyList &&
-          historyList.map((item, index) => {
+        {AllArray &&
+          AllArray.map((item, index) => {
             return (
               <HistoryBox key={index}>
                 <HistoryTextBlock>
-                  <HistoryText date>{item.date}</HistoryText>
+                  <HistoryText date>{item.entrance_date}</HistoryText>
                   <HistoryText
                     description
-                    hasTransaction={item.transaction && true}
+                    hasTransaction={item.transactionId && true}
                   >
-                    {item.description}
+                    {item.podo}
                   </HistoryText>
-                  {item.transaction && (
+                  {(item.transactionId != '') && (
                     <>
                       <HistoryText caption>Transaction Id :</HistoryText>
-                      <HistoryText caption>{item.transaction}</HistoryText>
+                      <HistoryText width={200} caption>{item.transactionId}</HistoryText>
                     </>
                   )}
                 </HistoryTextBlock>
-                <HistoryStatus status={item.status.code}>
-                  <HistoryStatusText>{item.status.text}</HistoryStatusText>
+                <HistoryStatus status={item.type + '/' + item.state}>
+                  <HistoryStatusText>{stateReturn(item.type + '/' + item.state)}</HistoryStatusText>
                 </HistoryStatus>
               </HistoryBox>
             );
@@ -423,5 +426,19 @@ const PocketStacking = ({ navigation }) => {
     </LayOut>
   );
 };
+
+function stateReturn(param) {
+
+  if (param == 'stake/3') {
+    return '스테이킹 완료'
+  } else if (param == 'stake/1') {
+    return '스테이킹 진행중'
+  } else if (param == 'unstake/1') {
+    return '언스테이킹 진행중'
+  } else if (param == 'unstake/3') {
+    return '언스테이킹 완료'
+  }
+
+}
 
 export default PocketStacking;

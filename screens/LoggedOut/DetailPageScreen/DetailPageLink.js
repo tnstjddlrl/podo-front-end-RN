@@ -54,10 +54,12 @@ const FooterText = styled.Text`
 `;
 
 const DetailPageLink = ({ route, navigation }) => {
-  const { productUrl } = route.params;
+  // const { productUrl } = route.params;
+  const [url, setUrl] = useState(route.params.url)
   const [loading, setLoading] = useState(true);
 
-  console.log(productUrl)
+  console.log('불러온 url : ' + route.params)
+  console.log(route.params);
 
   return (
     <>
@@ -69,7 +71,7 @@ const DetailPageLink = ({ route, navigation }) => {
         </CloseIconWrap>
       </WebViewTopper>
       <WebView
-        source={{ uri: productUrl }}
+        source={{ uri: url }}
         originWhitelist={["https://*", "http://*"]}
         onLoadEnd={() => {
           console.log('로드 end')

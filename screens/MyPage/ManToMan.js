@@ -1,6 +1,6 @@
 // import { Picker } from "@react-native-picker/picker";
 import React, { useEffect, useState } from "react";
-import { FlatList, Modal, SafeAreaView, ScrollView, StyleSheet, Text, View } from "react-native";
+import { Alert, FlatList, Modal, SafeAreaView, ScrollView, StyleSheet, Text, View } from "react-native";
 import styled, { css } from "styled-components/native";
 import { colors } from "../../colors";
 import { DownArrowIcon } from "../../components/Icons";
@@ -304,6 +304,7 @@ const ManToMan = ({ navigation }) => {
   const [questionContent, setQuestionContest] = useState('')
 
   const [imgbase64, setImgbase64] = useState('')
+  const [fileName, setFileName] = useState('')
 
 
   function HistoryLoadAxios(params) { //1대1 문의 내역 가져오기
@@ -318,6 +319,7 @@ const ManToMan = ({ navigation }) => {
         w_para: 4
       }
     }).then((res) => {
+
       if (res.data.msg === 'success') {
         console.log(res.data.list);
       }
@@ -332,8 +334,9 @@ const ManToMan = ({ navigation }) => {
   }
 
 
-  function WriteQuestionAxios(params) { //1대1 문의 내역 가져오기
-    axios.get('https://softer104.cafe24.com/V1/Inquiry/Register', {
+  function WriteQuestionAxios(params) { //1대1 문의 작성
+    console.log(userid);
+    axios.post('https://softer104.cafe24.com/V1/Inquiry/Register', {
       headers: {
         Authorization: `Bearer ${atUserToken}`
       },
@@ -343,11 +346,13 @@ const ManToMan = ({ navigation }) => {
         type: requestType,
         title: qusetionTitle,
         content: questionContent,
-
+        image: imgbase64
       }
     }).then((res) => {
+      console.log(res.data);
       if (res.data.msg === 'success') {
-        console.log(res.data.list);
+        console.log(res.data.msg);
+        setSendOn(!sendOn);
       }
     }).catch((error) => {
       if (error.response) {
@@ -360,17 +365,19 @@ const ManToMan = ({ navigation }) => {
   }
   useEffect(() => {
     HistoryLoadAxios()
-
-    // launchImageLibrary({
-    //   mediaType: 'photo',
-    //   quality: 0.2,
-    //   includeBase64: true,
-    // }).then((res) => {
-    //   console.log(res.assets[0].base64)
-    // setImgbase64(res.assets[0].base64)
-    // });
-
   }, [])
+
+  function ImagePickerOpen(params) {
+    launchImageLibrary({
+      mediaType: 'photo',
+      quality: 0.1,
+      includeBase64: true,
+    }).then((res) => {
+      // console.log(res.assets[0])
+      setImgbase64(res.assets[0].base64)
+      setFileName(res.assets[0].fileName)
+    });
+  }
 
 
   const onClickSelect = (name) => {
@@ -395,7 +402,6 @@ const ManToMan = ({ navigation }) => {
   };
 
   const onPressSendOn = () => {
-    setSendOn(!sendOn);
     WriteQuestionAxios()
   };
 
@@ -514,9 +520,10 @@ const ManToMan = ({ navigation }) => {
             />
             <UploaderWrap>
               <UrlDisplay>
-                <UrlText>PNG,JPG 파일 첨부 가능합니다.</UrlText>
+                {fileName != '' ? <UrlText>첨부완료!</UrlText> : <UrlText>PNG,JPG 파일 첨부 가능합니다.</UrlText>}
+
               </UrlDisplay>
-              <PurpleBtn width={"84px"} text={"파일첨부"} />
+              <PurpleBtn width={"84px"} text={"파일첨부"} onPress={ImagePickerOpen} />
             </UploaderWrap>
             <PurpleBtn
               width={"100%"}

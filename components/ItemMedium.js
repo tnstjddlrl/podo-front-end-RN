@@ -1,5 +1,9 @@
+import axios from "axios";
 import React, { useState } from "react";
+import { Alert } from "react-native";
+import { useRecoilState } from "recoil";
 import styled, { css } from "styled-components/native";
+import { AtomUserToken } from "../atom/atom";
 import { colors } from "../colors";
 import { randomValue } from "../constants";
 import { fonts } from "../fonts";
@@ -160,6 +164,10 @@ const ItemMediumTest = ({
   isFreeShipping,
   navigation,
   rank,
+  categoryName,
+  isRocket,
+  keyword,
+  productId
 }) => {
   const goDetailPage = () =>
     navigation.navigate("DetailPageLink", { productUrl });
@@ -167,9 +175,54 @@ const ItemMediumTest = ({
   const onClickLike = () => {
     setIsLike(!isLike);
   };
+  const [atUserToken, setAtUserToken] = useRecoilState(AtomUserToken)
+
+
+
+
+  function LinkAxios(param) { //
+    if (atUserToken == '') {
+      Alert.alert('로그인을 먼저 해주세요.')
+      navigation.navigate("Login");
+    } else {
+      axios.get('https://softer104.cafe24.com/V1/View/Deeplink', {
+        headers: {
+          Authorization: `Bearer ${atUserToken}`
+        },
+        params: {
+          productId: productId,
+          productName: productName,
+          productPrice: productPrice,
+          productImage: productImage,
+          productUrl: productUrl,
+          categoryName: categoryName,
+          keyword: keyword,
+          rank: rank,
+          isRocket: isRocket,
+          isFreeShipping: isFreeShipping,
+          like: like
+        }
+      }).then((res) => {
+        console.log(res.data);
+        if (res.data.msg === 'success') {
+          console.log(res.data.data[0].landingUrl);
+          let url = res.data.data[0].landingUrl
+          navigation.navigate("DetailPageLink", { url })
+        }
+      }).catch((error) => {
+        if (error.response) {
+          console.log(error.response.data);
+          // Alert.alert(error.response.data.error);
+        } else if (error.request) {
+          console.log(error.request);
+        }
+      })
+    }
+
+  }
 
   return (
-    <ItemContainer onPress={() => goDetailPage()}>
+    <ItemContainer onPress={() => LinkAxios()}>
       <ImageWrapper>
         <ItemImage source={{ uri: productImage }} />
         {isFreeShipping && (

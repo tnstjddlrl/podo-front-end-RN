@@ -159,8 +159,6 @@ export const AtomUserCurrentSearchList = atom({
     key: 'AtomUserCurrentSearchList',
     default: AsyncGetUserCurrentSearchList(),
 });
-
-
 /////////////////////////////////////////////////////////////////////
 
 

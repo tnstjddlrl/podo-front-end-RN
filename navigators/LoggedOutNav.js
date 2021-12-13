@@ -39,6 +39,9 @@ import DetailPageLink from "../screens/LoggedOut/DetailPageScreen/DetailPageLink
 const Stack = createNativeStackNavigator();
 
 const LoggedOutNav = () => {
+
+  //fcm 토큰 들고와야함
+
   return (
     <Stack.Navigator
       initialRouteName="HomeNav"

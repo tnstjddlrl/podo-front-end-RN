@@ -29,8 +29,8 @@ const CreateAccount = ({ navigation }) => {
   return (
     <LayOut>
       <ADImage source={require("../../assets/ad.png")} />
-      <FacebookBtn onPress={onClickFacebook} />
-      <KakaoBtn onPress={onCickKaKao} />
+      {/* <FacebookBtn onPress={onClickFacebook} />
+      <KakaoBtn onPress={onCickKaKao} /> */}
       <PurpleBtn
         height={"52px"}
         width={"100%"}
@@ -38,12 +38,12 @@ const CreateAccount = ({ navigation }) => {
         text={"PODO 신규 가입하기"}
         onPress={goCreateAccountPodo}
       />
-      {isFacebook && (
+      {/* {isFacebook && (
         <SnsConnectPopup onPress={cancelPopup} app="facebook" goHome={goHome} />
       )}
       {isKakao && (
         <SnsConnectPopup onPress={cancelPopup} app="kakao" goHome={goHome} />
-      )}
+      )} */}
     </LayOut>
   );
 };
