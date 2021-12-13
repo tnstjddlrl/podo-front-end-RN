@@ -30,16 +30,15 @@ const Alarm = () => {
     AlarmLoadAxios()
   }, [])
 
-  function AlarmLoadAxios(params) { 
+  function AlarmLoadAxios(params) {
     axios.get('https://softer104.cafe24.com/V1/Alarm/List', {
       headers: {
         Authorization: `Bearer ${atUserToken}`
       },
       params: {
-        mb_no:2
+        al_type: 'wirhdraw'
       }
     }).then((res) => {
-
       console.log(res.data);
       if (res.data.msg === 'success') {
         // setSelectedList(res.data.list)

@@ -193,7 +193,7 @@ const MyPage = ({ navigation }) => {
                   <GaugeSection>
                     <Gauge />
                   </GaugeSection>
-                  <LevelInfoText reward>리워드 30%</LevelInfoText>
+                  <LevelInfoText reward> </LevelInfoText>
                 </LevelGaugeWrap>
               </>
             )}

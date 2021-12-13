@@ -1,6 +1,9 @@
 import { useNavigation } from "@react-navigation/core";
 import React, { useEffect, useState } from "react";
+import { Alert } from "react-native";
+import { useRecoilState } from "recoil";
 import styled, { css } from "styled-components/native";
+import { AtomUserId } from "../../atom/atom";
 import { colors } from "../../colors";
 import { screenSize } from "../../constants";
 import { fonts } from "../../fonts";
@@ -47,9 +50,19 @@ const Underline = styled.View`
 
 const MenuHeader = () => {
   const navigation = useNavigation();
-  const goSetting = () => navigation.navigate("General");
+  const goSetting = () => {
+    if (atUserId == null) {
+      Alert.alert('로그인을 먼저 해주세요.')
+      navigation.navigate("Login");
+    } else {
+      navigation.navigate("General");
+    }
+
+  }
   const goHome = () => navigation.navigate("Home");
-  const [name, setName] = useState("게스트");
+  const [atUserId, setAtUserId] = useRecoilState(AtomUserId)  //유저아이디
+  const [name, setName] = useState('');
+
   useEffect(() => {
     getData("randomName").then((name) => setName(name));
   }, []);
@@ -57,7 +70,7 @@ const MenuHeader = () => {
     <Container>
       <Wrapper>
         <NameWrap>
-          <HeaderText isName>{name},</HeaderText>
+          <HeaderText isName>{atUserId == null ? '게스트' : atUserId},</HeaderText>
           <HeaderText> 환영합니다.</HeaderText>
         </NameWrap>
         <IconWrap onPress={goSetting}>

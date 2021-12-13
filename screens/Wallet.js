@@ -1,6 +1,6 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { FlatList, View } from "react-native";
+import { Alert, FlatList, View } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import { useRecoilState } from "recoil";
 import styled, { css } from "styled-components/native";
@@ -176,6 +176,13 @@ const Wallet = ({ navigation }) => {
   useEffect(() => {
     getData("randomName").then((name) => setName(name));
     console.log('토큰 : ' + atUserToken);
+
+    if (atUserToken == '') {
+      Alert.alert('로그인을 먼저 해주세요.')
+      navigation.navigate("Login");
+    } else {
+      // navigation.navigate("General");
+    }
   }, []);
 
   useEffect(() => {

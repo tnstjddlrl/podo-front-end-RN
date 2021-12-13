@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useRecoilState } from "recoil";
 import styled, { css } from "styled-components/native";
-import { AtomCategoryArray } from "../atom/atom";
+import { AtomCategoryArray, AtomUserToken } from "../atom/atom";
 import { colors } from "../colors";
 import { SearchResultTabList } from "../components/Home/SampleData";
 import LayOut from "../components/LayOut";
@@ -9,6 +9,7 @@ import { screenSize } from "../constants";
 import { fonts } from "../fonts";
 
 import axios from 'axios';
+import { Alert } from "react-native";
 
 const Container = styled.ScrollView`
   flex: 1;
@@ -57,9 +58,11 @@ const MenuItemText = styled.Text`
 
 const eventMenuList = ["골드박스", "기획전", "이벤트/쿠폰", "C.에비뉴"];
 
-const Menu = () => {
+const Menu = ({ navigation }) => {
   const [atCategoryArray, setAtCategoryArray] = useRecoilState(AtomCategoryArray)
   const [brandArray, setBrandArray] = useState([])
+  const [atUserToken, setAtUserToken] = useRecoilState(AtomUserToken) //유저 토큰
+  const [atUserId, setAtUserId] = useRecoilState(AtomUserId)  //유저아이디
 
 
   function BrandLoadAxios(params) {
@@ -99,13 +102,21 @@ const Menu = () => {
         <MenuLayout>
           {atCategoryArray.map((item) => {
             return (
-              <MenuItem key={item.code}>
+              <MenuItem key={item.code} onPress={() => {
+                if (atUserToken == '') {
+                  Alert.alert('로그인을 먼저 해주세요.')
+                  navigation.navigate("Login");
+                } else {
+                  console.log(item.code), navigation.navigate("SearchResult", { code: item.code, searchText: '' })
+                }
+
+              }}>
                 <MenuItemText>{item.name}</MenuItemText>
               </MenuItem>
             );
           })}
         </MenuLayout>
-        <MenuHeader>
+        {/* <MenuHeader>
           <MenuItemText header>이벤트</MenuItemText>
         </MenuHeader>
         <MenuLayout>
@@ -116,7 +127,7 @@ const Menu = () => {
               </MenuItem>
             );
           })}
-        </MenuLayout>
+        </MenuLayout> */}
       </Container>
     </LayOut>
   );
