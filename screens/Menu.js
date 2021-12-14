@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useRecoilState } from "recoil";
 import styled, { css } from "styled-components/native";
-import { AtomCategoryArray, AtomUserToken } from "../atom/atom";
+import { AtomCategoryArray, AtomUserId, AtomUserToken } from "../atom/atom";
 import { colors } from "../colors";
 import { SearchResultTabList } from "../components/Home/SampleData";
 import LayOut from "../components/LayOut";

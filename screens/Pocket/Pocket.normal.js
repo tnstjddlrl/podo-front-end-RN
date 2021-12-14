@@ -96,22 +96,22 @@ const HistoryStatus = styled.TouchableOpacity`
   justify-content: center;
   align-items: center;
   ${(p) =>
-    p.status === "withDrawEnd" &&
+    p.status === "출금신청" &&
     css`
       background: #78879c;
     `}
   ${(p) =>
-    p.status === "withDrawing" &&
+    (p.status === "출금 취소 신청" || p.status === "출금취소 완료") &&
     css`
       background: #e83535;
     `}
   ${(p) =>
-    p.status === "reward" &&
+    p.status === "출금완료" &&
     css`
       background: ${colors.purple};
     `}
     ${(p) =>
-    p.status === "sendWithDraw" &&
+    p.status === "출금신청 처리중" &&
     css`
       background: #20c06a;
     `}
@@ -206,7 +206,7 @@ const PocketNormal = ({ navigation }) => {
       setAllArray(array)
     }
 
-    console.log(allArray);
+    // console.log(allArray);
   }, [compArray, HistoryArray])
 
   function LoadWbtcPayOutHistoryComplteAxios(params) {
@@ -239,8 +239,8 @@ const PocketNormal = ({ navigation }) => {
       }
     }).then((res) => {
       console.log('완료안된것');
-      console.log(res.data.list);
-      setHistoryArray(res.data.list)
+      console.log(res.data);
+      setHistoryArray(res.data.data)
 
 
     }).catch((error) => {
@@ -298,11 +298,11 @@ const PocketNormal = ({ navigation }) => {
         })}
       </TabBox>
       <ScrollView showsVerticalScrollIndicator>
-        {(allArray == []) && (
+        {(compArray == []) && (
           <HistoryText noHistory>아직 출금 신청 이력이 없습니다.</HistoryText>
         )}
-        {(allArray != [] && allArray != undefined) &&
-          allArray.map((item, index) => {
+        {(compArray != [] && compArray != undefined) &&
+          compArray.map((item, index) => {
             return (
               <HistoryBox key={index}>
                 <HistoryTextBlock>
@@ -320,8 +320,8 @@ const PocketNormal = ({ navigation }) => {
                     </>
                   )}
                 </HistoryTextBlock>
-                <HistoryStatus status={item.state == '3' ? 'withDrawEnd' : 'withDrawing'}>
-                  <HistoryStatusText>{item.state == '3' ? '출금 완료' : '출금 처리중'}</HistoryStatusText>
+                <HistoryStatus status={stateSwitch(item.state)}>
+                  <HistoryStatusText>{stateSwitch(item.state)}</HistoryStatusText>
                 </HistoryStatus>
               </HistoryBox>
             );
@@ -330,5 +330,27 @@ const PocketNormal = ({ navigation }) => {
     </LayOut>
   );
 };
+
+function stateSwitch(param) {
+  switch (param) {
+    case '1':
+      return '출금신청'
+      break;
+    case '2':
+      return '출금신청 처리중'
+      break;
+    case '3':
+      return '출금완료'
+      break;
+    case '4':
+      return '출금 취소 신청'
+      break;
+    case '5':
+      return '출금취소 완료'
+      break;
+    default:
+      break;
+  }
+}
 
 export default PocketNormal;

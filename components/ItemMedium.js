@@ -225,12 +225,12 @@ const ItemMediumTest = ({
     <ItemContainer onPress={() => LinkAxios()}>
       <ImageWrapper>
         <ItemImage source={{ uri: productImage }} />
-        {isFreeShipping && (
+        {/* {isFreeShipping && (
           <FreeShippingBtn>
             <FreeBtnText>무료배송</FreeBtnText>
           </FreeShippingBtn>
-        )}
-        <HeartBtn onPress={() => onClickLike()}>
+        )} */}
+        {/* <HeartBtn onPress={() => onClickLike()}>
           {isLike ? (
             <HeartBtnBackground>
               <FavoriteFilledSmallIcon />
@@ -240,10 +240,11 @@ const ItemMediumTest = ({
               <FavoriteSmallIcon />
             </HeartBtnBackground>
           )}
-        </HeartBtn>
+        </HeartBtn> */}
       </ImageWrapper>
       <InfoWrapper>
         <InfoTextRow>
+          {/* <InfoText price>{productPrice}</InfoText> */}
           <InfoText price>{productPrice.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}</InfoText>
           {/* <InfoText rewardPercent>{reward}</InfoText> */}
         </InfoTextRow>

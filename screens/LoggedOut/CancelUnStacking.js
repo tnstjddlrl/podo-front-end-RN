@@ -1,6 +1,6 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { Alert, ScrollView } from "react-native";
+import { Alert, ScrollView, View } from "react-native";
 import { useRecoilState } from "recoil";
 import styled, { css } from "styled-components/native";
 import { AtomUserToken } from "../../atom/atom";
@@ -148,6 +148,7 @@ const CancelUnStacking = ({ navigation }) => {
   }, [])
 
   function UnStakingHistoryLoadAxios(params) { //스테이킹 신청내역
+    console.log('언스테이킹 내역:')
     axios.get('https://softer104.cafe24.com/V1/Podo/UnStakeList', {
       headers: {
         Authorization: `Bearer ${atUserToken}`
@@ -157,8 +158,7 @@ const CancelUnStacking = ({ navigation }) => {
         offset: 0,
       }
     }).then((res) => {
-      console.log('언스테이킹 내역:')
-      console.log(res.data);
+      console.log(res.data); console.log(res.data.list);
       if (res.data.msg === 'success') {
         setSelectedList(res.data.list)
       }
@@ -173,6 +173,7 @@ const CancelUnStacking = ({ navigation }) => {
   }
 
   function UnStakingCancelAxios(params) { //스테이킹 신청내역
+    console.log('언스테이킹 내역:')
     axios.get('https://softer104.cafe24.com/V1/Podo/UnStakeCancel', {
       headers: {
         Authorization: `Bearer ${atUserToken}`
@@ -181,7 +182,6 @@ const CancelUnStacking = ({ navigation }) => {
         num: selectNum,
       }
     }).then((res) => {
-      console.log('언스테이킹 내역:')
       console.log(res.data);
       if (res.data.msg === 'success') {
         Alert.alert('취소 신청 완료하였습니다.', '', [
@@ -220,9 +220,9 @@ const CancelUnStacking = ({ navigation }) => {
         <PageCaption>POD 언스테이킹 신청을 취소합니다.</PageCaption>
         <PageCaption>취소하실 신청이력을 선택하고 확인을 누르세요.</PageCaption>
       </TextWrapper>
-      {!selectedList && (
+      {(selectedList.length == 0) && (
         <HistoryText noHistory>
-          아직 신청하실 언스테이킹 이력이 없습니다.
+          취소하실 언스테이킹 이력이 없습니다.
         </HistoryText>
       )}
       <ScrollView>
@@ -246,7 +246,8 @@ const CancelUnStacking = ({ navigation }) => {
           );
         })}
       </ScrollView>
-      <BtnWrapper absolute={seeAll}>
+
+      <View style={{ flexDirection: "row", marginTop: 10, marginBottom: 10 }}>
         <CancelBtn
           width={"49%"}
           text={"취소"}
@@ -257,7 +258,7 @@ const CancelUnStacking = ({ navigation }) => {
           text={"확인"}
           onPress={() => UnStakingCancelAxios()}
         />
-      </BtnWrapper>
+      </View>
     </LayOut>
   );
 };

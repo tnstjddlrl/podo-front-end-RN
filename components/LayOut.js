@@ -31,16 +31,14 @@ const LayOut = ({
   heightFull,
 }) => {
   return (
-    <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
-      <Container
-        paddingTop={paddingTop}
-        horizontalZero={horizontalZero}
-        backgroundColor={backgroundColor}
-        heightFull={heightFull}
-      >
-        {children}
-      </Container>
-    </TouchableWithoutFeedback>
+    <Container
+      paddingTop={paddingTop}
+      horizontalZero={horizontalZero}
+      backgroundColor={backgroundColor}
+      heightFull={heightFull}
+    >
+      {children}
+    </Container>
   );
 };
 

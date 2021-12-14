@@ -62,8 +62,12 @@ const RecentSearches = () => {
         renderItem={RecentSearchItem}
       /> */}
 
+
+
       <ScrollView showsVerticalScrollIndicator={false}>
-        {([...atUserSearchList].reverse()).map((item, index) => {
+        {([...atUserSearchList].filter((character, idx, arr) => {
+          return arr.findIndex((item) => item.search === character.search) === idx
+        }).reverse()).map((item, index) => {
           return (
             <RecentSearchItem key={item.id} item={item}></RecentSearchItem>
           )

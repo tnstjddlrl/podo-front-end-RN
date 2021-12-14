@@ -223,6 +223,7 @@ const PocketStacking = ({ navigation }) => {
         setStakingHistoryArray(res.data.list)
       }
     }).catch((error) => {
+      console.log('스테이킹 내역:')
       if (error.response) {
         console.log(error.response.data);
         // Alert.alert(error.response.data.error);
@@ -248,6 +249,7 @@ const PocketStacking = ({ navigation }) => {
         setStakingCompleteHistoryArray(res.data.list)
       }
     }).catch((error) => {
+      console.log('스테이킹 완료 내역:')
       if (error.response) {
         console.log(error.response.data);
         // Alert.alert(error.response.data.error);
@@ -273,6 +275,7 @@ const PocketStacking = ({ navigation }) => {
         setUnStakingHistoryArray(res.data.list)
       }
     }).catch((error) => {
+      console.log('언스테이킹 내역:')
       if (error.response) {
         console.log(error.response.data);
         // Alert.alert(error.response.data.error);
@@ -298,6 +301,8 @@ const PocketStacking = ({ navigation }) => {
         setUnStakingCompleteHistoryArray(res.data.list)
       }
     }).catch((error) => {
+      console.log('언스테이킹 완료 내역:')
+
       if (error.response) {
         console.log(error.response.data);
         // Alert.alert(error.response.data.error);
@@ -359,6 +364,9 @@ const PocketStacking = ({ navigation }) => {
     console.log(array)
   }, [AllStakingArray, AllUnStakingArray])
 
+  useEffect(() => {
+    console.log(isFocused);
+  }, [isFocused])
 
 
   const onClickFocused = (index) => {
@@ -391,14 +399,66 @@ const PocketStacking = ({ navigation }) => {
           );
         })}
       </TabBox>
-      <ScrollView showsVerticalScrollIndicator={false}>
-        {!AllArray && (
-          <HistoryText noHistory>
-            아직 스테이킹 신청 이력이 없습니다.
-          </HistoryText>
-        )}
-        {AllArray &&
+      <ScrollView showsVerticalScrollIndicator={false} style={{ flex: 1 }}>
+        {/* <HistoryText noHistory>
+          아직 스테이킹 신청 이력이 없습니다.
+        </HistoryText> */}
+        {/* {!AllArray && (
+        )} */}
+        {isFocused == '0' &&
           AllArray.map((item, index) => {
+            return (
+              <HistoryBox key={index}>
+                <HistoryTextBlock>
+                  <HistoryText date>{item.entrance_date}</HistoryText>
+                  <HistoryText
+                    description
+                    hasTransaction={item.transactionId && true}
+                  >
+                    {item.podo}
+                  </HistoryText>
+                  {(item.transactionId != '') && (
+                    <>
+                      <HistoryText caption>Transaction Id :</HistoryText>
+                      <HistoryText width={200} caption>{item.transactionId}</HistoryText>
+                    </>
+                  )}
+                </HistoryTextBlock>
+                <HistoryStatus status={item.type + '/' + item.state}>
+                  <HistoryStatusText>{stateReturn(item.type + '/' + item.state)}</HistoryStatusText>
+                </HistoryStatus>
+              </HistoryBox>
+            );
+          })}
+
+        {isFocused == '1' &&
+          AllStakingArray.map((item, index) => {
+            return (
+              <HistoryBox key={index}>
+                <HistoryTextBlock>
+                  <HistoryText date>{item.entrance_date}</HistoryText>
+                  <HistoryText
+                    description
+                    hasTransaction={item.transactionId && true}
+                  >
+                    {item.podo}
+                  </HistoryText>
+                  {(item.transactionId != '') && (
+                    <>
+                      <HistoryText caption>Transaction Id :</HistoryText>
+                      <HistoryText width={200} caption>{item.transactionId}</HistoryText>
+                    </>
+                  )}
+                </HistoryTextBlock>
+                <HistoryStatus status={item.type + '/' + item.state}>
+                  <HistoryStatusText>{stateReturn(item.type + '/' + item.state)}</HistoryStatusText>
+                </HistoryStatus>
+              </HistoryBox>
+            );
+          })}
+
+        {isFocused == '2' &&
+          AllUnStakingArray.map((item, index) => {
             return (
               <HistoryBox key={index}>
                 <HistoryTextBlock>

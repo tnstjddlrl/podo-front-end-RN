@@ -183,15 +183,15 @@ const Notice = () => {
     );
   };
   return (
-    // <NoPage customText={"아직 공지사항이 없습니다!"} />
-    <FlatList
-      style={{
-        backgroundColor: "#fff",
-      }}
-      data={data}
-      renderItem={renderItem}
-      keyExtractor={(item) => "" + item.id}
-    />
+    <NoPage customText={"아직 공지사항이 없습니다!"} />
+    // <FlatList
+    //   style={{
+    //     backgroundColor: "#fff",
+    //   }}
+    //   data={data}
+    //   renderItem={renderItem}
+    //   keyExtractor={(item) => "" + item.id}
+    // />
   );
 };
 

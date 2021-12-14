@@ -1,8 +1,9 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { Alert, FlatList, SafeAreaView } from "react-native";
+import { Alert, FlatList, SafeAreaView, View } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import { useRecoilState } from "recoil";
+import styled, { css } from "styled-components/native";
 import dummyData from "../../assets/dummyData";
 import { AtomCategoryArray, AtomUserToken } from "../../atom/atom";
 import { colors } from "../../colors";
@@ -12,6 +13,39 @@ import LayOut from "../../components/LayOut";
 import FilterSection from "../../components/Search/FilterSection";
 import ResultTopTab from "../../components/Search/ResultTopTab";
 import SearchResultHeader from "../../components/Search/SearchResultHeader";
+
+
+const HistoryText = styled.Text`
+  ${(p) =>
+    p.date &&
+    css`
+      font-family: ${fonts.medium};
+      font-size: 13px;
+      line-height: 14px;
+      color: #31383fbf;
+      margin-bottom: 8px;
+    `}
+  ${(p) =>
+    p.quantity &&
+    css`
+      font-family: ${fonts.bold};
+      font-size: 14px;
+      line-height: 16.8px;
+      color: #31383f;
+      margin-bottom: ${(p) => (p.hasTransaction ? "12px" : 0)};
+    `}
+    ${(p) =>
+    p.noHistory &&
+    css`
+      font-size: 16px;
+      text-align: center;
+      margin-top: 35%;
+      color: ${colors.gray};
+    `}
+`;
+
+
+
 
 const SearchResult = ({ navigation, route }) => {
   const [isFocused, setIsFocused] = useState(route.params.code ? route.params.code : '9999');
@@ -116,12 +150,17 @@ const SearchResult = ({ navigation, route }) => {
             )
           })}
         </ScrollView> */}
+        {(data.length == 0) &&
+          <HistoryText noHistory>
+            검색결과가 없습니다!
+          </HistoryText>
+        }
         <FlatList
-          style={{ marginTop: 10 }}
+          style={{ marginTop: 10, height: '100%' }}
           data={data}
           keyExtractor={(item) => "" + item.productId}
           showsVerticalScrollIndicator={false}
-          renderItem={(item) => <ItemLarge {...item} navigation={navigation} />}
+          renderItem={(item) => <ItemLarge key={item.productId} {...item} navigation={navigation} />}
           onEndReachedThreshold={0.95}
           onEndReached={loadMoreData}
         />

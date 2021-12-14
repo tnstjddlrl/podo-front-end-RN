@@ -77,7 +77,7 @@ const CreateAccountPodo = ({ Navigation }) => {
     }).catch((error) => {
       if (error.response) {
         console.log(error.response.data.error);
-        Alert.alert(error.response.data.error);
+        Alert.alert('오류발생', error.response.data.error);
       } else if (error.request) {
         console.log(error.request);
       }
@@ -103,7 +103,9 @@ const CreateAccountPodo = ({ Navigation }) => {
       }).catch((error) => {
         if (error.response) {
           console.log(error.response.data.error);
-          Alert.alert(error.response.data.error);
+          // Alert.alert(error.response.data.error);
+          Alert.alert('오류발생', error.response.data.error);
+
         } else if (error.request) {
           console.log(error.request);
         }
@@ -127,7 +129,8 @@ const CreateAccountPodo = ({ Navigation }) => {
       if (error.response) {
         console.log(error.response.data)
         console.log(error.response.data.error);
-        Alert.alert(error.response.data.error);
+        Alert.alert('오류발생', error.response.data.error);
+
       } else if (error.request) {
         console.log(error.request);
       }
@@ -180,6 +183,12 @@ const CreateAccountPodo = ({ Navigation }) => {
     }
   };
 
+  useEffect(() => {
+    console.log(inzeng)
+    var string = inzeng.toUpperCase()
+    setInzeng(string)
+  }, [inzeng])
+
   return (
     <SafeAreaView style={{ backgroundColor: 'white', paddingTop: 20, paddingLeft: 20, paddingRight: 20, paddingBottom: 10, flex: 1 }} >
       <ScrollView showsVerticalScrollIndicator={false} style={{ flex: 1 }}>
@@ -207,6 +216,7 @@ const CreateAccountPodo = ({ Navigation }) => {
               width={"70%"}
               onChangeText={setInzeng}
               isppp={true}
+              value={inzeng}
             // onPress={() => { console.log('클릭됨'); }}
             // onPresstxt={'인증'}
             />
@@ -344,7 +354,7 @@ const CreateAccountPodo = ({ Navigation }) => {
 };
 
 
-function TextInputProp({ title, placeholder, bottomtxt, onChangeText, width, onPress, onPresstxt, isppp }) {
+function TextInputProp({ title, placeholder, bottomtxt, onChangeText, width, onPress, onPresstxt, isppp, value }) {
 
   const [isFocus, setIsFocus] = useState(false)
 
@@ -353,7 +363,7 @@ function TextInputProp({ title, placeholder, bottomtxt, onChangeText, width, onP
       {title && <Title>{title}</Title>}
       <View style={{ width: '100%', height: 48, flexDirection: 'row', alignItems: 'center' }}>
         <View style={{ width: (onPress || isppp) ? width : '100%', height: 48, borderRadius: 10, borderWidth: 1, borderColor: isFocus ? '#553AED' : '#DAE3EF', }}>
-          <TextInput style={{ flex: 1, marginLeft: 13 }} placeholder={`${placeholder}`} onChangeText={onChangeText} onFocus={() => { setIsFocus(true) }} onBlur={() => { setIsFocus(false) }} />
+          <TextInput style={{ flex: 1, marginLeft: 13 }} value={value} placeholder={`${placeholder}`} onChangeText={onChangeText} onFocus={() => { setIsFocus(true) }} onBlur={() => { setIsFocus(false) }} />
         </View>
 
         {onPress &&

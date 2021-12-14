@@ -9,6 +9,9 @@ import { fonts } from "../../fonts";
 import { getData } from "../../storage";
 
 import { useRecoilState } from 'recoil';
+import axios from "axios";
+import { Modal, SafeAreaView, Text, TouchableWithoutFeedback, View } from "react-native";
+import { TouchableOpacity } from "react-native-gesture-handler";
 
 
 const PageTitleWrap = styled.View`
@@ -88,7 +91,7 @@ const GaugeSection = styled.View`
 `;
 
 const Gauge = styled.View`
-  width: 50%;
+  width: ${p => p.percent}%;
   height: 12px;
   background: ${colors.orange};
   border-radius: 100px;
@@ -116,19 +119,37 @@ const MenuText = styled.Text`
   font-size: 16px;
 `;
 
+const PopupText = styled.Text`
+  font-size: 15px;
+  color: #2f3741;
+  margin-bottom: 16px;
+  ${(p) =>
+    p.title &&
+    css`
+      font-size: 20px;
+      font-family: ${fonts.bold};
+      margin-bottom: 4px;
+    `}
+  ${(p) =>
+    p.description &&
+    css`
+      min-height: 60px;
+    `}
+`;
+
 const menuList = [
-  { text: "쇼핑몰 자동 로그인 관리", navigate: "SetAutoLogin" },
+  // { text: "쇼핑몰 자동 로그인 관리", navigate: "SetAutoLogin" },
   {
     text: "내가 좋아하는 상품",
     navigate: "Favorite",
     route: { isFavorite: true },
   },
-  { text: "내가 본 상품", navigate: "Viewed", route: { isFavorite: false } },
+  { text: "내가 본 상품", navigate: "Favorite", route: { isFavorite: false } },
   { text: "배송 조회", navigate: "Shipping" },
   { text: "공지사항", navigate: "Notice" },
-  { text: "설정", navigate: "General" },
+  // { text: "설정", navigate: "General" },
   { text: "자주 묻는 질문", navigate: "Qna" },
-  { text: "1:1 문의", navigate: "ManToMan" },
+  // { text: "1:1 문의", navigate: "ManToMan" },
   { text: "이용가이드", navigate: "Guide" },
 ];
 
@@ -136,8 +157,29 @@ const MyPage = ({ navigation }) => {
   const [loginPopOn, setLoginPopOn] = useState(false);
   const [loginStatus, setLoginStatus] = useState(false);
 
+  const [userLevel, setUserLevel] = useState(0)
+  const [levelPercent, setLevelPercent] = useState(0)
+
   const [atUserId, setAtUserId] = useRecoilState(AtomUserId)  //유저아이디
   const [atUserToken, setAtUserToken] = useRecoilState(AtomUserToken) //유저 토큰
+
+  function MyInformLoadAxios(params) {
+    axios.get('https://softer104.cafe24.com/V1/Member/@me', {
+      headers: {
+        Authorization: `Bearer ${atUserToken}`
+      }
+    }).then((res) => {
+      console.log(res.data.data);
+      var data = res.data.data
+
+      setUserLevel(data.mb_level)
+
+      setLevelPercent(Number(data.level_per))
+
+    }).catch((error) => {
+      console.log(error);
+    })
+  }
 
   useEffect(() => {
     if (atUserId == '' || atUserId == null) {
@@ -151,6 +193,7 @@ const MyPage = ({ navigation }) => {
   const [name, setName] = useState("게스트");
   useEffect(() => {
     getData("randomName").then((name) => setName(name));
+    MyInformLoadAxios()
   }, []);
 
   const renderItem = ({ item }) => {
@@ -188,10 +231,10 @@ const MyPage = ({ navigation }) => {
                 <LevelGaugeWrap>
                   <LevelInfoWrap>
                     <LevelInfoText>User</LevelInfoText>
-                    <LevelInfoText colored>Level 1</LevelInfoText>
+                    <LevelInfoText colored>Level {userLevel}</LevelInfoText>
                   </LevelInfoWrap>
                   <GaugeSection>
-                    <Gauge />
+                    <Gauge percent={levelPercent} />
                   </GaugeSection>
                   <LevelInfoText reward> </LevelInfoText>
                 </LevelGaugeWrap>
@@ -216,7 +259,7 @@ const MyPage = ({ navigation }) => {
         keyExtractor={(item) => "" + item.navigate}
         renderItem={renderItem}
       />
-      {loginPopOn && (
+      {/* {loginPopOn && (
         <NormalPopup
           btnText={"로그인하러 가기"}
           title={"로그인이 필요합니다."}
@@ -228,7 +271,28 @@ const MyPage = ({ navigation }) => {
             "로그인이 필요한 서비스입니다. 로그인 페이지로 이동합니다."
           }
         />
-      )}
+      )} */}
+
+      <Modal visible={loginPopOn} transparent={true}>
+        <TouchableWithoutFeedback onPress={() => { setLoginPopOn(!loginPopOn); }}>
+          <SafeAreaView style={{ backgroundColor: 'rgba(0,0,0,0.3)', alignItems: "center", justifyContent: "center", flex: 1 }}>
+            <View style={{ borderRadius: 14, backgroundColor: 'white', width: '85%', padding: 20 }}>
+
+              <PopupText title>로그인이 필요합니다.</PopupText>
+              <PopupText description>로그인이 필요한 서비스입니다. 로그인 페이지로 이동합니다.</PopupText>
+
+              <TouchableWithoutFeedback onPress={() => {
+                setLoginPopOn(!loginPopOn);
+                navigation.navigate("Login");
+              }}>
+                <View style={{ borderRadius: 13, backgroundColor: 'rgb(84,59,237)', alignItems: "center", justifyContent: "center", width: '100%', padding: 10 }}>
+                  <Text style={{ color: 'white', fontFamily: fonts.bold, fontSize: 18 }}>로그인</Text>
+                </View>
+              </TouchableWithoutFeedback>
+            </View>
+          </SafeAreaView>
+        </TouchableWithoutFeedback>
+      </Modal>
     </LayOut>
   );
 };

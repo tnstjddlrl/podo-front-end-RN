@@ -73,9 +73,9 @@ const MenuHeader = () => {
           <HeaderText isName>{atUserId == null ? '게스트' : atUserId},</HeaderText>
           <HeaderText> 환영합니다.</HeaderText>
         </NameWrap>
-        <IconWrap onPress={goSetting}>
+        {/* <IconWrap onPress={goSetting}>
           <SettingIcon />
-        </IconWrap>
+        </IconWrap> */}
         <IconWrap isLast onPress={goHome}>
           <CloseIcon />
         </IconWrap>

@@ -1,6 +1,6 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { Alert, ScrollView } from "react-native";
+import { Alert, ScrollView, View } from "react-native";
 import { useRecoilState } from "recoil";
 import styled, { css } from "styled-components/native";
 import { AtomUserToken } from "../../atom/atom";
@@ -218,12 +218,12 @@ const CancelStacking = ({ navigation }) => {
         <PageCaption>POD 스테이킹 신청을 취소합니다.</PageCaption>
         <PageCaption>취소하실 신청이력을 선택하고 확인을 누르세요.</PageCaption>
       </TextWrapper>
-      {!selectedList && (
+      {((selectedList.length == 0)) && (
         <HistoryText noHistory>
-          아직 신청하실 스테이킹 이력이 없습니다.
+          취소하실 스테이킹 이력이 없습니다.
         </HistoryText>
       )}
-      <ScrollView>
+      <ScrollView style={{ flex: 1 }}>
         {selectedList.map((item, index) => {
           return (
             <HistoryBox
@@ -244,7 +244,9 @@ const CancelStacking = ({ navigation }) => {
           );
         })}
       </ScrollView>
-      <BtnWrapper absolute={seeAll}>
+      {/* <BtnWrapper absolute={false}>
+          </BtnWrapper> */}
+      <View style={{ flexDirection: "row", marginTop: 10, marginBottom: 10 }}>
         <CancelBtn
           width={"49%"}
           text={"취소"}
@@ -258,7 +260,7 @@ const CancelStacking = ({ navigation }) => {
             // navigation.navigate("PocketStacking")
           }}
         />
-      </BtnWrapper>
+      </View>
     </LayOut>
   );
 };

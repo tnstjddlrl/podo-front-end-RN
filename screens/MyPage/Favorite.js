@@ -5,7 +5,7 @@ import { useRecoilState } from "recoil";
 import styled from "styled-components/native";
 import dummyData from "../../assets/dummyData";
 import { AtomUserId, AtomUserToken } from "../../atom/atom";
-import ItemMedium from "../../components/ItemMedium";
+import ItemMediumTest from "../../components/ItemMedium";
 import LayOut from "../../components/LayOut";
 import SelectTabList from "../../components/SelectTabList.circle";
 
@@ -41,10 +41,13 @@ const Favorite = ({
     Viewed: !isFavorite,
     Favorite: isFavorite,
   });
-  const [listSample, setListSample] = useState(favoriteListSample);
+  const [listSample, setListSample] = useState([]);
 
   const [atUserId, setAtUserId] = useRecoilState(AtomUserId)
   const [atUserToken, setAtUserToken] = useRecoilState(AtomUserToken)
+
+  const [likeArray, setLikeArray] = useState([])
+  const [viewArray, setViewArray] = useState([])
 
   function MyViewLoadAxios(params) {
     axios.get('https://softer104.cafe24.com/V1/View/List', {
@@ -58,7 +61,9 @@ const Favorite = ({
         w_para: atUserId
       }
     }).then((res) => {
-      console.log(res.data);
+      console.log('본 상품');
+      console.log(res.data.list);
+      setViewArray(res.data.list)
       // var data = res.data.data
     }).catch((error) => {
       console.log(error);
@@ -77,7 +82,9 @@ const Favorite = ({
         w_para: atUserId
       }
     }).then((res) => {
-      console.log(res.data);
+      console.log('좋아요 상품');
+      console.log(res.data.list);
+      setLikeArray(res.data.list)
       // var data = res.data.data
     }).catch((error) => {
       console.log(error);
@@ -106,18 +113,19 @@ const Favorite = ({
   };
 
   useEffect(() => {
+    console.log(isFocused.Favorite)
     if (isFocused.Favorite === true) {
-      setListSample(favoriteListSample);
+      setListSample(likeArray);
     } else {
-      setListSample(viewedListSample);
+      setListSample(viewArray);
     }
   }, [isFocused.Favorite]);
   const renderItem = ({ item }) => {
     return (
-      <ItemMedium
+      <ItemMediumTest
         {...item}
         navigation={navigation}
-        isFavorite={listSample === favoriteListSample && 1}
+        isFavorite={false}
       />
     );
   };
@@ -135,13 +143,32 @@ const Favorite = ({
           );
         })}
       </TabBox>
-      {/* <FlatList
-        data={listSample}
-        showsVerticalScrollIndicator={true}
-        keyExtractor={(item) => "" + item.href}
-        renderItem={renderItem}
-        numColumns={2}
-      /> */}
+
+      {isFocused.Favorite ?
+        <FlatList
+          data={likeArray}
+          showsVerticalScrollIndicator={true}
+          keyExtractor={(item) => "" + item.productId}
+          renderItem={renderItem}
+          numColumns={2}
+        /> :
+
+        <FlatList
+          data={viewArray}
+          showsVerticalScrollIndicator={true}
+          keyExtractor={(item) => "" + item.productId}
+          renderItem={renderItem}
+          numColumns={2}
+        />
+      }
+
+      {/* {viewArray.map((item, index) => {
+        console.log(index)
+        return (
+          <ItemMediumTest item={item} navigation={navigation}
+            isFavorite={false}></ItemMediumTest>
+        )
+      })} */}
     </LayOut>
   );
 };
