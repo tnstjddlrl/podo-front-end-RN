@@ -30,6 +30,19 @@ const isCurrentScreenInitialOne = (state) => {
   return state.index === 0;
 };
 
+import messaging from '@react-native-firebase/messaging';
+
+async function requestUserPermission() {
+  const authStatus = await messaging().requestPermission();
+  const enabled =
+    authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
+    authStatus === messaging.AuthorizationStatus.PROVISIONAL;
+
+  if (enabled) {
+    console.log('Authorization status:', authStatus);
+  }
+}
+
 
 
 export default function App() {
@@ -60,6 +73,10 @@ export default function App() {
     const randomNamePromise = storeData("randomName", name);
     return Promise.all([...imagePromises, randomNamePromise]);
   };
+
+  useEffect(() => {
+    requestUserPermission()
+  }, [])
 
   if (loading) {
     return (

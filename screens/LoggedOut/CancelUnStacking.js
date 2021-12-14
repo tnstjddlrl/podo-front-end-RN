@@ -204,12 +204,6 @@ const CancelUnStacking = ({ navigation }) => {
     })
   }
 
-
-
-  const onClickSetSeeAll = () => {
-    setSeeAll(true);
-  };
-
   const onClickAddListToggle = (index) => {
     setSelectNum(index)
   };
