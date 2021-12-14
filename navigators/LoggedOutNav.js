@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import CreateAccount from "../screens/LoggedOut/CreateAccount";
 import Login from "../screens/LoggedOut/Login";
@@ -38,8 +38,24 @@ import DetailPageLink from "../screens/LoggedOut/DetailPageScreen/DetailPageLink
 
 const Stack = createNativeStackNavigator();
 
-const LoggedOutNav = () => {
+import messaging from '@react-native-firebase/messaging';
 
+async function requestUserPermission() {
+  const authStatus = await messaging().requestPermission();
+  const enabled =
+    authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
+    authStatus === messaging.AuthorizationStatus.PROVISIONAL;
+
+  if (enabled) {
+    console.log('Authorization status:', authStatus);
+  }
+}
+
+
+const LoggedOutNav = () => {
+  useEffect(() => {
+    requestUserPermission()
+  }, [])
   //fcm 토큰 들고와야함
 
   return (
