@@ -23,7 +23,7 @@ import {
 export const MainBannerData = [
   {
     id: 1,
-    url: require("../../assets/main_banner_01.png"),
+    url: { uri: 'https://softer104.cafe24.com/assets/main_banner_01.png' },
   },
 ];
 
