@@ -33,7 +33,7 @@ const NoPage = ({ horizontalZero, left, customText }) => {
     <LayOut backgroundColor={"#fff"} horizontalZero={horizontalZero}>
       <TextWrap left={left}>
         <AnimatedLottieView
-          source={require("../assets/developingLottie.json")}
+          source={{ uri: 'https://softer104.cafe24.com/assets/developingLottie.json' }}
           autoPlay
           loop
           style={{

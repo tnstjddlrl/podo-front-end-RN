@@ -52,8 +52,8 @@ export default function App() {
   }
   const preloadAssets = () => {
     const imagesToLoad = [
-      require("./assets/ic_facebook.png"),
-      require("./assets/ic_kakao.png"),
+      { uri: 'https://softer104.cafe24.com/assets/ic_facebook.png' },
+      { uri: 'https://softer104.cafe24.com/assets/ic_kakao.png' }
     ];
     const imagePromises = imagesToLoad.map((image) => Asset.loadAsync(image));
 
@@ -92,20 +92,20 @@ export default function App() {
         {intro ? (
           <Intro onDone={done} />
         ) : (
-          <ThemeProvider theme={darkMode ? darkTheme : lightTheme}>
-            {isInitialScreen && (
-              <DoubleTapToClose message="'뒤로' 버튼을 한번 더 누르시면 종료됩니다." />
-            )}
-            <NavigationContainer
-              onStateChange={(state) => {
-                setIsInitialScreen(isCurrentScreenInitialOne(state));
-              }}
-            >
-              <StatusBar />
-              <LoggedOutNav />
-            </NavigationContainer>
-          </ThemeProvider>
-        )}
+            <ThemeProvider theme={darkMode ? darkTheme : lightTheme}>
+              {isInitialScreen && (
+                <DoubleTapToClose message="'뒤로' 버튼을 한번 더 누르시면 종료됩니다." />
+              )}
+              <NavigationContainer
+                onStateChange={(state) => {
+                  setIsInitialScreen(isCurrentScreenInitialOne(state));
+                }}
+              >
+                <StatusBar />
+                <LoggedOutNav />
+              </NavigationContainer>
+            </ThemeProvider>
+          )}
       </RecoilRoot>
     </>
   );

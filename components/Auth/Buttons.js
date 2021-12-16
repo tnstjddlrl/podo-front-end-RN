@@ -71,7 +71,7 @@ export const FacebookBtn = ({ onPress }) => {
       console.log('클릭');
     }}>
       <BtnLeftWrapper>
-        <LogoImage source={require("../../assets/ic_facebook.png")} />
+        <LogoImage source={{ uri: 'https://softer104.cafe24.com/assets/ic_facebook.png' }} />
         <BtnText>페이스북으로 시작하기</BtnText>
       </BtnLeftWrapper>
       <RightArrowIcon />
@@ -87,7 +87,7 @@ export const KakaoBtn = ({ onPress }) => {
       })
     }}>
       <BtnLeftWrapper>
-        <LogoImage source={require("../../assets/ic_kakao.png")} />
+        <LogoImage source={{ uri: 'https://softer104.cafe24.com/assets/ic_kakao.png' }} />
         <BtnText>카카오로 시작하기</BtnText>
       </BtnLeftWrapper>
       <RightArrowIcon />

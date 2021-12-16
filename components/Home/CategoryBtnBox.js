@@ -37,25 +37,25 @@ const Text = styled.Text`
 `;
 
 const slider = {
-  1: require('../../assets/categoryIcons/1001.png'),
-  2: require('../../assets/categoryIcons/1002.png'),
-  10: require('../../assets/categoryIcons/1010.png'),
-  11: require('../../assets/categoryIcons/1011.png'),
-  12: require('../../assets/categoryIcons/1012.png'),
-  13: require('../../assets/categoryIcons/1013.png'),
-  14: require('../../assets/categoryIcons/1014.png'),
-  15: require('../../assets/categoryIcons/1015.png'),
-  16: require('../../assets/categoryIcons/1016.png'),
-  17: require('../../assets/categoryIcons/1017.png'),
-  18: require('../../assets/categoryIcons/1018.png'),
-  19: require('../../assets/categoryIcons/1019.png'),
-  20: require('../../assets/categoryIcons/1020.png'),
-  21: require('../../assets/categoryIcons/1021.png'),
-  24: require('../../assets/categoryIcons/1024.png'),
-  25: require('../../assets/categoryIcons/1025.png'),
-  26: require('../../assets/categoryIcons/1026.png'),
-  29: require('../../assets/categoryIcons/1029.png'),
-  30: require('../../assets/categoryIcons/1030.png')
+  1: { uri: 'https://softer104.cafe24.com/assets/categoryIcons/1001.png' },
+  2: { uri: 'https://softer104.cafe24.com/assets/categoryIcons/1002.png' },
+  10: { uri: 'https://softer104.cafe24.com/assets/categoryIcons/1010.png' },
+  11: { uri: 'https://softer104.cafe24.com/assets/categoryIcons/1011.png' },
+  12: { uri: 'https://softer104.cafe24.com/assets/categoryIcons/1012.png' },
+  13: { uri: 'https://softer104.cafe24.com/assets/categoryIcons/1013.png' },
+  14: { uri: 'https://softer104.cafe24.com/assets/categoryIcons/1014.png' },
+  15: { uri: 'https://softer104.cafe24.com/assets/categoryIcons/1015.png' },
+  16: { uri: 'https://softer104.cafe24.com/assets/categoryIcons/1016.png' },
+  17: { uri: 'https://softer104.cafe24.com/assets/categoryIcons/1017.png' },
+  18: { uri: 'https://softer104.cafe24.com/assets/categoryIcons/1018.png' },
+  19: { uri: 'https://softer104.cafe24.com/assets/categoryIcons/1019.png' },
+  20: { uri: 'https://softer104.cafe24.com/assets/categoryIcons/1020.png' },
+  21: { uri: 'https://softer104.cafe24.com/assets/categoryIcons/1021.png' },
+  24: { uri: 'https://softer104.cafe24.com/assets/categoryIcons/1024.png' },
+  25: { uri: 'https://softer104.cafe24.com/assets/categoryIcons/1025.png' },
+  26: { uri: 'https://softer104.cafe24.com/assets/categoryIcons/1026.png' },
+  29: { uri: 'https://softer104.cafe24.com/assets/categoryIcons/1029.png' },
+  30: { uri: 'https://softer104.cafe24.com/assets/categoryIcons/1030.png' }
 }
 
 
