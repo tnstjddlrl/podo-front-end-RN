@@ -2,3 +2,5 @@ info@flaton.net
 Flaton2021!@
 
 npm install - g expo - cli
+
+npx react-native-fix-image
