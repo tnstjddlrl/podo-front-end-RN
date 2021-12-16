@@ -75,7 +75,7 @@ const LinkingPage = ({ route, navigation }) => {
             </CloseIconWrap>
           </RewardIndicatorWrap>
           <LottieView
-            source={require("../../assets/loadingSplash.json")}
+            source={{ uri: 'https://softer104.cafe24.com/assets/loadingSplash.json' }}
             autoPlay
             loop
           />

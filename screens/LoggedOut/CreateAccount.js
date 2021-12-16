@@ -28,7 +28,8 @@ const CreateAccount = ({ navigation }) => {
   const goHome = () => navigation.navigate("Home");
   return (
     <LayOut>
-      <ADImage source={require("../../assets/ad.png")} />
+
+      <ADImage source={{ uri: 'https://softer104.cafe24.com/assets/ad.png' }} />
       {/* <FacebookBtn onPress={onClickFacebook} />
       <KakaoBtn onPress={onCickKaKao} /> */}
       <PurpleBtn

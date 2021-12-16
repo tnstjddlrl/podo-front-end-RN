@@ -13,7 +13,7 @@ const Img = styled.Image`
 const Slider1 = (props) => {
   return (
     <Container>
-      <Img source={require("./Slider1.png")} resizeMode="cover" />
+      <Img source={{ uri: 'https://softer104.cafe24.com/assets/Slider/Slider1.png' }} resizeMode="cover" />
     </Container>
   );
 };

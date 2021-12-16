@@ -33,7 +33,7 @@ const Img = styled.Image`
 function Slider4({ onDone }) {
   return (
     <Container>
-      <Img source={require("./Slider4.png")} resizeMode="cover" />
+      <Img source={{ uri: 'https://softer104.cafe24.com/assets/Slider/Slider4.png' }} resizeMode="cover" />
       {/* <DoneBtn onPress={() => onDone()}>
         <DoneBtnText>쇼핑하기</DoneBtnText>
       </DoneBtn> */}

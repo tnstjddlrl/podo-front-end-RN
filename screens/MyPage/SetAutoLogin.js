@@ -83,25 +83,25 @@ const ConnectText = styled.Text`
 const shopList = [
   {
     name: "쿠팡",
-    icon: require("../../assets/coupangLogo.jpg"),
+    icon: { uri: 'https://softer104.cafe24.com/assets/coupangLogo.jpg' },
     url: "https://login.coupang.com/login/login.pang?rtnUrl=https%3A%2F%2Fwww.coupang.com%2Fnp%2Fpost%2Flogin%3Fr%3Dhttps%253A%252F%252Fwww.coupang.com%252F",
     isConnected: true,
   },
   {
     name: "티몬",
-    icon: require("../../assets/tmonLogo.jpg"),
+    icon: { uri: 'https://softer104.cafe24.com/assets/tmonLogo.jpg' },
     url: "https://m.tmon.co.kr/user/loginForm?returnUrl=http%3A%2F%2Fm.tmon.co.kr%2Fmytmon%2Flist",
     isConnected: false,
   },
   {
     name: "위메프",
-    icon: require("../../assets/wemapLogo.png"),
+    icon: { uri: 'https://softer104.cafe24.com/assets/wemapLogo.jpg' },
     url: "https://front.wemakeprice.com/user/login?returnUrl=https%3A%2F%2Ffront.wemakeprice.com%2Fmain&type=GENERAL&orderYN=N&selectionYN=N",
     isConnected: false,
   },
   {
     name: "쇼핑몰 명",
-    icon: require("../../assets/logo.png"),
+    icon: { uri: 'https://softer104.cafe24.com/assets/logo.jpg' },
     url: "https://podopoint.io/#pd-feature",
     isConnected: false,
   },
