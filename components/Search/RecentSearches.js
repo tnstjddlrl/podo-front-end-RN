@@ -37,24 +37,24 @@ const RecentSearches = ({ }) => {
 
   const [atUserSearchList, setAtUserSerachList] = useRecoilState(AtomUserCurrentSearchList);
 
-  useEffect(() => {
-    if (atUserToken == '') {
-      Alert.alert('로그인을 먼저 해주세요.')
-      navigation.navigate("Login");
-    }
-    console.log(atUserSearchList)
-  }, [])
+  // useEffect(() => {
+  //   if (atUserToken == '') {
+  //     Alert.alert('로그인을 먼저 해주세요.')
+  //     navigation.navigate("Login");
+  //   }
+  //   console.log(atUserSearchList)
+  // }, [])
 
-  React.useEffect(() => {
-    const unsubscribe = navigation.addListener('focus', () => {
-      if (atUserToken == '') {
-        Alert.alert('로그인을 먼저 해주세요.')
-        navigation.navigate("Login");
-      }
-    });
+  // React.useEffect(() => {
+  //   const unsubscribe = navigation.addListener('focus', () => {
+  //     if (atUserToken == '') {
+  //       Alert.alert('로그인을 먼저 해주세요.')
+  //       navigation.navigate("Login");
+  //     }
+  //   });
 
-    return unsubscribe;
-  }, [navigation]);
+  //   return unsubscribe;
+  // }, [navigation]);
 
 
 

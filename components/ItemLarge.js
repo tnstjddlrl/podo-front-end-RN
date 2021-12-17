@@ -1,5 +1,6 @@
 import axios from "axios";
 import React, { useState } from "react";
+import { Alert } from "react-native";
 import { useRecoilState } from "recoil";
 import styled, { css } from "styled-components/native";
 import { AtomUserToken } from "../atom/atom";

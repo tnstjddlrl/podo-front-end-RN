@@ -64,11 +64,7 @@ const SearchResult = ({ navigation, route }) => {
   const [atUserToken, setAtUserToken] = useRecoilState(AtomUserToken)
 
   function ProductGetAxios(params) {
-    setOffset(0)
     axios.get(`https://softer104.cafe24.com/Open/Coupang/ProductSearch?keyword=${searchText}&category_id=${isFocused === '9999' ? '' : isFocused}&kinds=bestcategories,coupangPL,goldbox`, {
-      headers: {
-        Authorization: `Bearer ${atUserToken}`
-      },
     }).then((res) => {
       console.log(res.data);
       setAxiosArray([])
@@ -94,24 +90,24 @@ const SearchResult = ({ navigation, route }) => {
   }, [isFocused, searchText])
 
 
-  useEffect(() => {
-    if (atUserToken == '') {
-      Alert.alert('로그인을 먼저 해주세요.')
-      navigation.navigate("Login");
-    }
+  // useEffect(() => {
+  //   if (atUserToken == '') {
+  //     Alert.alert('로그인을 먼저 해주세요.')
+  //     navigation.navigate("Login");
+  //   }
 
-  }, [])
+  // }, [])
 
-  React.useEffect(() => {
-    const unsubscribe = navigation.addListener('focus', () => {
-      if (atUserToken == '') {
-        Alert.alert('로그인을 먼저 해주세요.')
-        navigation.navigate("Login");
-      }
-    });
+  // React.useEffect(() => {
+  //   const unsubscribe = navigation.addListener('focus', () => {
+  //     if (atUserToken == '') {
+  //       Alert.alert('로그인을 먼저 해주세요.')
+  //       navigation.navigate("Login");
+  //     }
+  //   });
 
-    return unsubscribe;
-  }, [navigation]);
+  //   return unsubscribe;
+  // }, [navigation]);
 
   // useEffect(() => {
   //   // setData(axiosArray.slice(0, limit));
