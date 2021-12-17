@@ -38,7 +38,6 @@
     "react-native": "~0.63.4",
     "react-native-app-intro-slider": "^4.0.4",
     "react-native-fbsdk-next": "^6.1.1",
-    "react-native-fix-image": "^2.1.0",
     "react-native-gesture-handler": "^1.10.3",
     "react-native-global-props": "^1.1.5",
     "react-native-image-picker": "^4.4.2",

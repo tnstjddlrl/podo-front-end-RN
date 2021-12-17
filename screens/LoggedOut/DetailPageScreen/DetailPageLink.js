@@ -90,11 +90,11 @@ const DetailPageLink = ({ route, navigation }) => {
               <CloseIcon />
             </CloseIconWrap>
           </RewardIndicatorWrap>
-          <LottieView
+          {/* <LottieView
             source={{ uri: 'https://softer104.cafe24.com/assets/loadingSplash.json' }}
             autoPlay
             loop
-          />
+          /> */}
           <FooterText>
             PODO는 상품에 직접 관여하지 않으며 상품 주문, 배송 및 환불의 의무와
             책임은 각 판매업체에 있습니다 .

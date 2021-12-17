@@ -64,14 +64,16 @@ const SearchResult = ({ navigation, route }) => {
   const [atUserToken, setAtUserToken] = useRecoilState(AtomUserToken)
 
   function ProductGetAxios(params) {
+    setOffset(0)
     axios.get(`https://softer104.cafe24.com/Open/Coupang/ProductSearch?keyword=${searchText}&category_id=${isFocused === '9999' ? '' : isFocused}&kinds=bestcategories,coupangPL,goldbox`, {
       headers: {
         Authorization: `Bearer ${atUserToken}`
       },
     }).then((res) => {
       console.log(res.data);
+      setAxiosArray([])
+      setData([])
       if (res.data.msg === 'success') {
-
         setAxiosArray(res.data.list)
       }
     }).catch((error) => {
@@ -89,28 +91,44 @@ const SearchResult = ({ navigation, route }) => {
     // Alert.alert(isFocused, searchText, route.params)
     ProductGetAxios()
 
-  }, [isFocused])
+  }, [isFocused, searchText])
+
 
   useEffect(() => {
+    if (atUserToken == '') {
+      Alert.alert('로그인을 먼저 해주세요.')
+      navigation.navigate("Login");
+    }
 
   }, [])
 
-  useEffect(() => {
-    setData(axiosArray.slice(0, limit));
-    setOffset(limit);
-  }, [axiosArray]);
+  React.useEffect(() => {
+    const unsubscribe = navigation.addListener('focus', () => {
+      if (atUserToken == '') {
+        Alert.alert('로그인을 먼저 해주세요.')
+        navigation.navigate("Login");
+      }
+    });
 
-  const loadMoreData = () => {
-    const newData = data.concat(
-      axiosArray.slice(offset, offset + limit)
-    );
-    setData(newData);
-    setOffset(offset + limit);
-  };
+    return unsubscribe;
+  }, [navigation]);
 
-  useEffect(() => {
-    console.log(searchText);
-  }, [searchText])
+  // useEffect(() => {
+  //   // setData(axiosArray.slice(0, limit));
+  //   // setOffset(limit);
+  // }, [axiosArray]);
+
+  // const loadMoreData = () => {
+  //   const newData = data.concat(
+  //     axiosArray.slice(offset, offset + limit)
+  //   );
+  //   setData(newData);
+  //   setOffset(offset + limit);
+  // };
+
+  // useEffect(() => {
+  //   console.log(searchText);
+  // }, [searchText])
 
 
 
@@ -127,8 +145,9 @@ const SearchResult = ({ navigation, route }) => {
           horizontal
           showsHorizontalScrollIndicator={false}
           style={{ marginTop: 10 }}
-          renderItem={(item) => (
+          renderItem={(item, index) => (
             <ResultTopTab
+              key={index}
               {...item}
               isFocused={isFocused}
               onClickSelect={onClickSelect}
@@ -150,19 +169,19 @@ const SearchResult = ({ navigation, route }) => {
             )
           })}
         </ScrollView> */}
-        {(data.length == 0) &&
+        {(axiosArray.length == 0) &&
           <HistoryText noHistory>
             검색결과가 없습니다!
           </HistoryText>
         }
         <FlatList
           style={{ marginTop: 10, height: '100%' }}
-          data={data}
-          keyExtractor={(item) => "" + item.productId}
+          data={axiosArray}
+          keyExtractor={(item) => "" + item.productUrl}
           showsVerticalScrollIndicator={false}
-          renderItem={(item) => <ItemLarge key={item.productId} {...item} navigation={navigation} />}
+          renderItem={(item, index) => <ItemLarge key={index} {...item} navigation={navigation} />}
           onEndReachedThreshold={0.95}
-          onEndReached={loadMoreData}
+        // onEndReached={loadMoreData}
         />
       </LayOut>
     </>

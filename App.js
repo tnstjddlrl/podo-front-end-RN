@@ -31,9 +31,6 @@ const isCurrentScreenInitialOne = (state) => {
 };
 
 
-
-
-
 export default function App() {
   const [isInitialScreen, setIsInitialScreen] = useState(true);
 
@@ -92,20 +89,20 @@ export default function App() {
         {intro ? (
           <Intro onDone={done} />
         ) : (
-            <ThemeProvider theme={darkMode ? darkTheme : lightTheme}>
-              {isInitialScreen && (
-                <DoubleTapToClose message="'뒤로' 버튼을 한번 더 누르시면 종료됩니다." />
-              )}
-              <NavigationContainer
-                onStateChange={(state) => {
-                  setIsInitialScreen(isCurrentScreenInitialOne(state));
-                }}
-              >
-                <StatusBar />
-                <LoggedOutNav />
-              </NavigationContainer>
-            </ThemeProvider>
-          )}
+          <ThemeProvider theme={darkMode ? darkTheme : lightTheme}>
+            {isInitialScreen && (
+              <DoubleTapToClose message="'뒤로' 버튼을 한번 더 누르시면 종료됩니다." />
+            )}
+            <NavigationContainer
+              onStateChange={(state) => {
+                setIsInitialScreen(isCurrentScreenInitialOne(state));
+              }}
+            >
+              <StatusBar />
+              <LoggedOutNav />
+            </NavigationContainer>
+          </ThemeProvider>
+        )}
       </RecoilRoot>
     </>
   );

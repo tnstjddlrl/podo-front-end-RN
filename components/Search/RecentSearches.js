@@ -1,13 +1,14 @@
 import React, { useEffect } from "react";
-import { TouchableOpacity } from "react-native";
+import { Alert, TouchableOpacity } from "react-native";
 import styled from "styled-components/native";
 import { colors } from "../../colors";
 import LayOut from "../LayOut";
 import { RecentSearchesData } from "../Home/SampleData";
 import RecentSearchItem from "./RecentSearchItem";
-import { AsyncSetUserCurrentSearchList, AtomUserCurrentSearchList } from "../../atom/atom";
+import { AsyncSetUserCurrentSearchList, AtomUserCurrentSearchList, AtomUserId, AtomUserToken } from "../../atom/atom";
 import { useRecoilState } from "recoil";
 import { ScrollView } from "react-native-gesture-handler";
+import { useNavigation } from "@react-navigation/native";
 
 const RowWrapper = styled.View`
   width: 100%;
@@ -29,16 +30,33 @@ const FlatList = styled.FlatList`
   background-color: #fff;
 `;
 
-const RecentSearches = () => {
+const RecentSearches = ({ }) => {
+  const navigation = useNavigation()
+  const [atUserId, setAtUserId] = useRecoilState(AtomUserId)  //유저아이디
+  const [atUserToken, setAtUserToken] = useRecoilState(AtomUserToken) //유저 토큰
 
   const [atUserSearchList, setAtUserSerachList] = useRecoilState(AtomUserCurrentSearchList);
 
   useEffect(() => {
-    // let plus = atUserSearchList.concat({ id: atUserSearchList.length + 1, search: '추가됨!' })
-    // setAtUserSerachList(plus)
-
+    if (atUserToken == '') {
+      Alert.alert('로그인을 먼저 해주세요.')
+      navigation.navigate("Login");
+    }
     console.log(atUserSearchList)
   }, [])
+
+  React.useEffect(() => {
+    const unsubscribe = navigation.addListener('focus', () => {
+      if (atUserToken == '') {
+        Alert.alert('로그인을 먼저 해주세요.')
+        navigation.navigate("Login");
+      }
+    });
+
+    return unsubscribe;
+  }, [navigation]);
+
+
 
   return (
     <LayOut backgroundColor={colors.white}>
