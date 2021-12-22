@@ -131,9 +131,9 @@ const ItemLarge = ({ item, navigation }) => {
 
   }
 
-
   const goDetailPage = () =>
     navigation.navigate("DetailPageLink", { productUrl });
+
   return (
     <ItemContainer onPress={() => LinkAxios()}>
       <LeftPart>

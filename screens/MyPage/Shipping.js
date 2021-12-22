@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled, { css } from "styled-components/native";
 import { colors } from "../../colors";
 import LayOut from "../../components/LayOut";
@@ -15,6 +15,9 @@ import {
 } from "../../components/Icons";
 import { StyleSheet } from "react-native";
 import RNPickerSelect from "react-native-picker-select";
+import { useRecoilState } from "recoil";
+import { AtomUserId, AtomUserToken } from "../../atom/atom";
+import axios from "axios";
 
 const TopInfoText = styled.Text`
   font-size: 13px;
@@ -206,7 +209,33 @@ const Shipping = () => {
   const [shipData, setShipData] = useState();
   const onClickSetData = () => {
     setShipData(sampleShippingData);
+    postSearchAxios()
   };
+
+  const [atUserId, setAtUserId] = useRecoilState(AtomUserId)  //유저아이디
+  const [atUserToken, setAtUserToken] = useRecoilState(AtomUserToken) //유저 토큰
+
+  const [postNumber, setPostNumber] = useState('')
+
+  function postSearchAxios(params) {
+    axios.get('https://softer104.cafe24.com/V1/Member/DeliveryTracking', {
+      headers: {
+        Authorization: `Bearer ${atUserToken}`
+      },
+      invoiceNumber: postNumber,
+    }).then((res) => {
+      console.log(res.data);
+      var data = res.data.data
+
+    }).catch((error) => {
+      console.log(error);
+    })
+  }
+
+  // useEffect(() => {
+  //   postSearchAxios()
+  // }, [])
+
 
   const onClickRemoveData = () => {
     setShipData();
@@ -262,7 +291,7 @@ const Shipping = () => {
         />
       </DropdownWrap>
       <InputBtnWrap>
-        <Input width={"75%"} placeholder={"운송장 번호 -없이 입력"} />
+        <Input width={"75%"} placeholder={"운송장 번호 -없이 입력"} onChangeText={setPostNumber} />
         <PurpleBtn text={"검색"} width={"66px"} onPress={onClickSetData} />
       </InputBtnWrap>
       {shipData && (

@@ -193,8 +193,14 @@ const MyPage = ({ navigation }) => {
   const [name, setName] = useState("게스트");
   useEffect(() => {
     getData("randomName").then((name) => setName(name));
-    MyInformLoadAxios()
   }, []);
+
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('focus', () => {
+      MyInformLoadAxios()
+    });
+    return unsubscribe;
+  }, [navigation]);
 
   const renderItem = ({ item }) => {
     return (
